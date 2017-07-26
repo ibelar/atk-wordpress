@@ -21,7 +21,7 @@ class EnqueueController
 		'https://cdnjs.cloudflare.com/ajax/libs/jquery-serialize-object/2.5.0/jquery.serialize-object.min.js',
 		'https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.10/semantic.min.js',
 		'https://cdn.rawgit.com/mdehoog/Semantic-UI-Calendar/0.0.8/dist/calendar.min.js',
-		'atk4JS.js'
+		'atk4JS.min.js'
 	];
 
 	//the css file to load.

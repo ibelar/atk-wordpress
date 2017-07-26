@@ -7,7 +7,6 @@
 
 namespace atkwp;
 
-use \atkwp\AtkWpView;
 use \atk4\ui\Template;
 use \atk4\ui\App;
 use \atk4\ui\Persistence\UI;
