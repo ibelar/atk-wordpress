@@ -1,0 +1,28 @@
+{
+  "name": "atk-wordpress",
+  "description": "Enable use of agile toolkit library in wordpress",
+  "license": "MIT",
+  "keywords": ["atk", "wordpress", "atk4/ui"],
+  "authors": [
+    {
+      "name": "Alain Belair",
+      "email": "belair.alain@gmail.com"
+    }
+  ],
+  "require": {
+    "atk4/ui": "1.2.0-RC1"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "4.0.*"
+  },
+  "autoload": {
+    "psr-4": {
+      "atkwp\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "atkwp\\":"tests/"
+    }
+  }
+}
