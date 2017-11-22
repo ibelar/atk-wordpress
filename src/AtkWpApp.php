@@ -7,10 +7,10 @@
 
 namespace atkwp;
 
-use \atk4\ui\Template;
-use \atk4\ui\App;
-use \atk4\ui\Persistence\UI;
-use \atk4\ui\jQuery;
+use atk4\ui\Template;
+use atk4\ui\App;
+use atk4\ui\Persistence\UI;
+use atk4\ui\jQuery;
 
 class AtkWpApp extends App
 {
@@ -48,7 +48,7 @@ class AtkWpApp extends App
 
 	public function initWpLayout($component)
 	{
-		$class = '\\'. $component['class'];
+		$class = '\\'. $component['uses'];
 		//$this->wpHtml = new View(['defaultTemplate' => 'layout.html', 'name' => $this->appName]);
 		$this->wpHtml = new AtkWpView(['defaultTemplate' => 'layout.html', 'name' => $this->pluginService->pluginName]);
 		$this->wpHtml->app = $this;
@@ -93,7 +93,7 @@ class AtkWpApp extends App
 		exit;
 	}
 
-	public function url($page = null, $arguments = array())
+	public function url($page = [], $hasRequestUri = false)
 	{
 		// $url = admin_url('admin-ajax.php');
 
@@ -106,8 +106,8 @@ class AtkWpApp extends App
 		}
 
 		if ($this->page === 'admin-ajax') {
-			$sticky['action'] = $this->pluginService->pluginName;
-			$sticky['atkwp']  = $this->pluginService->wpComponent['id'];
+			$sticky['action'] = $this->pluginService->getPluginName();
+			$sticky['atkwp']  = $this->pluginService->getWpComponentId();
 		}
 
 		if (is_string($page)) {

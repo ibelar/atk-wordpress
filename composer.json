@@ -1,5 +1,6 @@
 {
   "name": "atk-wordpress",
+  "type": "package",
   "description": "Enable use of agile toolkit library in wordpress",
   "license": "MIT",
   "keywords": ["atk", "wordpress", "atk4/ui"],

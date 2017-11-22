@@ -12,19 +12,19 @@ use atkwp\AtkWp;
 
 class Model extends \atk4\data\Model
 {
-	private $pluginService;
-	
-	public function __construct(AtkWp $service = null, array $defaults = [])
-	{
-		if (!$service) {
-			throw new \atk4\ui\Exception(' Please add your plugin service when creating model');
-		}
-		$this->pluginService = $service;
-		parent::__construct($service->getDbConnection(), $defaults);
-	}
-	
-	public function getPluginService()
-	{
-		return $this->pluginService;
-	}
+//	private $pluginService;
+//
+//	public function __construct(AtkWp $service = null, array $defaults = [])
+//	{
+//		if (!$service) {
+//			throw new \atk4\ui\Exception(' Please add your plugin service when creating model');
+//		}
+//		$this->pluginService = $service;
+//		parent::__construct($service->getDbConnection(), $defaults);
+//	}
+//
+//	public function getPluginService()
+//	{
+//		return $this->pluginService;
+//	}
 }

@@ -7,9 +7,11 @@
 
 namespace atkwp;
 use atkwp\controllers\EnqueueController;
-use \atkwp\controllers\PanelController;
+use atkwp\controllers\MetaBoxController;
+use atkwp\controllers\PanelController;
 
-class AtkWp {
+class AtkWp
+{
 
 	use \atk4\core\InitializerTrait {
 		init as _init;
@@ -115,12 +117,23 @@ class AtkWp {
 		// $this->panelCtrl = $this->add(new PanelController($this->getConfig('panel', [])));
 		$this->panelCtrl = new PanelController($this);
 		$this->enqueueCtrl = new EnqueueController($this);
+		$this->metaBoxCtrl = new MetaBoxController($this);
 	}
 
 	public function getDbConnection()
 	{
 		return $this->dbConnection;
 	}
+
+	public function getPluginName()
+    {
+        return $this->pluginName;
+    }
+
+    public function getWpComponentId()
+    {
+        return $this->wpComponent['id'];
+    }
 
 	/**
 	 * Plugin Entry point
@@ -138,7 +151,7 @@ class AtkWp {
 		try {
 			$this->panelCtrl->loadPanels();
 //			$this->widgetCtrl->loadWidgets();
-//			$this->metaBoxCtrl->loadMetaBoxes();
+			$this->metaBoxCtrl->loadMetaBoxes();
 //			$this->shortcodeCtrl->loadShortcodes();
 //			$this->dashboardCtrl->loadDashboards();
 //			add_action('init', [$this, 'wpInit']);
@@ -183,12 +196,41 @@ class AtkWp {
 		if (isset($_GET['atkshortcode'])) {
 			$this->stickyGet('atkshortcode');
 		}
-		//check_ajax_referer($this->pluginName);
-		$app = new AtkWpApp($this);
-		$app->page = 'admin-ajax';
-		$app->initWpLayout($this->wpComponent);
-		$app->execute($this->ajaxMode);
+		try {
+            //check_ajax_referer($this->pluginName);
+            $app = new AtkWpApp($this);
+            $app->page = 'admin-ajax';
+            $app->initWpLayout($this->wpComponent);
+            $app->execute($this->ajaxMode);
+        } catch (\atk4\ui\Exception $e) {
+		    $this->caughtException($e);
+        }
 	}
+
+    /**
+     * Output metabox view in Wp.
+     *
+     * Differnet metabox view may be output within the same admin page,
+     * it is necessary to reset the content after main is execute.
+     *
+     * @$post    \WP_Post //Contains the current post information
+     * @$param   Array   //Argument passed into the metabox, contains argument set in config file.
+     */
+    public function wpMetaBoxExecute(\WP_Post $post, array $param)
+    {
+        //set the view to output.
+        $this->wpComponent = $this->metaBoxCtrl->getMetaBoxByKey($param['id']);//$this->metaBox;
+        //$this->panel['id']    = $param['id'];
+        //Make our post info available for our view.
+        $this->metaBoxCtrl->setCurrentMetaBox($post, $param['args']);
+        $app = new AtkWpApp($this);
+        $app->initWpLayout($this->wpComponent);
+        $app->execute();
+//        $this->isLayoutNeedInitialise = false;
+//        $this->metaBoxCtrl->metaDisplayCount ++;
+//        $this->main();
+//        $this->resetContent();
+    }
 
 	/**
 	 * Manually set configuration option.

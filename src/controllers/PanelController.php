@@ -57,6 +57,9 @@ class PanelController
 	{
 		$this->pluginService = $service;
 		$this->panels = $this->pluginService->getConfig('panel', []);
+		foreach($this->panels as $key=>$panel) {
+		    $this->panels[$key]['id'] = $key;
+        }
 	}
 
 	/**
@@ -116,15 +119,17 @@ class PanelController
 		if ($isHook) {
 			foreach ($this->panels as $key => $panel) {
 				if ($panel['hook'] === $panelId) {
-					$response['class'] = $panel['uses'];
-					$response['id']    = $key;
+				    $response = $panel;
+//					$response['class'] = $panel['uses'];
+//					$response['id']    = $key;
 				}
 			}
 		} else {
 			foreach ($this->panels as $key => $panel) {
 				if ( $key === $panelId ) {
-					$response['class'] = $panel['uses'];
-					$response['id']    = $key;
+				    $response = $panel;
+//					$response['class'] = $panel['uses'];
+//					$response['id']    = $key;
 				}
 			}
 		}

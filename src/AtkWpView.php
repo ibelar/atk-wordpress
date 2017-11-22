@@ -10,7 +10,7 @@ namespace atkwp;
 
 class AtkWpView extends \atk4\ui\View
 {
-    private $pluginService;
+//    private $pluginService;
 
 //    public function __construct(AtkWp $service)
 //    {
