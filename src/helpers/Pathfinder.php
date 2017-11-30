@@ -7,62 +7,49 @@
  */
 namespace atkwp\helpers;
 
-class Pathfinder
+use atkwp\interfaces\PathInterface;
+
+class Pathfinder implements PathInterface
 {
-	public $jsLocation = [];
+    //The path to this plugin.
+    public $path;
+
+    //Array matching path according to file type.
 	public $filesLocation = [];
-	public $configurationDir = 'configurations';
-	public $configurationPath;
 
-	public function __construct(string $pluginPath)
+	//default skin for atk-ui
+	public $skin = 'semantic-ui';
+
+	public function __construct($pluginPath)
 	{
-		$this->setLocations($pluginPath);
+	    $this->path = $pluginPath;
+        $this->setFilesLocation($pluginPath, $this->skin);
 	}
 
-	public function setLocations(string $path, string $skin = 'semantic-ui')
+    public function getConfigurationPath()
+    {
+        return $this->path . 'configurations';
+    }
+
+    public function getAssetsPath()
+    {
+        return $this->path . 'assets';
+    }
+
+    public function getTemplateLocation($fileName)
+    {
+        return $this->getFileLocation('template', $fileName);
+    }
+
+	private function setFilesLocation($path, $skin)
 	{
-		$this->setConfigurationPath($path);
-		$this->setFilesLocation($path, $skin);
-
-	}
-
-
-	public function setConfigurationPath(string $path)
-	{
-		$this->configurationPath = $path . $this->configurationDir;
-	}
-
-	public function getConfigurationPath()
-	{
-		return $this->configurationPath;
-	}
-
-	public function setFilesLocation(string $path, string $skin)
-	{
+	    //When looking for a template file, will look into plugin dir first, then atkwp and finally atkui.
 		$this->filesLocation['template']['plugin'] = $path . 'templates/';
 		$this->filesLocation['template']['atkwp']  = $path . 'vendor/atk-wordpress/templates/';
 		$this->filesLocation['template']['atkui']  = $path . 'vendor/atk4/ui/template/'. $skin . '/';
-
-		$this->filesLocation['js']['plugin']  = $path . 'js/';
-		$this->filesLocation['js']['atkwp']   = $path . 'vendor/atk-wordpress/js/lib/';
-		$this->filesLocation['js']['atkui']   = $path . 'vendor/atk4/ui/public/';
 	}
 
-	public function getTemplateLocation(string $fileName)
-	{
-		return $this->getFileLocation('template', $fileName);
-	}
-
-	public function getJsLocation(string $fileName, bool $needRelative = false)
-	{
-		$path =  $this->getFileLocation('js', $fileName);
-		if ($needRelative) {
-			$path = '/' . substr($path, strlen(get_home_path()));
-		}
-		return $path;
-	}
-
-	public function getFileLocation(string $type, string $fileName)
+	private function getFileLocation($type, $fileName)
 	{
 		foreach ($this->filesLocation[$type] as $dir) {
 			$path = $dir . $fileName;
@@ -72,7 +59,7 @@ class Pathfinder
 		}
 		throw new \atk4\ui\Exception([
 			'Unable to get path location for file',
-			'file'=> $templateFile
+			'file'=> $fileName
 		]);
 	}
 }

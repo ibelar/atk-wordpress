@@ -11,19 +11,18 @@ use atk4\ui\Template;
 use atk4\ui\App;
 use atk4\ui\Persistence\UI;
 use atk4\ui\jQuery;
+use atkwp\interfaces\ComponentInterface;
 
 class AtkWpApp extends App
 {
 
 	use \atk4\core\SessionTrait;
 
-	// The pluggin running this app
-	public $pluginService;
-	// The html produce by this app
+	//The pluggin running this app
+	public $plugin;
+
+	//The html produce by this app
 	public $wpHtml;
-	//The dir location use by this app
-	public $appTemplateLocation = [];
-	// public $appName;
 
 	public $skin = 'semantic-ui';
 
@@ -32,16 +31,12 @@ class AtkWpApp extends App
 		parent::init();
 	}
 
-	public function __construct(AtkWp $pluginService/*$pluginName, $pluginPath*/)
+	public function __construct(AtkWp $plugin)
 	{
-		$this->pluginService = $pluginService;
-		// $this->appName = /*$pluginName*/$pluginService->pluginName;
-		// $this->setAppTemplateLocation(/*$pluginPath*/$pluginService->plugInPath);
+		$this->plugin = $plugin;
 		if (!isset($this->ui_persistence)) {
 			$this->ui_persistence = new UI();
 		}
-		// $this->templateDirPath = $pluginPath . 'vendor/atk-wordpress/src/templates/';
-
 	}
 
 
@@ -49,11 +44,10 @@ class AtkWpApp extends App
 	public function initWpLayout($component)
 	{
 		$class = '\\'. $component['uses'];
-		//$this->wpHtml = new View(['defaultTemplate' => 'layout.html', 'name' => $this->appName]);
-		$this->wpHtml = new AtkWpView(['defaultTemplate' => 'layout.html', 'name' => $this->pluginService->pluginName]);
+		$this->wpHtml = new AtkWpView(['defaultTemplate' => 'layout.html', 'name' => $this->plugin->getPluginName()]);
 		$this->wpHtml->app = $this;
 		$this->wpHtml->init();
-		$this->wpHtml->add(new $class());
+		return $this->wpHtml->add(new $class());
 	}
 
 	/**
@@ -76,7 +70,7 @@ class AtkWpApp extends App
 
 	public function getDbConnection()
     {
-        return $this->pluginService->getDbConnection();
+        return $this->plugin->getDbConnection();
     }
 
 	/**
@@ -106,8 +100,8 @@ class AtkWpApp extends App
 		}
 
 		if ($this->page === 'admin-ajax') {
-			$sticky['action'] = $this->pluginService->getPluginName();
-			$sticky['atkwp']  = $this->pluginService->getWpComponentId();
+			$sticky['action'] = $this->plugin->getPluginName();
+			$sticky['atkwp']  = $this->plugin->getWpComponentId();
 		}
 
 		if (is_string($page)) {
@@ -190,7 +184,7 @@ class AtkWpApp extends App
 	{
 		$template = new Template();
 		$template->app = $this;
-		return $template->load($this->pluginService->pathFinder->getTemplateLocation($name));
+		return $template->load($this->plugin->getTemplateLocation($name));
 	}
 
 }

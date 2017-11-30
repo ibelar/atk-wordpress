@@ -8,21 +8,58 @@
 namespace atkwp\components;
 
 
-class MetaBoxComponent extends PanelComponent
-{
-    public $metaFields = [];
+use atkwp\controllers\MetaFieldController;
+use atkwp\interfaces\ComponentInterface;
+use atkwp\interfaces\MetaBoxFieldsInterface;
+use atkwp\interfaces\MetaFieldInterface;
 
-    public function addFormField($field)
+class MetaBoxComponent extends Component
+{
+    public $fieldCtrl;
+
+    /**
+     * MetaBoxComponent constructor.
+     *
+     * Note: You can override this constructor in your plugin file in order to setup your
+     * own MetaField controller.
+     *
+     * @param null $label
+     * @param null $class
+     * @param MetaFieldInterface|null $fieldCtrl
+     */
+    public function __construct( $label = null, $class = null, MetaFieldInterface $fieldCtrl = null)
     {
-        $this->metaFields[] = $field;
+        parent::__construct( $label, $class );
+
+        $this->fieldCtrl = $fieldCtrl;
+        if ($this instanceof MetaBoxFieldsInterface) {
+            if (!$this->fieldCtrl) {
+                $this->fieldCtrl = new MetaFieldController();
+            }
+            $this->initFields($this->fieldCtrl);
+        }
     }
 
-    public function init()
-    {
-        parent::init();
 
-        foreach ($this->metaFields as $field) {
-            $this->add($field);
+    public function setFieldInput($postId, ComponentInterface $compCtrl)
+    {
+        if ($this->fieldCtrl) {
+            foreach ($this->fieldCtrl->getFields() as $key => $field) {
+                $field->set($compCtrl->getPostMetaData($postId, $field->short_name, true));
+            }
+        }
+    }
+
+    /**
+     * Called from the action hook added by the MetaBox service.
+     * @param $postId
+     */
+    public function savePost($postId, ComponentInterface $compCtrl)
+    {
+        if ($this->fieldCtrl) {
+            foreach ($this->fieldCtrl->getFields() as $key => $field) {
+                $compCtrl->savePostMetaData($postId, $field->short_name, $this->escapeRawData($key, $_POST[$field->short_name]));
+            }
         }
     }
 }

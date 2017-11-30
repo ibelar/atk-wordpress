@@ -9,7 +9,7 @@ namespace atkwp\components;
 use atkwp\AtkWpView;
 
 
-class PanelComponent extends AtkWpView 
+class PanelComponent extends Component
 {
-	public $defaultTemplate = 'panel.html';
+
 }

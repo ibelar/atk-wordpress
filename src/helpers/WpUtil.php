@@ -29,6 +29,11 @@ class WpUtil
 		}
 	}
 
+	public static function getPluginUrl($path, $plugin)
+    {
+        return plugins_url($path, $plugin);
+    }
+
 	public static function getWpOption($option)
 	{
 		return get_option($option);
