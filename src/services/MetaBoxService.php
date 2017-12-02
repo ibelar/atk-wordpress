@@ -7,7 +7,6 @@
 
 namespace atkwp\services;
 
-use atkwp\AtkWp;
 use atkwp\interfaces\ComponentCtrlInterface;
 
 class MetaBoxService
@@ -16,7 +15,6 @@ class MetaBoxService
     protected $executable;
 
     public $metaBoxes = [];
-    //public $metaDisplayCount = 0;
 
     public function __construct(ComponentCtrlInterface $ctrl, $metaBoxes, $callable)
     {
@@ -24,7 +22,7 @@ class MetaBoxService
         $this->executable = $callable;
         $this->setMetaBoxes($metaBoxes);
         $this->loadMetaBoxes();
-        //register panel components with ctrl ounce fully loaded and with hook setting in place.
+        //register panel components with ctrl when metaboxes are fully loaded and with hook setting in place.
         add_action('admin_init', function() {
             $this->ctrl->registerComponents('metaBox', $this->getMetaBoxes());
         });
