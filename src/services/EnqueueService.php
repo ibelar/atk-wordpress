@@ -34,7 +34,7 @@ class EnqueueService
     //the css file to load.
     protected $atkCssFiles = [
         'https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.10/semantic.css',
-        'https://cdn.rawgit.com/mdehoog/Semantic-UI-Calendar/0.0.8/dist/calendar.css'
+        'https://cdn.rawgit.com/mdehoog/Semantic-UI-Calendar/0.0.8/dist/calendar.css',
     ];
 
     public function __construct(ComponentCtrlInterface $ctrl, $enqueueFiles, $url)
@@ -65,7 +65,7 @@ class EnqueueService
         //Check if this is an atk component.
         //We need to load js and css for atk when using panel or metaBox
         if ($component = $this->ctrl->getComponentByType('panel', $hook, 'hook')) {
-        } elseif ($component = $this->ctrl->getComponentByType('metaBox', $hook, 'hook')){
+        } elseif ($component = $this->ctrl->getComponentByType('metaBox', $hook, 'hook')) {
         }
 
         if (isset($component)) {

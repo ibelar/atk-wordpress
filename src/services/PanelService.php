@@ -31,7 +31,6 @@ use atkwp\interfaces\ComponentCtrlInterface;
  * Panel are atk views that are echo within Wordpress admin section.
  * Every panels defined will be registered in $ctrl->component array.
  */
-
 class PanelService
 {
     //Component controller for this plugin.

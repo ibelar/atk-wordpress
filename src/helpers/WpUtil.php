@@ -9,7 +9,7 @@ namespace atkwp\helpers;
 
 class WpUtil
 {
-    static $jQueryVar = 'jQuery';
+    public static $jQueryVar = 'jQuery';
 
     public static function getDbPrefix()
     {
