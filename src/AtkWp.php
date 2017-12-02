@@ -1,292 +1,212 @@
 <?php
 /**
- * Created by abelair.
- * Date: 2017-06-08
- * Time: 11:45 AM
+ * The actual plugin class implementation for WP.
  */
 
 namespace atkwp;
-use atkwp\controllers\EnqueueController;
-use \atkwp\controllers\PanelController;
 
-class AtkWp {
+use atk4\data\Persistence_SQL;
+use atk4\ui\Exception;
+use atkwp\helpers\Config;
+use atkwp\interfaces\ComponentCtrlInterface;
+use atkwp\interfaces\PathInterface;
 
-	use \atk4\core\InitializerTrait {
-		init as _init;
-	}
-	use \atk4\core\HookTrait;
-//	use \atk4\core\AppScopeTrait;
-//	use \atk4\core\ContainerTrait;
-	// use \atk4\core\TrackableTrait;
-	// use \atk4\core\SessionTrait;
+class AtkWp
+{
+    //The  name of the plugin
+    public $pluginName;
 
-	//The  name of the plugin
-	public $pluginName;
-	// an instance of this plugin
-	// public $plugin;
+    //The plugin component controller
+    public $componentCtrl;
 
-	public $config = [];
+    protected $isExecuting;
 
-	protected $isExecuting;
+    //Whether initialized_layout is bypass or not.
+    public $isLayoutNeedInitialise = true;
 
-	//Whether initialized_layout is bypass or not.
-	public $isLayoutNeedInitialise = true;
+    //the current wp view to output. ( Ex: admin panel, shortcode or metabox)
+    public $wpComponent;
 
-	//The enqueue controller.
-	public $enqueueCtrl;
-	//The panel controller.
-	public $panelCtrl;
-	//The Widget controller
-	public $widgetCtrl;
-	//The Metabox controller
-	public $metaBoxCtrl;
-	//The dasboard controller
-	public $dashboardCtrl;
+    //the database connection for this plugin.
+    public $dbConnection;
 
-	public $shortcodeCtrl;
+    //plugin path locator for template file.
+    public $pathFinder;
 
-	//the current wp view to output. ( Ex: admin panel, shortcode or metabox)
-	public $wpComponent;
-	// the database connection for this service.
-	public $dbConnection;
+    //plugin configuration
+    public $config;
 
-	//default config files to read
-	public $wpConfigFiles = [
-		'config-default',
-		'config-wp',
-		'config-panel',
-		'config-enqueue',
-		'config-shortcode',
-		'config-widget',
-		'config-metabox',
-		'config-dashboard'];
+    /**
+     * AtkWp constructor.
+     *
+     * @param $pluginName The name of this plugin.
+     * @param PathInterface      $pathFinder The pathFinder object for retrieving atk template file under WP.
+     * @param ComponentInterface $ctrl       The ctrl object responsible to initialize all WP components.
+     */
+    public function __construct($pluginName, PathInterface $pathFinder, ComponentCtrlInterface $ctrl)
+    {
+        $this->pluginName = $pluginName;
+        $this->pathFinder = $pathFinder;
+        $this->componentCtrl = $ctrl;
+        $this->config = new Config($this->pathFinder->getConfigurationPath());
+        $this->init();
+    }
 
-	public $plugInPath;
-	public $configurationPath;
-	public $pathFinder;
-	//public $configurationDir = 'configuration';
+    public function getPluginName()
+    {
+        return $this->pluginName;
+    }
 
-	public $ajaxMode = false;
+    public function getConfig($name, $default = null)
+    {
+        return $this->config->getConfig($name, $default);
+    }
 
-	//ATK43 init
-	/** When page is determined, it's class instance is created and stored in here */
-	public $page_object=null;
+    public function setConfig($config = [], $defautl = UNDEFINED)
+    {
+        $this->config->setConfig($config, $defautl);
+    }
 
-	/** Class which is used for static pages */
-	public $page_class='Page';
+    public function getTemplateLocation($fileName)
+    {
+        return $this->pathFinder->getTemplateLocation($fileName);
+    }
 
-	/** List of pages which are routed into namespace */
-	public $namespace_routes = array();
+    public function getDbConnection()
+    {
+        return $this->dbConnection;
+    }
 
-	/** Object for a custom layout, introduced in 4.3 */
-	public $layout = null;
+    public function setDbConnection()
+    {
+        $dsn = 'mysql:host='.DB_HOST.';dbname='.DB_NAME;
+        $this->dbConnection = new Persistence_SQL($dsn, DB_USER, DB_PASSWORD);
+    }
 
-	/** will contains the app html output when using wp shortcode */
-	public $appHtmlBuffer;
+    public function getWpComponentId()
+    {
+        return $this->wpComponent['id'];
+    }
 
-	//the metabox being execute.
-	public $metaBox;
-	//the shortcode being execute
-	public $shortcode;
+    /**
+     * Plugin Entry point
+     * Wordpress plugin file call this function in order to have
+     * atk work under Wordpress.
+     *
+     * Will load panel, metab box, widget and shortcode configuration file;
+     * Setup proper Wp action for each of them;
+     * Setup WP Ajax.
+     *
+     * @throws
+     */
+    public function boot($filePath)
+    {
+        try {
+            //setup plugin activation / deactivation hook.
+            register_activation_hook($filePath, [$this, 'activatePlugin']);
+            register_deactivation_hook($filePath, [$this, 'deactivatePlugin']);
 
+            //setup component services.
+            $this->componentCtrl->initializeComponents($this);
 
-//	public static function getServiceInstance()
-//	{
-//		return self;
-//	}
+            //register ajax action for this plugin
+            add_action("wp_ajax_{$this->getPluginName()}", [$this, 'wpAjaxExecute']);
 
+            //enable Wp ajax front end action.
+            //add_action("wp_ajax_nopriv_{$this->pluginName}", [$this, 'wpAjaxExecute']);
+        } catch (Exception $e) {
+            $this->caughtException($e);
+        }
+    }
 
-	public function __construct($name, $pluginPath)
-	{
-		$this->pluginName = $name;
-		$this->plugInPath = $pluginPath;
-		// $this->configurationPath = $pluginPath . 'configurations';
-		$this->pathFinder = new \atkwp\helpers\Pathfinder($pluginPath);
-		$this->initService();
-		$this->init();
-		//$this->pathfinder_class = 'WpPathfinder';
-		//parent::__construct($name);
-	}
-	
+    /**
+     * Plugin Initialize function.
+     */
+    public function init()
+    {
+    }
 
-	public function initService() {
-		//$this->app = $this;
-		$this->config = $this->loadConfiguration();
-		// $this->panelCtrl = $this->add(new PanelController($this->getConfig('panel', [])));
-		$this->panelCtrl = new PanelController($this);
-		$this->enqueueCtrl = new EnqueueController($this);
-	}
+    /*--------------------- OUTPUT -------------------------------*/
 
-	public function getDbConnection()
-	{
-		return $this->dbConnection;
-	}
+    /**
+     * Output Panel view in Wp.
+     */
+    public function wpAdminExecute()
+    {
+        global $hook_suffix;
+        $this->wpComponent = $this->componentCtrl->getComponentByType('panel', $hook_suffix, 'hook');
 
-	/**
-	 * Plugin Entry point
-	 * Wordpress plugin file call this function in order to have
-	 * atk4 work under Wordpress.
-	 *
-	 * Will load panel, metab box, widget and shortcode configuration file;
-	 * Setup proper Wp action for each of them;
-	 * Setup WP Ajax.
-	 *
-	 * @throws
-	 */
-	public function boot()
-	{
-		try {
-			$this->panelCtrl->loadPanels();
-//			$this->widgetCtrl->loadWidgets();
-//			$this->metaBoxCtrl->loadMetaBoxes();
-//			$this->shortcodeCtrl->loadShortcodes();
-//			$this->dashboardCtrl->loadDashboards();
-//			add_action('init', [$this, 'wpInit']);
-//			//register ajax action for this plugin
-			add_action("wp_ajax_{$this->pluginName}", [$this, 'wpAjaxExecute']);
-//			//enable Wp ajax front end action.
-//			add_action("wp_ajax_nopriv_{$this->pluginName}", [$this, 'wpAjaxExecute']);
+        try {
+            $app = new AtkWpApp($this);
+            $app->initWpLayout($this->wpComponent);
+            $app->execute();
+        } catch (Exception $e) {
+            $this->caughtException($e);
+        }
+    }
 
-		} catch (Exception $e) {
-			$this->caughtException($e);
-		}
+    /**
+     * Output ajax call in Wp.
+     * This is an overall catch ajax request for Wordpress admin and front.
+     */
+    public function wpAjaxExecute()
+    {
+        $this->ajaxMode = true;
+        $this->wpComponent = $this->componentCtrl->getComponentByKey($_REQUEST['atkwp']);
+        if (isset($_GET['atkshortcode'])) {
+            //$this->stickyGet('atkshortcode');
+        }
 
-	}
+        try {
+            //check_ajax_referer($this->pluginName);
+            $app = new AtkWpApp($this);
+            $app->page = 'admin-ajax';
+            $app->initWpLayout($this->wpComponent);
+            $app->execute($this->ajaxMode);
+        } catch (Exception $e) {
+            $this->caughtException($e);
+        }
+    }
 
-	/*--------------------- OUTPUT -------------------------------*/
+    /**
+     * Output metabox view in Wp.
+     *
+     * @$post    \WP_Post Contains the current post information
+     * @$param   Array Arguments passed into the metabox, contains argument set in config file.
+     */
+    public function wpMetaBoxExecute(\WP_Post $post, array $param)
+    {
+        //set the view to output.
+        $this->wpComponent = $this->componentCtrl->getComponentByType('metaBox', $param['id']);
 
-	/**
-	 * Output Panel view in Wp.
-	 *
-	 */
-	public function wpAdminExecute()
-	{
-		global $hook_suffix;
-		$this->wpComponent = $this->panelCtrl->getPanelUses($hook_suffix);
-		try {
-			$app = new AtkWpApp($this);
-			$app->initWpLayout($this->wpComponent);
-			$app->execute();
-		} catch (\atk4\ui\Exception $e) {
-			$this->caughtException($e);
-		}
-	}
+        $app = new AtkWpApp($this);
+        $metaBox = $app->initWpLayout($this->wpComponent);
+        $metaBox->addMetaArguments($param['args']);
+        $metaBox->setFieldInput($post->ID, $this->componentCtrl);
+        $app->execute();
+    }
 
-	/**
-	 * Output ajax call in Wp.
-	 * This is an overall catch ajax request for Wordpress admin and front.
-	 */
-	public function wpAjaxExecute()
-	{
-		$this->ajaxMode = true;
-		$this->wpComponent = $this->panelCtrl->getPanelUses($_REQUEST['atkwp'], false);
-		if (isset($_GET['atkshortcode'])) {
-			$this->stickyGet('atkshortcode');
-		}
-		//check_ajax_referer($this->pluginName);
-		$app = new AtkWpApp($this);
-		$app->page = 'admin-ajax';
-		$app->initWpLayout($this->wpComponent);
-		$app->execute($this->ajaxMode);
-	}
-
-	/**
-	 * Manually set configuration option.
-	 *
-	 * @param array $config
-	 * @param mixed $val
-	 */
-	public function setConfig($config = array(), $val = UNDEFINED)
-	{
-		if ($val !== UNDEFINED) {
-			return $this->setConfig(array($config => $val));
-		}
-		$this->config = array_merge($this->config ?: array(), $config ?: array());
-	}
-
-	/**
-	 * Load config if necessary and look up corresponding setting.
-	 *
-	 * @param string $path
-	 * @param mixed $default_value
-	 *
-	 * @return string
-	 */
-	public function getConfig($path, $default_value = UNDEFINED)
-	{
-		/*
-		 * For given path such as 'dsn' or 'logger/log_dir' returns
-		 * corresponding config value. Throws ExceptionNotConfigured if not set.
-		 *
-		 * To find out if config is set, do this:
-		 *
-		 * $var_is_set = true;
-		 * try { $app->getConfig($path); } catch ExceptionNotConfigured($e) { $var_is_set=false; }
-		 */
-		$parts = explode('/', $path);
-		$current_position = $this->config;
-		foreach ($parts as $part) {
-			if (!array_key_exists($part, $current_position)) {
-				if ($default_value !== UNDEFINED) {
-					return $default_value;
-				}
-				throw $this->exception('Configuration parameter is missing in config.php', 'NotConfigured')
-				           ->addMoreInfo('config_files_loaded', $this->config_files_loaded)
-				           ->addMoreInfo('missign_line', " \$config['".implode("']['", explode('/', $path))."']");
-			} else {
-				$current_position = $current_position[$part];
-			}
-		}
-
-		return $current_position;
-	}
-
-	private function loadConfiguration() {
-		$loadedConfig = [];
-		foreach ($this->wpConfigFiles as $fileName) {
-			$config = [];
-			if (strpos( $fileName, '.php') != strlen($fileName) - 4) {
-				$fileName .= '.php';
-			}
-			$filePath = $this->pathFinder->getConfigurationPath() . '/' . $fileName;
-
-			if (file_exists($filePath)) {
-				include $filePath;
-			}
-			$loadedConfig = array_merge($loadedConfig, $config);
-		}
-		return $loadedConfig;
-	}
-
-	public function setDbConnection()
-	{
-		//$this->app->setConfig('dsn', 'mysql://'.DB_USER.':'.DB_PASSWORD.'@'.DB_HOST.'/'.DB_NAME)
-		// mysql:host=hostname;dbname=ssldb
-		$dsn = 'mysql:host=' . DB_HOST .';dbname='.DB_NAME;
-		$this->dbConnection = new \atk4\data\Persistence_SQL($dsn,DB_USER, DB_PASSWORD);
-	}
-
-	/**
-	 * Catch exception.
-	 *
-	 * @param mixed $exception
-	 */
-	public function caughtException($exception)
-	{
-		$l = new \atk4\ui\App();
-		$l->initLayout('Centered');
-		if ($exception instanceof \atk4\core\Exception) {
-			$l->layout->template->setHTML('Content', $exception->getHTML());
-		} elseif ($exception instanceof \Error) {
-			$l->layout->add(new View(['ui'=> 'message', get_class($exception).': '.
-			                                            $exception->getMessage().' (in '.$exception->getFile().':'.$exception->getLine().')',
-				'error', ]));
-			$l->layout->add(new Text())->set(nl2br($exception->getTraceAsString()));
-		} else {
-			$l->layout->add(new View(['ui'=>'message', get_class($exception).': '.$exception->getMessage(), 'error']));
-		}
-		$l->layout->template->tryDel('Header');
-		$l->run();
-		$this->run_called = true;
-	}
+    /**
+     * Catch exception.
+     *
+     * @param mixed $exception
+     */
+    public function caughtException($exception)
+    {
+        $l = new \atk4\ui\App();
+        $l->initLayout('Centered');
+        if ($exception instanceof \atk4\core\Exception) {
+            $l->layout->template->setHTML('Content', $exception->getHTML());
+        } elseif ($exception instanceof \Error) {
+            $l->layout->add(new View(['ui'=> 'message', get_class($exception).': '.
+                                                        $exception->getMessage().' (in '.$exception->getFile().':'.$exception->getLine().')',
+                'error', ]));
+            $l->layout->add(new Text())->set(nl2br($exception->getTraceAsString()));
+        } else {
+            $l->layout->add(new View(['ui'=>'message', get_class($exception).': '.$exception->getMessage(), 'error']));
+        }
+        $l->layout->template->tryDel('Header');
+        $l->run();
+        $this->run_called = true;
+    }
 }

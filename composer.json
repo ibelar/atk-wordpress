@@ -1,5 +1,6 @@
 {
   "name": "atk-wordpress",
+  "type": "package",
   "description": "Enable use of agile toolkit library in wordpress",
   "license": "MIT",
   "keywords": ["atk", "wordpress", "atk4/ui"],
@@ -10,7 +11,7 @@
     }
   ],
   "require": {
-    "atk4/ui": "1.2.0-RC1"
+    "atk4/ui": "^1.3"
   },
   "require-dev": {
     "phpunit/phpunit": "4.0.*"
