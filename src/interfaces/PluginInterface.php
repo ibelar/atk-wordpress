@@ -16,7 +16,6 @@
 
 namespace atkwp\interfaces;
 
-
 interface PluginInterface
 {
     /**
@@ -24,17 +23,17 @@ interface PluginInterface
      *
      * @return mixed
      */
-	public function activatePlugin();
+    public function activatePlugin();
 
     /**
      * Worpress deactivated plugin implementation.
      * @return mixed
      */
-	public function deactivatePlugin();
+    public function deactivatePlugin();
 
     /**
      * Wordpress unsinstall plugin implementation.
      * @return mixed
      */
-	public function uninstallPlugin();
+    public function uninstallPlugin();
 }

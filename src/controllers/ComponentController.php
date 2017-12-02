@@ -13,9 +13,9 @@ namespace atkwp\controllers;
 
 use atkwp\helpers\WpUtil;
 use atkwp\interfaces\ComponentCtrlInterface;
+use atkwp\services\EnqueueService;
 use atkwp\services\MetaBoxService;
 use atkwp\services\PanelService;
-use atkwp\services\EnqueueService;
 
 class ComponentController implements ComponentCtrlInterface
 {
@@ -24,7 +24,9 @@ class ComponentController implements ComponentCtrlInterface
     public $componentType = ['panel', 'metaBox', 'shortcode', 'widget'];
     public $componentServices = [];
 
-    public function __construct() {}
+    public function __construct()
+    {
+    }
 
     public function initializeComponents($plugin)
     {
@@ -54,8 +56,6 @@ class ComponentController implements ComponentCtrlInterface
         $this->components[$type] = $components;
     }
 
-
-
     public function getComponentByType($type, $search, $searchKey = 'id')
     {
         $comp = null;
@@ -68,6 +68,7 @@ class ComponentController implements ComponentCtrlInterface
                 }
             }
         }
+
         return $comp;
     }
 
@@ -84,8 +85,6 @@ class ComponentController implements ComponentCtrlInterface
                 return $this->getComponentByKey($search, $subComponents);
             }
         }
-
-        return null;
     }
 
     public function getPostMetaData($postID, $postKey, $single = true)
@@ -93,7 +92,7 @@ class ComponentController implements ComponentCtrlInterface
         return $this->componentServices['metaBoxes']->getPostMetaData($postID, $postKey, $single);
     }
 
-    public function savePostMetaData( $postID, $postKey, $postValue )
+    public function savePostMetaData($postID, $postKey, $postValue)
     {
         $this->componentServices['metaBoxes']->savePostMetaData($postID, $postKey, $postValue);
     }

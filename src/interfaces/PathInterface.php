@@ -2,11 +2,10 @@
 /**
  * Created by abelair.
  * Date: 2017-11-23
- * Time: 1:50 PM
+ * Time: 1:50 PM.
  */
 
 namespace atkwp\interfaces;
-
 
 interface PathInterface
 {

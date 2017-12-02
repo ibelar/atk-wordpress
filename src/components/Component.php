@@ -5,11 +5,9 @@
  * The plugin instance running the atk app will be inject within the app.
  * This mean that when using a component, you can get to your plugin instance using
  * $this->app->plugin
- *
  */
 
 namespace atkwp\components;
-
 
 use atkwp\AtkWpView;
 

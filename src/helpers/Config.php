@@ -2,13 +2,10 @@
 /**
  * Created by abelair.
  * Date: 2017-11-24
- * Time: 10:48 AM
+ * Time: 10:48 AM.
  */
 
 namespace atkwp\helpers;
-
-
-use atkwp\interfaces\PathInterface;
 
 class Config
 {
@@ -24,7 +21,8 @@ class Config
         'config-shortcode',
         'config-widget',
         'config-metabox',
-        'config-dashboard'];
+        'config-dashboard',
+        ];
 
     public function __construct($configPath)
     {
@@ -41,16 +39,16 @@ class Config
     public function setConfig($config = [], $val = UNDEFINED)
     {
         if ($val !== UNDEFINED) {
-            return $this->setConfig(array($config => $val));
+            return $this->setConfig([$config => $val]);
         }
-        $this->config = array_merge($this->config ?: array(), $config ?: array());
+        $this->config = array_merge($this->config ?: [], $config ?: []);
     }
 
     /**
      * Load config if necessary and look up corresponding setting.
      *
      * @param string $path
-     * @param mixed $default_value
+     * @param mixed  $default_value
      *
      * @return string
      */
@@ -72,6 +70,7 @@ class Config
                 if ($default_value !== UNDEFINED) {
                     return $default_value;
                 }
+
                 throw $this->exception('Configuration parameter is missing in config.php', 'NotConfigured')
                            ->addMoreInfo('config_files_loaded', $this->config_files_loaded)
                            ->addMoreInfo('missign_line', " \$config['".implode("']['", explode('/', $path))."']");
@@ -83,14 +82,15 @@ class Config
         return $current_position;
     }
 
-    private function loadConfiguration() {
+    private function loadConfiguration()
+    {
         $loadedConfig = [];
         foreach ($this->wpConfigFiles as $fileName) {
             $config = [];
             if (strpos( $fileName, '.php') != strlen($fileName) - 4) {
                 $fileName .= '.php';
             }
-            $filePath = $this->configPath . '/' . $fileName;
+            $filePath = $this->configPath.'/'.$fileName;
 
             if (file_exists($filePath)) {
                 include $filePath;
@@ -100,3 +100,4 @@ class Config
         return $loadedConfig;
     }
 }
+

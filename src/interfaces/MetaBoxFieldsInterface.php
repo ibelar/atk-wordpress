@@ -2,11 +2,10 @@
 /**
  * Created by abelair.
  * Date: 2017-11-28
- * Time: 1:01 PM
+ * Time: 1:01 PM.
  */
 
 namespace atkwp\interfaces;
-
 
 interface MetaBoxFieldsInterface
 {

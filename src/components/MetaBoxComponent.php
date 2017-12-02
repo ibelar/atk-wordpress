@@ -2,11 +2,10 @@
 /**
  * Created by abelair.
  * Date: 2017-11-20
- * Time: 10:21 AM
+ * Time: 10:21 AM.
  */
 
 namespace atkwp\components;
-
 
 use atkwp\controllers\MetaFieldController;
 use atkwp\interfaces\ComponentCtrlInterface;
@@ -24,13 +23,13 @@ class MetaBoxComponent extends Component
      * Note: You can override this constructor in your plugin file in order to setup your
      * own MetaField controller.
      *
-     * @param null $label
-     * @param null $class
-     * @param MetaFieldInterface|null $fieldCtrl
+     * @param null                      $label
+     * @param null                      $class
+     * @param MetaFieldInterface|null   $fieldCtrl
      */
-    public function __construct( $label = null, $class = null, MetaFieldInterface $fieldCtrl = null)
+    public function __construct($label = null, $class = null, MetaFieldInterface $fieldCtrl = null)
     {
-        parent::__construct( $label, $class );
+        parent::__construct($label, $class);
 
         $this->fieldCtrl = $fieldCtrl;
         if ($this instanceof MetaBoxFieldsInterface) {
@@ -41,14 +40,12 @@ class MetaBoxComponent extends Component
         }
     }
 
-
     public function addMetaArguments($args)
     {
         if ($this instanceof MetaBoxArgumentsInterface) {
             $this->onMetaBoxArguments($args);
         }
     }
-
 
     public function setFieldInput($postId, ComponentCtrlInterface $compCtrl)
     {
@@ -61,6 +58,7 @@ class MetaBoxComponent extends Component
 
     /**
      * Called from the action hook added by the MetaBox service.
+     *
      * @param $postId
      */
     public function savePost($postId, ComponentCtrlInterface $compCtrl)

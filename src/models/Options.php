@@ -2,20 +2,18 @@
 /**
  * Created by abelair.
  * Date: 2017-11-15
- * Time: 1:32 PM
+ * Time: 1:32 PM.
  */
 
 namespace atkwp\models;
-
 
 use atkwp\helpers\WpUtil;
 
 class Options extends \atk4\data\Model
 {
-
     public function init()
     {
-        $this->table = WpUtil::getDbPrefix() . 'options';
+        $this->table = WpUtil::getDbPrefix().'options';
         $this->id_field = 'option_id';
         parent::init();
 

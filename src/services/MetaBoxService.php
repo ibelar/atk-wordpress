@@ -2,7 +2,7 @@
 /**
  * Created by abelair.
  * Date: 2017-11-20
- * Time: 10:12 AM
+ * Time: 10:12 AM.
  */
 
 namespace atkwp\services;
@@ -23,7 +23,7 @@ class MetaBoxService
         $this->setMetaBoxes($metaBoxes);
         $this->loadMetaBoxes();
         //register panel components with ctrl when metaboxes are fully loaded and with hook setting in place.
-        add_action('admin_init', function() {
+        add_action('admin_init', function () {
             $this->ctrl->registerComponents('metaBox', $this->getMetaBoxes());
         });
     }
@@ -46,7 +46,7 @@ class MetaBoxService
     public function setMetaBoxes($metaBoxes)
     {
         //add id key to our panels
-        foreach($metaBoxes as $key => $metaBox) {
+        foreach ($metaBoxes as $key => $metaBox) {
             $metaBoxes[$key]['id'] = $key;
             //hook use by WP when generating a post admin page, i.e. post, page, comments etc.
             //We setup the hook here so our Enqueue service can find this component and load proper js/css files with it.
@@ -58,8 +58,8 @@ class MetaBoxService
     public function registerMetaBox($key, $metabox)
     {
         //create metaBoxes using closure function.
-        add_action('add_meta_boxes', function() use ($key, $metabox) {
-            $args = (isset($metabox['args']))? $metabox['args'] : null;
+        add_action('add_meta_boxes', function () use ($key, $metabox) {
+            $args = (isset($metabox['args'])) ? $metabox['args'] : null;
             add_meta_box(
                 $key,
                 $metabox['title'],
@@ -71,7 +71,7 @@ class MetaBoxService
             );
         });
         //Add save post action
-        add_action('save_post_'.$metabox['type'], [$this, 'savePostType'], 10, 3 );
+        add_action('save_post_'.$metabox['type'], [$this, 'savePostType'], 10, 3);
     }
 
     /**
@@ -89,7 +89,7 @@ class MetaBoxService
         // We do want to catch this for saving our meta field.
         if ($isUpdating) {
             foreach ($this->metaBoxes as $key => $metaBox) {
-                $box = new $metaBox['uses'];
+                $box = new $metaBox['uses']();
                 $box->savePost($postId, $this->ctrl);
             }
         }
@@ -98,6 +98,7 @@ class MetaBoxService
 
     /**
      * Return post meta data value associated to a post.
+     *
      * @param $postID
      * @param $postKey
      * @param bool $single
@@ -111,6 +112,7 @@ class MetaBoxService
 
     /**
      * Save Post meta data value.
+     *
      * @param $postID
      * @param $postKey
      * @param $postValue

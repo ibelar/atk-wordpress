@@ -2,7 +2,7 @@
 /**
  * Created by abelair.
  * Date: 2017-11-28
- * Time: 10:48 AM
+ * Time: 10:48 AM.
  */
 
 namespace atkwp\interfaces;
@@ -13,6 +13,7 @@ interface MetaFieldInterface
 {
     /**
      * AddFields to a Generic field object container, usually an array.
+     *
      * @param $name //the name of the field.
      * @param Generic $field //the atk field instance.
      * @param $baseName //metaKey name for your field in WP db.
@@ -24,6 +25,7 @@ interface MetaFieldInterface
 
     /**
      * Retrieve field from container with Generic field object.
+     *
      * @param $name //the name of the field to retreive.
      *
      * @return Generic FormField
@@ -32,8 +34,8 @@ interface MetaFieldInterface
 
     /**
      * Retrieve all fields from Generic fields container.
+     *
      * @return mixed
      */
     public function getFields();
-
 }
