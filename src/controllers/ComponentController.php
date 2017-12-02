@@ -84,6 +84,7 @@ class ComponentController implements ComponentCtrlInterface
                 return $this->getComponentByKey($search, $subComponents);
             }
         }
+
         return null;
     }
 

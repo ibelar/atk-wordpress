@@ -14,15 +14,6 @@ use atk4\ui\Exception;
 class AtkWp
 {
 
-//	use \atk4\core\InitializerTrait {
-//		init as _init;
-//	}
-//	use \atk4\core\HookTrait;
-//	use \atk4\core\AppScopeTrait;
-//	use \atk4\core\ContainerTrait;
-	// use \atk4\core\TrackableTrait;
-	// use \atk4\core\SessionTrait;
-
 	//The  name of the plugin
 	public $pluginName;
 
@@ -45,25 +36,6 @@ class AtkWp
 
 	//plugin configuration
 	public $config;
-
-	//public $ajaxMode = false;
-
-	//ATK43 init
-	/** When page is determined, it's class instance is created and stored in here */
-	//public $page_object=null;
-
-	/** Class which is used for static pages */
-	//public $page_class='Page';
-
-	/** List of pages which are routed into namespace */
-	//public $namespace_routes = array();
-
-	/** Object for a custom layout, introduced in 4.3 */
-	//public $layout = null;
-
-	/** will contains the app html output when using wp shortcode */
-	//public $appHtmlBuffer;
-
 
     /**
      * AtkWp constructor.
