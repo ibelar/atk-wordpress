@@ -2,195 +2,183 @@
 /**
  * Created by abelair.
  * Date: 2017-06-09
- * Time: 1:04 PM
+ * Time: 1:04 PM.
  */
 
 namespace atkwp;
 
-use atk4\ui\Template;
 use atk4\ui\App;
 use atk4\ui\Persistence\UI;
-use atk4\ui\jQuery;
+use atk4\ui\Template;
 
 class AtkWpApp extends App
 {
+    use \atk4\core\SessionTrait;
 
-	use \atk4\core\SessionTrait;
+    //The pluggin running this app
+    public $plugin;
 
-	// The pluggin running this app
-	public $pluginService;
-	// The html produce by this app
-	public $wpHtml;
-	//The dir location use by this app
-	public $appTemplateLocation = [];
-	// public $appName;
+    //The html produce by this app
+    public $wpHtml;
 
-	public $skin = 'semantic-ui';
+    public $skin = 'semantic-ui';
 
-	public function init()
-	{
-		parent::init();
-	}
-
-	public function __construct(AtkWp $pluginService/*$pluginName, $pluginPath*/)
-	{
-		$this->pluginService = $pluginService;
-		// $this->appName = /*$pluginName*/$pluginService->pluginName;
-		// $this->setAppTemplateLocation(/*$pluginPath*/$pluginService->plugInPath);
-		if (!isset($this->ui_persistence)) {
-			$this->ui_persistence = new UI();
-		}
-		// $this->templateDirPath = $pluginPath . 'vendor/atk-wordpress/src/templates/';
-
-	}
-
-
-
-	public function initWpLayout($component)
-	{
-		$class = '\\'. $component['uses'];
-		//$this->wpHtml = new View(['defaultTemplate' => 'layout.html', 'name' => $this->appName]);
-		$this->wpHtml = new AtkWpView(['defaultTemplate' => 'layout.html', 'name' => $this->pluginService->pluginName]);
-		$this->wpHtml->app = $this;
-		$this->wpHtml->init();
-		$this->wpHtml->add(new $class());
-	}
-
-	/**
-	 * Runs app and echo rendered template.
-	 */
-	public function execute($isAjax = false)
-	{
-		//$this->run_called = true;
-		$this->hook('beforeRender');
-		$this->is_rendering = true;
-		//$this->html->template->set('title', $this->title);
-		$this->wpHtml->renderAll();
-		$this->wpHtml->template->appendHTML('HEAD', $this->getJsReady($this->wpHtml));
-		//$this->wpHtml->getJS(/*$isAjax*/);
-		//$this->wpHtml->template->appendHTML('HEAD', $this->wpHtml->getJS());
-		$this->is_rendering = false;
-		$this->hook('beforeOutput');
-		echo $this->wpHtml->template->render();
-	}
-
-	public function getDbConnection()
+    public function init()
     {
-        return $this->pluginService->getDbConnection();
+        parent::init();
     }
 
-	/**
-	 * Will perform a preemptive output and terminate. Do not use this
-	 * directly, instead call it form Callback, jsCallback or similar
-	 * other classes.
-	 *
-	 * @param string $output
-	 */
-	public function terminate($output = null)
-	{
-		echo $output;
-		$this->run_called = true; // prevent shutdown function from triggering.
-		exit;
-	}
+    public function __construct(AtkWp $plugin)
+    {
+        $this->plugin = $plugin;
+        if (!isset($this->ui_persistence)) {
+            $this->ui_persistence = new UI();
+        }
+    }
 
-	public function url($page = [], $hasRequestUri = false)
-	{
-		// $url = admin_url('admin-ajax.php');
+    public function initWpLayout($component)
+    {
+        $class = '\\'.$component['uses'];
+        $this->wpHtml = new AtkWpView(['defaultTemplate' => 'layout.html', 'name' => $this->plugin->getPluginName()]);
+        $this->wpHtml->app = $this;
+        $this->wpHtml->init();
 
-		$sticky = $this->sticky_get_arguments;
-		$result = [];
+        return $this->wpHtml->add(new $class());
+    }
 
-		if ($this->page === null) {
-			//$this->page = basename($this->getRequestURI(), '.php');
-			$this->page = 'admin-ajax';
-		}
+    /**
+     * Runs app and echo rendered template.
+     */
+    public function execute($isAjax = false)
+    {
+        //$this->run_called = true;
+        $this->hook('beforeRender');
+        $this->is_rendering = true;
+        //$this->html->template->set('title', $this->title);
+        $this->wpHtml->renderAll();
+        $this->wpHtml->template->appendHTML('HEAD', $this->getJsReady($this->wpHtml));
+        //$this->wpHtml->getJS(/*$isAjax*/);
+        //$this->wpHtml->template->appendHTML('HEAD', $this->wpHtml->getJS());
+        $this->is_rendering = false;
+        $this->hook('beforeOutput');
+        echo $this->wpHtml->template->render();
+    }
 
-		if ($this->page === 'admin-ajax') {
-			$sticky['action'] = $this->pluginService->getPluginName();
-			$sticky['atkwp']  = $this->pluginService->getWpComponentId();
-		}
+    public function getDbConnection()
+    {
+        return $this->plugin->getDbConnection();
+    }
 
-		if (is_string($page)) {
-			return $page;
-		}
+    /**
+     * Will perform a preemptive output and terminate. Do not use this
+     * directly, instead call it form Callback, jsCallback or similar
+     * other classes.
+     *
+     * @param string $output
+     */
+    public function terminate($output = null)
+    {
+        echo $output;
+        $this->run_called = true; // prevent shutdown function from triggering.
+        exit;
+    }
 
-		if (!isset($page[0])) {
-			$page[0] = $this->page;
+    public function url($page = [], $hasRequestUri = false)
+    {
+        // $url = admin_url('admin-ajax.php');
+        $sticky = $this->sticky_get_arguments;
+        $result = [];
 
-			if (is_array($sticky) && !empty($sticky)) {
-				foreach ($sticky as $key => $val) {
-					if ($val === true) {
-						if (isset($_GET[$key])) {
-							$val = $_GET[$key];
-						} else {
-							continue;
-						}
-					}
-					if (!isset($result[$key])) {
-						$result[$key] = $val;
-					}
-				}
-			}
-		}
+        if ($this->page === null) {
+            //$this->page = basename($this->getRequestURI(), '.php');
+            $this->page = 'admin-ajax';
+        }
 
-		foreach ($page as $arg => $val) {
-			if ($arg === 0) {
-				continue;
-			}
+        if ($this->page === 'admin-ajax') {
+            $sticky['action'] = $this->plugin->getPluginName();
+            $sticky['atkwp'] = $this->plugin->getWpComponentId();
+        }
 
-			if ($val === null || $val === false) {
-				unset($result[$arg]);
-			} else {
-				$result[$arg] = $val;
-			}
-		}
+        if (is_string($page)) {
+            return $page;
+        }
 
-		$page = $page[0];
+        if (!isset($page[0])) {
+            $page[0] = $this->page;
 
-		$url = $page ? $page.'.php' : '';
+            if (is_array($sticky) && !empty($sticky)) {
+                foreach ($sticky as $key => $val) {
+                    if ($val === true) {
+                        if (isset($_GET[$key])) {
+                            $val = $_GET[$key];
+                        } else {
+                            continue;
+                        }
+                    }
+                    if (!isset($result[$key])) {
+                        $result[$key] = $val;
+                    }
+                }
+            }
+        }
 
-		$args = http_build_query($result);
+        foreach ($page as $arg => $val) {
+            if ($arg === 0) {
+                continue;
+            }
 
-		if ($args) {
-			$url = $url.'?'.$args;
-		}
+            if ($val === null || $val === false) {
+                unset($result[$arg]);
+            } else {
+                $result[$arg] = $val;
+            }
+        }
 
-		return $url;
+        $page = $page[0];
 
-	}
-	
-	public function getJsReady($app_view)
-	{
-		$actions = [];
+        $url = $page ? $page.'.php' : '';
 
-		foreach ($app_view->_js_actions as $eventActions) {
-			foreach ($eventActions as $action) {
-				$actions[] = $action;
-			}
-		}
+        $args = http_build_query($result);
 
-		if (!$actions) {
-			return '';
-		}
+        if ($args) {
+            $url = $url.'?'.$args;
+        }
 
-		$actions['indent'] = '';
-		$ready = new \atk4\ui\jsFunction(['$'], $actions);
+        return $url;
+    }
 
-		return "<script>jQuery(document).ready({$ready->jsRender()})</script>";
-	}
+    public function getJsReady($app_view)
+    {
+        $actions = [];
 
-	/**
-	 * Load template.
-	 *
-	 * @param string $name
-	 *
-	 * @return Template
-	 */
-	public function loadTemplate($name)
-	{
-		$template = new Template();
-		$template->app = $this;
-		return $template->load($this->pluginService->pathFinder->getTemplateLocation($name));
-	}
+        foreach ($app_view->_js_actions as $eventActions) {
+            foreach ($eventActions as $action) {
+                $actions[] = $action;
+            }
+        }
 
+        if (!$actions) {
+            return '';
+        }
+
+        $actions['indent'] = '';
+        $ready = new \atk4\ui\jsFunction(['$'], $actions);
+
+        return "<script>jQuery(document).ready({$ready->jsRender()})</script>";
+    }
+
+    /**
+     * Load template.
+     *
+     * @param string $name
+     *
+     * @return Template
+     */
+    public function loadTemplate($name)
+    {
+        $template = new Template();
+        $template->app = $this;
+
+        return $template->load($this->plugin->getTemplateLocation($name));
+    }
 }

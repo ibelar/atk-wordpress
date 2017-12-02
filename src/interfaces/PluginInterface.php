@@ -16,11 +16,26 @@
 
 namespace atkwp\interfaces;
 
-
-interface Pluggable
+interface PluginInterface
 {
-	public function __construct($name, $path);
-	public function activatePlugin();
-	public function deactivatePlugin();
-	public function uninstallPlugin();
+    /**
+     * Wordpress acrivated plugin implementation.
+     *
+     * @return mixed
+     */
+    public function activatePlugin();
+
+    /**
+     * Worpress deactivated plugin implementation.
+     *
+     * @return mixed
+     */
+    public function deactivatePlugin();
+
+    /**
+     * Wordpress unsinstall plugin implementation.
+     *
+     * @return mixed
+     */
+    public function uninstallPlugin();
 }
