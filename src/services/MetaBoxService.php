@@ -93,7 +93,6 @@ class MetaBoxService
                 $box->savePost($postId, $this->ctrl);
             }
         }
-
     }
 
     /**

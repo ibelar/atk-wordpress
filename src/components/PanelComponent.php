@@ -6,8 +6,6 @@
  */
 
 namespace atkwp\components;
-use atkwp\AtkWpView;
-
 
 class PanelComponent extends Component
 {

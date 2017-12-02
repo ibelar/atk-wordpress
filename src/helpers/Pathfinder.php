@@ -46,21 +46,21 @@ class Pathfinder implements PathInterface
     {
         //When looking for a template file, will look into plugin dir first, then atkwp and finally atkui.
         $this->filesLocation['template']['plugin'] = $path.'templates/';
-        $this->filesLocation['template']['atkwp']  = $path.'vendor/atk-wordpress/templates/';
-        $this->filesLocation['template']['atkui']  = $path.'vendor/atk4/ui/template/'.$skin.'/';
+        $this->filesLocation['template']['atkwp'] = $path.'vendor/atk-wordpress/templates/';
+        $this->filesLocation['template']['atkui'] = $path.'vendor/atk4/ui/template/'.$skin.'/';
     }
 
     private function getFileLocation($type, $fileName)
     {
         foreach ($this->filesLocation[$type] as $dir) {
-            $path = $dir . $fileName;
+            $path = $dir.$fileName;
             if (is_readable($path)) {
                 return $path;
             }
         }
         throw new \atk4\ui\Exception([
             'Unable to get path location for file',
-            'file'=> $fileName
+            'file'=> $fileName,
         ]);
     }
 }

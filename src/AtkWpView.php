@@ -8,4 +8,5 @@
 namespace atkwp;
 
 class AtkWpView extends \atk4\ui\View
-{}
+{
+}

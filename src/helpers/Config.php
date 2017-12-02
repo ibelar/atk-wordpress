@@ -87,7 +87,7 @@ class Config
         $loadedConfig = [];
         foreach ($this->wpConfigFiles as $fileName) {
             $config = [];
-            if (strpos( $fileName, '.php') != strlen($fileName) - 4) {
+            if (strpos($fileName, '.php') != strlen($fileName) - 4) {
                 $fileName .= '.php';
             }
             $filePath = $this->configPath.'/'.$fileName;
@@ -97,7 +97,7 @@ class Config
             }
             $loadedConfig = array_merge($loadedConfig, $config);
         }
+
         return $loadedConfig;
     }
 }
-

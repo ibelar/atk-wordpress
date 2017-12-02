@@ -25,6 +25,7 @@ interface PathInterface
 
     /**
      * Get the assets directory path.
+     *
      * @return mixed
      */
     public function getAssetsPath();

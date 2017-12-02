@@ -30,6 +30,7 @@ class Options extends \atk4\data\Model
         } else {
             $value = $default;
         }
+
         return $value;
     }
 

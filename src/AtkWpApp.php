@@ -7,15 +7,13 @@
 
 namespace atkwp;
 
-use atk4\ui\Template;
 use atk4\ui\App;
-use atk4\ui\Persistence\UI;
-use atk4\ui\jQuery;
 use atkwp\interfaces\ComponentInterface;
+use atk4\ui\Persistence\UI;
+use atk4\ui\Template;
 
 class AtkWpApp extends App
 {
-
     use \atk4\core\SessionTrait;
 
     //The pluggin running this app
@@ -39,14 +37,13 @@ class AtkWpApp extends App
         }
     }
 
-
-
     public function initWpLayout($component)
     {
-        $class = '\\'. $component['uses'];
+        $class = '\\'.$component['uses'];
         $this->wpHtml = new AtkWpView(['defaultTemplate' => 'layout.html', 'name' => $this->plugin->getPluginName()]);
         $this->wpHtml->app = $this;
         $this->wpHtml->init();
+
         return $this->wpHtml->add(new $class());
     }
 
@@ -90,7 +87,6 @@ class AtkWpApp extends App
     public function url($page = [], $hasRequestUri = false)
     {
         // $url = admin_url('admin-ajax.php');
-
         $sticky = $this->sticky_get_arguments;
         $result = [];
 
@@ -150,7 +146,6 @@ class AtkWpApp extends App
         }
 
         return $url;
-
     }
 
     public function getJsReady($app_view)
@@ -184,7 +179,7 @@ class AtkWpApp extends App
     {
         $template = new Template();
         $template->app = $this;
+
         return $template->load($this->plugin->getTemplateLocation($name));
     }
-
 }

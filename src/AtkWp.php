@@ -13,7 +13,6 @@ use atkwp\interfaces\PathInterface;
 
 class AtkWp
 {
-
     //The  name of the plugin
     public $pluginName;
 
@@ -41,8 +40,8 @@ class AtkWp
      * AtkWp constructor.
      *
      * @param $pluginName The name of this plugin.
-     * @param PathInterface         $pathFinder The pathFinder object for retrieving atk template file under WP.
-     * @param ComponentInterface    $ctrl The ctrl object responsible to initialize all WP components.
+     * @param PathInterface      $pathFinder The pathFinder object for retrieving atk template file under WP.
+     * @param ComponentInterface $ctrl The ctrl object responsible to initialize all WP components.
      */
     public function __construct($pluginName, PathInterface $pathFinder, ComponentCtrlInterface $ctrl)
     {
@@ -80,8 +79,8 @@ class AtkWp
 
     public function setDbConnection()
     {
-        $dsn = 'mysql:host=' . DB_HOST .';dbname='.DB_NAME;
-        $this->dbConnection = new Persistence_SQL($dsn,DB_USER, DB_PASSWORD);
+        $dsn = 'mysql:host='.DB_HOST.';dbname='.DB_NAME;
+        $this->dbConnection = new Persistence_SQL($dsn, DB_USER, DB_PASSWORD);
     }
 
     public function getWpComponentId()
@@ -113,30 +112,30 @@ class AtkWp
             //register ajax action for this plugin
             add_action("wp_ajax_{$this->getPluginName()}", [$this, 'wpAjaxExecute']);
 
-//			//enable Wp ajax front end action.
+			//enable Wp ajax front end action.
 //			add_action("wp_ajax_nopriv_{$this->pluginName}", [$this, 'wpAjaxExecute']);
-
         } catch (Exception $e) {
             $this->caughtException($e);
         }
-
     }
 
     /**
      * Plugin Initialize function.
      */
-    public function init() {}
+    public function init()
+    {
+    }
 
     /*--------------------- OUTPUT -------------------------------*/
 
     /**
      * Output Panel view in Wp.
-     *
      */
     public function wpAdminExecute()
     {
         global $hook_suffix;
         $this->wpComponent = $this->componentCtrl->getComponentByType('panel', $hook_suffix, 'hook');
+
         try {
             $app = new AtkWpApp($this);
             $app->initWpLayout($this->wpComponent);
@@ -157,6 +156,7 @@ class AtkWp
         if (isset($_GET['atkshortcode'])) {
             //$this->stickyGet('atkshortcode');
         }
+
         try {
             //check_ajax_referer($this->pluginName);
             $app = new AtkWpApp($this);
@@ -185,9 +185,6 @@ class AtkWp
         $metaBox->setFieldInput($post->ID, $this->componentCtrl);
         $app->execute();
     }
-
-
-
 
     /**
      * Catch exception.

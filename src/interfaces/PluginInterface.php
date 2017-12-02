@@ -27,12 +27,14 @@ interface PluginInterface
 
     /**
      * Worpress deactivated plugin implementation.
+     *
      * @return mixed
      */
     public function deactivatePlugin();
 
     /**
      * Wordpress unsinstall plugin implementation.
+     *
      * @return mixed
      */
     public function uninstallPlugin();

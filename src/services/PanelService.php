@@ -2,7 +2,7 @@
 /**
  * Created by abelair.
  * Date: 2017-06-08
- * Time: 2:58 PM
+ * Time: 2:58 PM.
  */
 
 namespace atkwp\services;
@@ -56,7 +56,7 @@ class PanelService
 
         //register panel components with ctrl ounce fully loaded and with hook setting in place.
         add_action('admin_init', function () {
-           $this->ctrl->registerComponents('panel', $this->getPanels());
+            $this->ctrl->registerComponents('panel', $this->getPanels());
         });
     }
 
@@ -73,7 +73,7 @@ class PanelService
     public function setPanels($panels)
     {
         //add id key to our panels
-        foreach($panels as $key => $panel) {
+        foreach ($panels as $key => $panel) {
             $panels[$key]['id'] = $key;
         }
         $this->panels = $panels;
@@ -95,11 +95,10 @@ class PanelService
     /**
      * This will register the panel within Wordpress by setting the proper action hook.
      * Will take the uses attribute to load (add) the proper panel class.
-     * Will also add sub panel define for a panel
+     * Will also add sub panel define for a panel.
      *
      * @param $key
      * @param $panel
-     *
      */
     protected function registerPanel($key, $panel)
     {
@@ -112,14 +111,13 @@ class PanelService
                     $this->createSubPanelMenu($key, $subPanel);
                 }
             }
-
         });
     }
 
     /**
      * This is the actual implementation of the panel.
      * Registering the add_menu_page action in Wordpress that will render the html for the panel.
-     * When this panel menu is selected, It will run the function $this->executable;
+     * When this panel menu is selected, It will run the function $this->executable.
      *
      * @param $key
      * @param $panel
@@ -163,6 +161,7 @@ class PanelService
         if ($panel['type'] === 'wp-sub-panel') {
             $parentSlug = $panel['parent'];
         }
+
         return $parentSlug;
     }
 
@@ -173,20 +172,23 @@ class PanelService
 
     private function getPanelsByType($type)
     {
-        return array_filter($this->panels, function($panel) use ($type) {
-            if ($panel['type'] === $type) return $panel;
+        return array_filter($this->panels, function ($panel) use ($type) {
+            if ($panel['type'] === $type) {
+                return $panel;
+            }
         });
     }
 
     /**
      * Get sub panel related to a panel.
+     *
      * @param $panelKey
      *
      * @return array
      */
     private function getSubPanels($panelKey)
     {
-        $relatedPanels = array();
+        $relatedPanels = [];
         $subPanels = $this->getPanelsByType('sub-panel');
         if ($subPanels) {
             foreach ($subPanels as $key => $subPanel) {

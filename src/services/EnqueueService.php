@@ -28,7 +28,7 @@ class EnqueueService
         'https://cdnjs.cloudflare.com/ajax/libs/jquery-serialize-object/2.5.0/jquery.serialize-object.min.js',
         'https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.10/semantic.min.js',
         'https://cdn.rawgit.com/mdehoog/Semantic-UI-Calendar/0.0.8/dist/calendar.min.js',
-        'https://cdn.rawgit.com/atk4/ui/1.3.0/public/atk4JS.min.js'
+        'https://cdn.rawgit.com/atk4/ui/1.3.0/public/atk4JS.min.js',
     ];
 
     //the css file to load.
@@ -64,8 +64,9 @@ class EnqueueService
     {
         //Check if this is an atk component.
         //We need to load js and css for atk when using panel or metaBox
-        if ($component = $this->ctrl->getComponentByType('panel', $hook, 'hook')) {}
-        elseif ($component = $this->ctrl->getComponentByType('metaBox', $hook, 'hook')){};
+        if ($component = $this->ctrl->getComponentByType('panel', $hook, 'hook')) {
+        } elseif ($component = $this->ctrl->getComponentByType('metaBox', $hook, 'hook')){
+        }
 
         if (isset($component)) {
             $this->jsFiles = array_merge($this->jsFiles, $this->atkJsFiles);
@@ -126,7 +127,7 @@ class EnqueueService
                 } else {
                     $source = "{$this->assetsUrl}/css/{$file}.css";
                 }
-                wp_enqueue_style( $file, $source, $file );
+                wp_enqueue_style($file, $source, $file);
             }
         }
     }

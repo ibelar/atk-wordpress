@@ -23,9 +23,9 @@ class MetaBoxComponent extends Component
      * Note: You can override this constructor in your plugin file in order to setup your
      * own MetaField controller.
      *
-     * @param null                      $label
-     * @param null                      $class
-     * @param MetaFieldInterface|null   $fieldCtrl
+     * @param null                    $label
+     * @param null                    $class
+     * @param MetaFieldInterface|null $fieldCtrl
      */
     public function __construct($label = null, $class = null, MetaFieldInterface $fieldCtrl = null)
     {

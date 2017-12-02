@@ -7,14 +7,14 @@
 
 namespace atkwp\helpers;
 
-class WpUtil 
+class WpUtil
 {
     static $jQueryVar = 'jQuery';
-    static $jQueryBundle = 'wp-atk4-bundle-jquery.min';
 
     public static function getDbPrefix()
     {
         global $wpdb;
+
         return $wpdb->prefix;
     }
 
@@ -41,10 +41,5 @@ class WpUtil
     public static function getJQueryVar()
     {
         return self::$jQueryVar;
-    }
-
-    public static function getJQueryBundle()
-    {
-        return self::$jQueryBundle;
     }
 }
