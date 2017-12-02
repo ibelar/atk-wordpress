@@ -8,7 +8,7 @@
 namespace atkwp\interfaces;
 
 
-interface ComponentInterface
+interface ComponentCtrlInterface
 {
 
     /**

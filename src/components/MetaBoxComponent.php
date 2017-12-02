@@ -9,7 +9,8 @@ namespace atkwp\components;
 
 
 use atkwp\controllers\MetaFieldController;
-use atkwp\interfaces\ComponentInterface;
+use atkwp\interfaces\ComponentCtrlInterface;
+use atkwp\interfaces\MetaBoxArgumentsInterface;
 use atkwp\interfaces\MetaBoxFieldsInterface;
 use atkwp\interfaces\MetaFieldInterface;
 
@@ -36,12 +37,20 @@ class MetaBoxComponent extends Component
             if (!$this->fieldCtrl) {
                 $this->fieldCtrl = new MetaFieldController();
             }
-            $this->initFields($this->fieldCtrl);
+            $this->onInitMetaBoxFields($this->fieldCtrl);
         }
     }
 
 
-    public function setFieldInput($postId, ComponentInterface $compCtrl)
+    public function addMetaArguments($args)
+    {
+        if ($this instanceof MetaBoxArgumentsInterface) {
+            $this->onMetaBoxArguments($args);
+        }
+    }
+
+
+    public function setFieldInput($postId, ComponentCtrlInterface $compCtrl)
     {
         if ($this->fieldCtrl) {
             foreach ($this->fieldCtrl->getFields() as $key => $field) {
@@ -54,11 +63,11 @@ class MetaBoxComponent extends Component
      * Called from the action hook added by the MetaBox service.
      * @param $postId
      */
-    public function savePost($postId, ComponentInterface $compCtrl)
+    public function savePost($postId, ComponentCtrlInterface $compCtrl)
     {
         if ($this->fieldCtrl) {
             foreach ($this->fieldCtrl->getFields() as $key => $field) {
-                $compCtrl->savePostMetaData($postId, $field->short_name, $this->escapeRawData($key, $_POST[$field->short_name]));
+                $compCtrl->savePostMetaData($postId, $field->short_name, $this->onUpdateMetaFieldRawData($key, $_POST[$field->short_name]));
             }
         }
     }

@@ -7,8 +7,7 @@
 
 namespace atkwp\services;
 
-
-use atkwp\AtkWp;
+use atkwp\interfaces\ComponentCtrlInterface;
 
 class EnqueueService
 {
@@ -39,7 +38,7 @@ class EnqueueService
         'https://cdn.rawgit.com/mdehoog/Semantic-UI-Calendar/0.0.8/dist/calendar.css'
     ];
 
-	public function __construct($ctrl, $enqueueFiles, $url)
+	public function __construct(ComponentCtrlInterface $ctrl, $enqueueFiles, $url)
 	{
 		$this->ctrl = $ctrl;
         $this->assetsUrl = $url;
@@ -146,51 +145,4 @@ class EnqueueService
 			wp_enqueue_style($file);
 		}
 	}
-
-    //	public function init()
-//	{
-//
-//	}
-
-    /**
-     * @return array
-     */
-//	public function getAtkJsFiles()
-//	{
-//		return $this->atkJsFiles;
-//	}
-
-//	public function registerAtkJsFiles($files)
-//	{
-//		//register files.
-//		foreach ($files as $file) {
-//			//atkjs file need wp-init as a dependency.
-//			wp_register_script($file, $this->pluginService->locateURL('js', $file.'.js'), ['jquery']);
-//		}
-//	}
-
-    //	public function enqueueAtkJsInFront()
-//	{
-//		$this->enqueueFiles($this->atkJsFiles, 'js');
-//		$this->enqueueFiles($this->atkCssFiles, 'css');
-//	}
-
-
-    //	public function enqueueJQueryUi()
-//	{
-//		foreach ($this->jQueryUiComponents as $component) {
-//			wp_enqueue_script('jquery-ui-'.$component);
-//		}
-//	}
-
-
-//	public function isAtkPanel($hook)
-//	{
-//		return $this->pluginService->panelCtrl->isAtkPanel($hook);
-//	}
-
-//	public function getAtkPanel($hook)
-//	{
-//		return $this->pluginService->panelCtrl->getAtkPanel($hook);
-//	}
 }

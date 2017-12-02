@@ -8,7 +8,7 @@
 namespace atkwp\services;
 
 use atkwp\AtkWp;
-use atkwp\interfaces\ComponentInterface;
+use atkwp\interfaces\ComponentCtrlInterface;
 
 class MetaBoxService
 {
@@ -18,23 +18,17 @@ class MetaBoxService
     public $metaBoxes = [];
     //public $metaDisplayCount = 0;
 
-    public function __construct(ComponentInterface $ctrl, $metaBoxes, $callable)
+    public function __construct(ComponentCtrlInterface $ctrl, $metaBoxes, $callable)
     {
         $this->ctrl = $ctrl;
         $this->executable = $callable;
         $this->setMetaBoxes($metaBoxes);
         $this->loadMetaBoxes();
         //register panel components with ctrl ounce fully loaded and with hook setting in place.
-        add_action('admin_init', function(){
+        add_action('admin_init', function() {
             $this->ctrl->registerComponents('metaBox', $this->getMetaBoxes());
         });
     }
-
-//    public function setCurrentMetaBox( \WP_Post $post, $args)
-//    {
-//        $this->currentMetaBox['post'] = $post;
-//        $this->currentMetaBox['args'] = $args;
-//    }
 
     /**
      * Load metaBoxes define in our config file.
@@ -97,7 +91,6 @@ class MetaBoxService
         // We do want to catch this for saving our meta field.
         if ($isUpdating) {
             foreach ($this->metaBoxes as $key => $metaBox) {
-                //$box = $this->app->add($metaBox['uses'], ['name'=>$key, 'id'=>$key]);
                 $box = new $metaBox['uses'];
                 $box->savePost($postId, $this->ctrl);
             }

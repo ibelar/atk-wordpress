@@ -19,8 +19,7 @@ namespace atkwp\services;
  * Licensed under MIT
  * =====================================================================*/
 use atkwp\AtkWp;
-use atkwp\controllers\ComponentController;
-use atkwp\interfaces\ComponentInterface;
+use atkwp\interfaces\ComponentCtrlInterface;
 
 /**
  * This service is responsible for loading and registering
@@ -47,7 +46,7 @@ class PanelService
 	//icon base url
     protected $iconUrl;
 
-	public function __construct(ComponentInterface $ctrl, $panels, $callable, $url)
+	public function __construct(ComponentCtrlInterface $ctrl, $panels, $callable, $url)
 	{
 		$this->ctrl = $ctrl;
 		$this->executable = $callable;

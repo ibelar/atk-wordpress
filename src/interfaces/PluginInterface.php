@@ -17,7 +17,7 @@
 namespace atkwp\interfaces;
 
 
-interface Pluggable
+interface PluginInterface
 {
     /**
      * Wordpress acrivated plugin implementation.

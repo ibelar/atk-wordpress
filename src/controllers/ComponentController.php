@@ -12,12 +12,12 @@
 namespace atkwp\controllers;
 
 use atkwp\helpers\WpUtil;
-use atkwp\interfaces\ComponentInterface;
+use atkwp\interfaces\ComponentCtrlInterface;
 use atkwp\services\MetaBoxService;
 use atkwp\services\PanelService;
 use atkwp\services\EnqueueService;
 
-class ComponentController implements ComponentInterface
+class ComponentController implements ComponentCtrlInterface
 {
     //Components use by the plugin
     public $components = [];

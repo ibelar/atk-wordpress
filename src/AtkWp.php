@@ -5,7 +5,7 @@
  */
 
 namespace atkwp;
-use atkwp\interfaces\ComponentInterface;
+use atkwp\interfaces\ComponentCtrlInterface;
 use atkwp\interfaces\PathInterface;
 use atkwp\helpers\Config;
 use atk4\data\Persistence_SQL;
@@ -72,7 +72,7 @@ class AtkWp
      * @param PathInterface $pathFinder The pathFinder object for retrieving atk template file under WP.
      * @param ComponentInterface $ctrl The ctrl object responsible to initialize all WP components.
      */
-	public function __construct($pluginName, PathInterface $pathFinder, ComponentInterface $ctrl)
+	public function __construct($pluginName, PathInterface $pathFinder, ComponentCtrlInterface $ctrl)
 	{
 		$this->pluginName = $pluginName;
 		$this->pathFinder = $pathFinder;
@@ -209,6 +209,7 @@ class AtkWp
 
         $app = new AtkWpApp($this);
         $metaBox = $app->initWpLayout($this->wpComponent);
+        $metaBox->addMetaArguments($param['args']);
         $metaBox->setFieldInput($post->ID, $this->componentCtrl);
         $app->execute();
     }
