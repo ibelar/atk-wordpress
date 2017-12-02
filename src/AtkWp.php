@@ -41,7 +41,7 @@ class AtkWp
      *
      * @param $pluginName The name of this plugin.
      * @param PathInterface      $pathFinder The pathFinder object for retrieving atk template file under WP.
-     * @param ComponentInterface $ctrl The ctrl object responsible to initialize all WP components.
+     * @param ComponentInterface $ctrl  The ctrl object responsible to initialize all WP components.
      */
     public function __construct($pluginName, PathInterface $pathFinder, ComponentCtrlInterface $ctrl)
     {
@@ -112,8 +112,8 @@ class AtkWp
             //register ajax action for this plugin
             add_action("wp_ajax_{$this->getPluginName()}", [$this, 'wpAjaxExecute']);
 
-			//enable Wp ajax front end action.
-//			add_action("wp_ajax_nopriv_{$this->pluginName}", [$this, 'wpAjaxExecute']);
+            //enable Wp ajax front end action.
+            //add_action("wp_ajax_nopriv_{$this->pluginName}", [$this, 'wpAjaxExecute']);
         } catch (Exception $e) {
             $this->caughtException($e);
         }

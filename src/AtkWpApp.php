@@ -8,7 +8,6 @@
 namespace atkwp;
 
 use atk4\ui\App;
-use atkwp\interfaces\ComponentInterface;
 use atk4\ui\Persistence\UI;
 use atk4\ui\Template;
 
@@ -97,7 +96,7 @@ class AtkWpApp extends App
 
         if ($this->page === 'admin-ajax') {
             $sticky['action'] = $this->plugin->getPluginName();
-            $sticky['atkwp']  = $this->plugin->getWpComponentId();
+            $sticky['atkwp'] = $this->plugin->getWpComponentId();
         }
 
         if (is_string($page)) {
