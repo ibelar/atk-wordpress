@@ -41,7 +41,7 @@ class AtkWp
      *
      * @param $pluginName The name of this plugin.
      * @param PathInterface      $pathFinder The pathFinder object for retrieving atk template file under WP.
-     * @param ComponentInterface $ctrl  The ctrl object responsible to initialize all WP components.
+     * @param ComponentInterface $ctrl       The ctrl object responsible to initialize all WP components.
      */
     public function __construct($pluginName, PathInterface $pathFinder, ComponentCtrlInterface $ctrl)
     {
