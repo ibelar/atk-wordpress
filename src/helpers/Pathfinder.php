@@ -58,6 +58,7 @@ class Pathfinder implements PathInterface
                 return $path;
             }
         }
+
         throw new \atk4\ui\Exception([
             'Unable to get path location for file',
             'file'=> $fileName,
