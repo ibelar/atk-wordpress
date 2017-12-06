@@ -44,9 +44,9 @@ class AtkWp
     /**
      * AtkWp constructor.
      *
-     * @param string                 $pluginName the name of this plugin.
+     * @param string                 $pluginName The name of this plugin.
      * @param PathInterface          $pathFinder The pathFinder object for retrieving atk template file under WP.
-     * @param ComponentCtrlInterface $ctrl The ctrl object responsible to initialize all WP components.
+     * @param ComponentCtrlInterface $ctrl       The ctrl object responsible to initialize all WP components.
      */
     public function __construct($pluginName, PathInterface $pathFinder, ComponentCtrlInterface $ctrl)
     {
@@ -169,7 +169,7 @@ class AtkWp
     /**
      * Output metabox view in Wp.
      *
-     * @param \WP_Post $post The wordpress post.
+     * @param \WP_Post $post  The wordpress post.
      * @param array    $param The param set in metabox configuration.
      *
      * @throws Exception

@@ -8,8 +8,6 @@ namespace atkwp\components;
 
 use atk4\ui\Exception;
 use atkwp\AtkWp;
-use atkwp\AtkWpApp;
-use atkwp\AtkWpView;
 
 class WidgetComponent extends \WP_Widget
 {
@@ -53,7 +51,7 @@ class WidgetComponent extends \WP_Widget
         echo $args['before_widget'];
 
         $title = apply_filters('widget_title', $this->widgetConfig['title']);
-        if (!empty( $title)) {
+        if (!empty($title)) {
             echo $args['before_title'].$title.$args['after_title'];
         }
 
