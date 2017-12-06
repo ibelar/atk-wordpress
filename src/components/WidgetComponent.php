@@ -5,7 +5,6 @@
 
 namespace atkwp\components;
 
-
 use atk4\ui\Exception;
 use atkwp\AtkWp;
 
@@ -43,7 +42,6 @@ class WidgetComponent extends \WP_Widget
         $this->widgetConfig = $config;
         //Add the id value to our widget definition.
         $this->widgetConfig['id'] = $id;
-
     }
 
     public function widget($args, $instance)

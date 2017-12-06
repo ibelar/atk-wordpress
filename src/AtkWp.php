@@ -7,8 +7,8 @@ namespace atkwp;
 
 use atk4\data\Persistence_SQL;
 use atk4\ui\Exception;
-use atk4\ui\View;
 use atk4\ui\Text;
+use atk4\ui\View;
 use atkwp\helpers\Config;
 use atkwp\interfaces\ComponentCtrlInterface;
 use atkwp\interfaces\PathInterface;
