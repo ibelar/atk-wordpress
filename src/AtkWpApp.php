@@ -28,7 +28,7 @@ class AtkWpApp extends App
         parent::init();
     }
 
-    public function __construct(AtkWp $plugin)
+    public function __construct(AtkWp $plugin = null)
     {
         $this->plugin = $plugin;
         if (!isset($this->ui_persistence)) {
@@ -36,10 +36,10 @@ class AtkWpApp extends App
         }
     }
 
-    public function initWpLayout($component)
+    public function initWpLayout($component, $layout, $name)
     {
         $class = '\\'.$component['uses'];
-        $this->wpHtml = new AtkWpView(['defaultTemplate' => 'layout.html', 'name' => $this->plugin->getPluginName()]);
+        $this->wpHtml = new AtkWpView(['defaultTemplate' => $layout, 'name' => $name]);
         $this->wpHtml->app = $this;
         $this->wpHtml->init();
 

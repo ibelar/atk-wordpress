@@ -16,6 +16,7 @@ use atkwp\interfaces\ComponentCtrlInterface;
 use atkwp\services\EnqueueService;
 use atkwp\services\MetaBoxService;
 use atkwp\services\PanelService;
+use atkwp\services\WidgetService;
 
 class ComponentController implements ComponentCtrlInterface
 {
@@ -31,6 +32,8 @@ class ComponentController implements ComponentCtrlInterface
     public function initializeComponents($plugin)
     {
         $assetUrl = WpUtil::getPluginUrl('assets', $plugin->pathFinder->getAssetsPath());
+        $this->plugin = $plugin;
+
         $this->componentServices['enqueue'] = new EnqueueService(
             $this,
             $plugin->config->getConfig('enqueue', []),
@@ -48,6 +51,12 @@ class ComponentController implements ComponentCtrlInterface
             $this,
             $plugin->config->getConfig('metabox', []),
             [$plugin, 'wpMetaBoxExecute']
+        );
+
+        $this->componentServices['widget'] = new WidgetService(
+            $this,
+            $plugin->config->getConfig('widget', []),
+            $plugin
         );
     }
 

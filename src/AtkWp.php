@@ -10,6 +10,8 @@ use atk4\ui\Exception;
 use atkwp\helpers\Config;
 use atkwp\interfaces\ComponentCtrlInterface;
 use atkwp\interfaces\PathInterface;
+use atk4\ui\View;
+use atk4\ui\Text;
 
 class AtkWp
 {
@@ -23,6 +25,9 @@ class AtkWp
 
     //Whether initialized_layout is bypass or not.
     public $isLayoutNeedInitialise = true;
+
+    //wp default layout template.
+    public $defaultLayout = 'layout.html';
 
     //the current wp view to output. ( Ex: admin panel, shortcode or metabox)
     public $wpComponent;
@@ -39,9 +44,9 @@ class AtkWp
     /**
      * AtkWp constructor.
      *
-     * @param $pluginName The name of this plugin.
-     * @param PathInterface      $pathFinder The pathFinder object for retrieving atk template file under WP.
-     * @param ComponentInterface $ctrl       The ctrl object responsible to initialize all WP components.
+     * @param string $pluginName the name of this plugin.
+     * @param PathInterface $pathFinder The pathFinder object for retrieving atk template file under WP.
+     * @param ComponentCtrlInterface $ctrl The ctrl object responsible to initialize all WP components.
      */
     public function __construct($pluginName, PathInterface $pathFinder, ComponentCtrlInterface $ctrl)
     {
@@ -97,26 +102,19 @@ class AtkWp
      * Setup proper Wp action for each of them;
      * Setup WP Ajax.
      *
-     * @throws
+     * @param string $filePath the path to wp plugin file.
      */
     public function boot($filePath)
     {
-        try {
-            //setup plugin activation / deactivation hook.
-            register_activation_hook($filePath, [$this, 'activatePlugin']);
-            register_deactivation_hook($filePath, [$this, 'deactivatePlugin']);
+        //setup plugin activation / deactivation hook.
+        register_activation_hook($filePath, [$this, 'activatePlugin']);
+        register_deactivation_hook($filePath, [$this, 'deactivatePlugin']);
 
-            //setup component services.
-            $this->componentCtrl->initializeComponents($this);
+        //setup component services.
+        $this->componentCtrl->initializeComponents($this);
 
-            //register ajax action for this plugin
-            add_action("wp_ajax_{$this->getPluginName()}", [$this, 'wpAjaxExecute']);
-
-            //enable Wp ajax front end action.
-            //add_action("wp_ajax_nopriv_{$this->pluginName}", [$this, 'wpAjaxExecute']);
-        } catch (Exception $e) {
-            $this->caughtException($e);
-        }
+        //register ajax action for this plugin
+        add_action("wp_ajax_{$this->getPluginName()}", [$this, 'wpAjaxExecute']);
     }
 
     /**
@@ -138,9 +136,9 @@ class AtkWp
 
         try {
             $app = new AtkWpApp($this);
-            $app->initWpLayout($this->wpComponent);
+            $app->initWpLayout($this->wpComponent, $this->defaultLayout, $this->pluginName);
             $app->execute();
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             $this->caughtException($e);
         }
     }
@@ -161,9 +159,9 @@ class AtkWp
             //check_ajax_referer($this->pluginName);
             $app = new AtkWpApp($this);
             $app->page = 'admin-ajax';
-            $app->initWpLayout($this->wpComponent);
+            $app->initWpLayout($this->wpComponent, $this->defaultLayout, $this->pluginName);
             $app->execute($this->ajaxMode);
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             $this->caughtException($e);
         }
     }
@@ -171,42 +169,70 @@ class AtkWp
     /**
      * Output metabox view in Wp.
      *
-     * @$post    \WP_Post Contains the current post information
-     * @$param   Array Arguments passed into the metabox, contains argument set in config file.
+     * @param \WP_Post $post The wordpress post.
+     * @param array $param The param set in metabox configuration.
+     *
+     * @throws Exception
      */
-    public function wpMetaBoxExecute(\WP_Post $post, array $param)
+    public function wpMetaBoxExecute(\WP_Post $post, Array $param)
     {
         //set the view to output.
         $this->wpComponent = $this->componentCtrl->getComponentByType('metaBox', $param['id']);
 
+        try {
+            $app = new AtkWpApp($this);
+            $metaBox = $app->initWpLayout($this->wpComponent, $this->defaultLayout, $this->pluginName);
+            $metaBox->addMetaArguments($param['args']);
+            $metaBox->setFieldInput($post->ID, $this->componentCtrl);
+            $app->execute();
+        } catch (\Exception $e) {
+            $this->caughtException($e);
+        }
+    }
+
+    /**
+     * Create a new Atk View.
+     * This view is fully initialize with an atk application.
+     * WidgetComponent use this to create a view for Widget.
+     *  - You can echo this view using $view->app->execute().
+     *
+     * @param string $template the template to use with this view.
+     * @param string $name the name of the application.
+     *
+     * @return \atk4\ui\View
+     */
+    public function newAtkAppView($template = 'layout.html', $name)
+    {
+        $this->wpComponent['uses'] = 'atk4\ui\View';
         $app = new AtkWpApp($this);
-        $metaBox = $app->initWpLayout($this->wpComponent);
-        $metaBox->addMetaArguments($param['args']);
-        $metaBox->setFieldInput($post->ID, $this->componentCtrl);
-        $app->execute();
+
+        return $app->initWpLayout($this->wpComponent, $template, $name);
     }
 
     /**
      * Catch exception.
      *
-     * @param mixed $exception
+     * @param $exception
+     *
+     * @throws Exception
      */
     public function caughtException($exception)
     {
-        $l = new \atk4\ui\App();
-        $l->initLayout('Centered');
+        $view = $this->newAtkAppView('layout.html', $this->pluginName);
         if ($exception instanceof \atk4\core\Exception) {
-            $l->layout->template->setHTML('Content', $exception->getHTML());
+            $view->template->setHTML('Content', $exception->getHTML());
         } elseif ($exception instanceof \Error) {
-            $l->layout->add(new View(['ui'=> 'message', get_class($exception).': '.
-                                                        $exception->getMessage().' (in '.$exception->getFile().':'.$exception->getLine().')',
-                'error', ]));
-            $l->layout->add(new Text())->set(nl2br($exception->getTraceAsString()));
+            $view->add(new View([
+                'ui'=> 'message',
+                get_class($exception).': '.$exception->getMessage().' (in '.$exception->getFile().':'.$exception->getLine().')',
+                'error',
+                ])
+            );
+            $view->add(new Text())->set(nl2br($exception->getTraceAsString()));
         } else {
-            $l->layout->add(new View(['ui'=>'message', get_class($exception).': '.$exception->getMessage(), 'error']));
+            $view->add(new View(['ui'=>'message', get_class($exception).': '.$exception->getMessage(), 'error']));
         }
-        $l->layout->template->tryDel('Header');
-        $l->run();
-        $this->run_called = true;
+        $view->template->tryDel('Header');
+        $view->app->execute();
     }
 }
