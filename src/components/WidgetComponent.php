@@ -1,8 +1,6 @@
 <?php
 /**
- * Created by abelair.
- * Date: 2017-12-03
- * Time: 10:57 AM
+ * Wordpress Widget.
  */
 
 namespace atkwp\components;
@@ -33,16 +31,16 @@ class WidgetComponent extends \WP_Widget
      * @param array $config
      * @param AtkWp $plugin
      */
-    public function initializeWidget($id, Array $config, AtkWp $plugin)
+    public function initializeWidget($id, array $config, AtkWp $plugin)
     {
         $this->plugin = $plugin;
         $this->name = $config['title'];
         //make sure our id_base is unique
-        $this->id_base      = $plugin->name . '_wdg_' . $id;
+        $this->id_base = $plugin->name.'_wdg_'.$id;
         //Widget option_name in Option table that will hold the widget instance field value.
-        $this->option_name = 'widget_' . $this->id_base;
-        $this->widget_options   = wp_parse_args($config['widget_ops'], ['classname' => $this->option_name]);
-        $this->control_options  = wp_parse_args($config['widget_control_ops'], ['id_base' => $this->id_base]);
+        $this->option_name = 'widget_'.$this->id_base;
+        $this->widget_options = wp_parse_args($config['widget_ops'], ['classname' => $this->option_name]);
+        $this->control_options = wp_parse_args($config['widget_control_ops'], ['id_base' => $this->id_base]);
         // Our widget definition
         $this->widgetConfig = $config;
         //Add the id value to our widget definition.
@@ -55,7 +53,7 @@ class WidgetComponent extends \WP_Widget
         echo $args['before_widget'];
 
         $title = apply_filters('widget_title', $this->widgetConfig['title']);
-        if (!empty( $title )) {
+        if (!empty( $title)) {
             echo $args['before_title'].$title.$args['after_title'];
         }
 

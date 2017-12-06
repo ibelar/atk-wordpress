@@ -5,8 +5,8 @@
 
 namespace atkwp\ui;
 
-use atk4\ui\View;
 use atk4\ui\Template;
+use atk4\ui\View;
 use atkwp\components\Component;
 
 class Input extends Component
@@ -33,7 +33,7 @@ class Input extends Component
 
     public function renderView()
     {
-        $location = ($this->wpClass === 'widefat')? 'in_label' : 'out_label';
+        $location = ($this->wpClass === 'widefat') ? 'in_label' : 'out_label';
         $input = new View(['template' => new Template('{Input}<input class="{$class}" type="{input_type}text{/}" {$input_attributes}/>{/}')]);
         $input->template->setHTML('Input', $this->getInput());
         $input->content = null;

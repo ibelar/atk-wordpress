@@ -7,11 +7,11 @@ namespace atkwp;
 
 use atk4\data\Persistence_SQL;
 use atk4\ui\Exception;
+use atk4\ui\View;
+use atk4\ui\Text;
 use atkwp\helpers\Config;
 use atkwp\interfaces\ComponentCtrlInterface;
 use atkwp\interfaces\PathInterface;
-use atk4\ui\View;
-use atk4\ui\Text;
 
 class AtkWp
 {
@@ -44,8 +44,8 @@ class AtkWp
     /**
      * AtkWp constructor.
      *
-     * @param string $pluginName the name of this plugin.
-     * @param PathInterface $pathFinder The pathFinder object for retrieving atk template file under WP.
+     * @param string                 $pluginName the name of this plugin.
+     * @param PathInterface          $pathFinder The pathFinder object for retrieving atk template file under WP.
      * @param ComponentCtrlInterface $ctrl The ctrl object responsible to initialize all WP components.
      */
     public function __construct($pluginName, PathInterface $pathFinder, ComponentCtrlInterface $ctrl)
@@ -170,11 +170,11 @@ class AtkWp
      * Output metabox view in Wp.
      *
      * @param \WP_Post $post The wordpress post.
-     * @param array $param The param set in metabox configuration.
+     * @param array    $param The param set in metabox configuration.
      *
      * @throws Exception
      */
-    public function wpMetaBoxExecute(\WP_Post $post, Array $param)
+    public function wpMetaBoxExecute(\WP_Post $post, array $param)
     {
         //set the view to output.
         $this->wpComponent = $this->componentCtrl->getComponentByType('metaBox', $param['id']);
@@ -197,11 +197,11 @@ class AtkWp
      *  - You can echo this view using $view->app->execute().
      *
      * @param string $template the template to use with this view.
-     * @param string $name the name of the application.
+     * @param string $name     the name of the application.
      *
      * @return \atk4\ui\View
      */
-    public function newAtkAppView($template = 'layout.html', $name)
+    public function newAtkAppView($template, $name)
     {
         $this->wpComponent['uses'] = 'atk4\ui\View';
         $app = new AtkWpApp($this);

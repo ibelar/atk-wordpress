@@ -1,14 +1,10 @@
 <?php
 /**
- * Created by abelair.
- * Date: 2017-12-03
- * Time: 11:06 AM
+ * Setup Wordpress to use Widget with atk.
  */
 
 namespace atkwp\services;
 
-use atkwp\AtkWpApp;
-use atkwp\AtkWpView;
 use atkwp\interfaces\ComponentCtrlInterface;
 
 class WidgetService
@@ -42,12 +38,13 @@ class WidgetService
      * Register each widget within Wordpress.
      * Once register perform initialisation on them in order
      * for Wordpress widget class to work with atk.
+     *
      * @param $id
      * @param $widget
      */
     public function registerWidget($id, $widget)
     {
-        add_action('widgets_init', function() use ($id, $widget) {
+        add_action('widgets_init', function () use ($id, $widget) {
             global $wp_widget_factory;
             register_widget($widget['uses']);
             //get latest create widget in widget factory
