@@ -52,9 +52,9 @@ interface ComponentCtrlInterface
     /**
      * Get meta data attach to a post.
      *
-     * @param integer $postId The post id.
-     * @param string  $key    The meta key set in db to retrieve value for.
-     * @param bool    $single Return single or multiple value.
+     * @param int    $postId The post id.
+     * @param string $key    The meta key set in db to retrieve value for.
+     * @param bool   $single Return single or multiple value.
      *
      * @return mixed Will be an array if single is false, otherwise will be a value.
      */
@@ -63,9 +63,9 @@ interface ComponentCtrlInterface
     /**
      * Save meta data attach to a post.
      *
-     * @param integer $postID
-     * @param string  $postKey
-     * @param mixed   $postValue
+     * @param int    $postID
+     * @param string $postKey
+     * @param mixed  $postValue
      *
      * @return mixed
      */
