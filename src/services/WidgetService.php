@@ -5,6 +5,7 @@
 
 namespace atkwp\services;
 
+use atkwp\AtkWp;
 use atkwp\interfaces\ComponentCtrlInterface;
 
 class WidgetService
@@ -12,6 +13,13 @@ class WidgetService
     private $ctrl;
     private $plugin;
 
+    /**
+     * WidgetService constructor.
+     *
+     * @param ComponentCtrlInterface $ctrl
+     * @param array                  $widgets
+     * @param AtkWp                  $plugin
+     */
     public function __construct(ComponentCtrlInterface $ctrl, $widgets, $plugin)
     {
         $this->ctrl = $ctrl;

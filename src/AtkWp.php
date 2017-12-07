@@ -138,7 +138,7 @@ class AtkWp
             $app = new AtkWpApp($this);
             $app->initWpLayout($this->wpComponent, $this->defaultLayout, $this->pluginName);
             $app->execute();
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->caughtException($e);
         }
     }
@@ -161,7 +161,7 @@ class AtkWp
             $app->page = 'admin-ajax';
             $app->initWpLayout($this->wpComponent, $this->defaultLayout, $this->pluginName);
             $app->execute($this->ajaxMode);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->caughtException($e);
         }
     }
@@ -185,7 +185,7 @@ class AtkWp
             $metaBox->addMetaArguments($param['args']);
             $metaBox->setFieldInput($post->ID, $this->componentCtrl);
             $app->execute();
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->caughtException($e);
         }
     }
