@@ -32,12 +32,12 @@ interface WidgetInterface
      * This method will be called prior to echo the html for this view, allowing
      * developer to add field input to the view.
      *
-     * @param AtkWpView $view
+     * @param View  $view
      * @param array $instance
      *
-     * @return AtkWpView $view The view to echo in form() method.
-     *
      * @throws Exception
+     *
+     * @return AtkWpView $view The view to echo in form() method.
      */
     public function onForm(View $view, $instance);
 

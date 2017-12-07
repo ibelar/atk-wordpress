@@ -71,14 +71,13 @@ class ComponentController implements ComponentCtrlInterface
     /**
      * Add components created by services to the list of components.
      *
-     * @param string   $type        The component type.
-     * @param array    $components  The array containing all components of this type.
+     * @param string $type       The component type.
+     * @param array  $components The array containing all components of this type.
      */
     public function registerComponents($type, array $components)
     {
         $this->components[$type] = $components;
     }
-
 
     /**
      * Get a component using it's type and a key - value.
@@ -104,7 +103,6 @@ class ComponentController implements ComponentCtrlInterface
 
         return $comp;
     }
-
 
     /**
      * Return a component from the components array.
@@ -143,8 +141,8 @@ class ComponentController implements ComponentCtrlInterface
         return $this->componentServices['metaBoxes']->getPostMetaData($postID, $postKey, $single);
     }
 
-
     /**
+     * Save meta data associated to a post.
      *
      * @param int    $postID
      * @param string $postKey

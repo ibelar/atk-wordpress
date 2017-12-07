@@ -17,7 +17,6 @@ interface ComponentCtrlInterface
      * hook action function needed for creating wordpress components.
      *
      * @param AtkWp $plugin
-     *
      */
     public function initializeComponents(AtkWp $plugin);
 
@@ -32,9 +31,9 @@ interface ComponentCtrlInterface
     /**
      * Get a component by type from the component container.
      *
-     * @param string $type        The type of component to search.
-     * @param string $search      The value to search for.
-     * @param string $searchKey   The key use to search, default to id.
+     * @param string $type      The type of component to search.
+     * @param string $search    The value to search for.
+     * @param string $searchKey The key use to search, default to id.
      *
      * @return array||null The component definition.
      */
@@ -55,7 +54,7 @@ interface ComponentCtrlInterface
      *
      * @param integer $postId The post id.
      * @param string  $key    The meta key set in db to retrieve value for.
-     * @param boolean $single Return single or multiple value.
+     * @param bool    $single Return single or multiple value.
      *
      * @return mixed Will be an array if single is false, otherwise will be a value.
      */
@@ -63,6 +62,7 @@ interface ComponentCtrlInterface
 
     /**
      * Save meta data attach to a post.
+     *
      * @param integer $postID
      * @param string  $postKey
      * @param mixed   $postValue

@@ -120,9 +120,9 @@ class MetaBoxService
     /**
      * Return post meta data value associated to a post.
      *
-     * @param integer $postID
-     * @param string  $postKey
-     * @param bool    $single
+     * @param int    $postID
+     * @param string $postKey
+     * @param bool   $single
      *
      * @return mixed
      */
@@ -134,9 +134,9 @@ class MetaBoxService
     /**
      * Save Post meta data value.
      *
-     * @param integer $postID
-     * @param string  $postKey
-     * @param mixed   $postValue
+     * @param int    $postID
+     * @param string $postKey
+     * @param mixed  $postValue
      *
      * @return mixed
      */
