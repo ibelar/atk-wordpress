@@ -11,7 +11,6 @@ use atkwp\AtkWp;
 
 interface ComponentCtrlInterface
 {
-
     /**
      * Create and initialized all Wordpress service, i.e.
      * hook action function needed for creating wordpress components.
