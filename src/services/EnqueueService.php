@@ -1,8 +1,6 @@
 <?php
 /**
- * Created by abelair.
- * Date: 2017-06-09
- * Time: 2:07 PM.
+ * This service is responsible to load js and css file within WP.
  */
 
 namespace atkwp\services;
@@ -60,6 +58,11 @@ class EnqueueService
         }
     }
 
+    /**
+     * WP action function when running under admin mode.
+     *
+     * @param $hook
+     */
     public function enqueueAdminFiles($hook)
     {
         //Check if this is an atk component.
@@ -95,6 +98,9 @@ class EnqueueService
         }
     }
 
+    /**
+     * WP action function when running in front end.
+     */
     public function enqueueFrontFiles()
     {
         if (!empty($this->jsFiles)) {
@@ -108,6 +114,13 @@ class EnqueueService
         }
     }
 
+    /**
+     * The actual file inclusion in WP.
+     *
+     * @param array  $files    The list of files to include.
+     * @param string $type     The type of file to include, js or css.
+     * @param null   $required The required file to include if needed.
+     */
     public function enqueueFiles($files, $type, $required = null)
     {
         if ($type === 'js') {
@@ -132,14 +145,24 @@ class EnqueueService
         }
     }
 
-    public function enqueueJsInclude($files)
+    /**
+     * The js files to includes that are already registered within WP.
+     *
+     * @param array $files
+     */
+    public function enqueueJsInclude(array $files)
     {
         foreach ($files as $file) {
             wp_enqueue_script($file);
         }
     }
 
-    public function enqueueCssInclude($files)
+    /**
+     * The css files to include that are already registered withing WP.
+     *
+     * @param array $files
+     */
+    public function enqueueCssInclude(array $files)
     {
         foreach ($files as $file) {
             wp_enqueue_style($file);

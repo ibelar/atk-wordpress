@@ -11,11 +11,13 @@
 
 namespace atkwp\controllers;
 
+use atkwp\AtkWp;
 use atkwp\helpers\WpUtil;
 use atkwp\interfaces\ComponentCtrlInterface;
 use atkwp\services\EnqueueService;
 use atkwp\services\MetaBoxService;
 use atkwp\services\PanelService;
+use atkwp\services\WidgetService;
 
 class ComponentController implements ComponentCtrlInterface
 {
@@ -28,9 +30,18 @@ class ComponentController implements ComponentCtrlInterface
     {
     }
 
-    public function initializeComponents($plugin)
+    /**
+     * Implementation of WP services.
+     * Each service wired together WP action hook or function in order to
+     * create their corresponding components base on configuration setup.
+     *
+     * @param AtkWp $plugin
+     */
+    public function initializeComponents(AtkWp $plugin)
     {
         $assetUrl = WpUtil::getPluginUrl('assets', $plugin->pathFinder->getAssetsPath());
+        $this->plugin = $plugin;
+
         $this->componentServices['enqueue'] = new EnqueueService(
             $this,
             $plugin->config->getConfig('enqueue', []),
@@ -49,13 +60,34 @@ class ComponentController implements ComponentCtrlInterface
             $plugin->config->getConfig('metabox', []),
             [$plugin, 'wpMetaBoxExecute']
         );
+
+        $this->componentServices['widget'] = new WidgetService(
+            $this,
+            $plugin->config->getConfig('widget', []),
+            $plugin
+        );
     }
 
-    public function registerComponents($type, $components)
+    /**
+     * Add components created by services to the list of components.
+     *
+     * @param string $type       The component type.
+     * @param array  $components The array containing all components of this type.
+     */
+    public function registerComponents($type, array $components)
     {
         $this->components[$type] = $components;
     }
 
+    /**
+     * Get a component using it's type and a key - value.
+     *
+     * @param string $type
+     * @param string $search
+     * @param string $searchKey
+     *
+     * @return array|null
+     */
     public function getComponentByType($type, $search, $searchKey = 'id')
     {
         $comp = null;
@@ -72,6 +104,14 @@ class ComponentController implements ComponentCtrlInterface
         return $comp;
     }
 
+    /**
+     * Return a component from the components array.
+     *
+     * @param string $search
+     * @param array  $components
+     *
+     * @return array|mixed
+     */
     public function getComponentByKey($search, $components = [])
     {
         if (empty($components)) {
@@ -87,13 +127,31 @@ class ComponentController implements ComponentCtrlInterface
         }
     }
 
+    /**
+     * Get meta data value associated to a post.
+     *
+     * @param int    $postID
+     * @param string $postKey
+     * @param bool   $single
+     *
+     * @return mixed
+     */
     public function getPostMetaData($postID, $postKey, $single = true)
     {
         return $this->componentServices['metaBoxes']->getPostMetaData($postID, $postKey, $single);
     }
 
+    /**
+     * Save meta data associated to a post.
+     *
+     * @param int    $postID
+     * @param string $postKey
+     * @param mixed  $postValue
+     *
+     * @return mixed
+     */
     public function savePostMetaData($postID, $postKey, $postValue)
     {
-        $this->componentServices['metaBoxes']->savePostMetaData($postID, $postKey, $postValue);
+        return $this->componentServices['metaBoxes']->savePostMetaData($postID, $postKey, $postValue);
     }
 }

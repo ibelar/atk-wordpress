@@ -1,8 +1,7 @@
 <?php
 /**
- * Created by abelair.
- * Date: 2017-11-20
- * Time: 10:12 AM.
+ * Responsible for creating and registering all WP action
+ * needed for metaboxes.
  */
 
 namespace atkwp\services;
@@ -16,12 +15,19 @@ class MetaBoxService
 
     public $metaBoxes = [];
 
+    /**
+     * MetaBoxService constructor.
+     *
+     * @param ComponentCtrlInterface $ctrl      The component ctrl.
+     * @param array                  $metaBoxes The list of metaboxes as defined in configuration.
+     * @param callable               $callable  The executable need to run the metaboxes in WP.
+     */
     public function __construct(ComponentCtrlInterface $ctrl, $metaBoxes, $callable)
     {
         $this->ctrl = $ctrl;
         $this->executable = $callable;
         $this->setMetaBoxes($metaBoxes);
-        $this->loadMetaBoxes();
+        $this->registerMetaBoxes();
         //register panel components with ctrl when metaboxes are fully loaded and with hook setting in place.
         add_action('admin_init', function () {
             $this->ctrl->registerComponents('metaBox', $this->getMetaBoxes());
@@ -29,20 +35,10 @@ class MetaBoxService
     }
 
     /**
-     * Load metaBoxes define in our config file.
+     * Perform some initialisation to our metaboxes prior to register them.
+     *
+     * @param array $metaBoxes
      */
-    public function loadMetaBoxes()
-    {
-        foreach ($this->metaBoxes as $key => $metaBox) {
-            $this->registerMetaBox($key, $metaBox);
-        }
-    }
-
-    public function getMetaBoxes()
-    {
-        return $this->metaBoxes;
-    }
-
     public function setMetaBoxes($metaBoxes)
     {
         //add id key to our panels
@@ -55,6 +51,32 @@ class MetaBoxService
         $this->metaBoxes = $metaBoxes;
     }
 
+    /**
+     * Registers each metaboxes within WP.
+     */
+    public function registerMetaBoxes()
+    {
+        foreach ($this->metaBoxes as $key => $metaBox) {
+            $this->registerMetaBox($key, $metaBox);
+        }
+    }
+
+    /**
+     * Return all metaboxes.
+     *
+     * @return array
+     */
+    public function getMetaBoxes()
+    {
+        return $this->metaBoxes;
+    }
+
+    /**
+     * Create WP action to define metabox.
+     *
+     * @param string $key     The metabox id.
+     * @param array  $metabox The metabox configuration.
+     */
     public function registerMetaBox($key, $metabox)
     {
         //create metaBoxes using closure function.
@@ -79,7 +101,7 @@ class MetaBoxService
      * Redirection is done prior of adding metaBox to this app.
      *
      * In order to delegate the saving of metaBox field to the metaBox class, we
-     * need to rebuild them within our app and call the savePost function.
+     * need to rebuild and call their savePost function.
      *
      * @param $post \WP_Post
      */
@@ -98,9 +120,9 @@ class MetaBoxService
     /**
      * Return post meta data value associated to a post.
      *
-     * @param $postID
-     * @param $postKey
-     * @param bool $single
+     * @param int    $postID
+     * @param string $postKey
+     * @param bool   $single
      *
      * @return mixed
      */
@@ -112,12 +134,14 @@ class MetaBoxService
     /**
      * Save Post meta data value.
      *
-     * @param $postID
-     * @param $postKey
-     * @param $postValue
+     * @param int    $postID
+     * @param string $postKey
+     * @param mixed  $postValue
+     *
+     * @return mixed
      */
     public function savePostMetaData($postID, $postKey, $postValue)
     {
-        update_post_meta($postID, $postKey, $postValue);
+        return update_post_meta($postID, $postKey, $postValue);
     }
 }
