@@ -178,6 +178,7 @@ class AtkWp
     public function wpDashboardExecute($key, $dashboard, $configureMode = false)
     {
         $this->wpComponent = $this->componentCtrl->searchComponentByType('dashboard', $dashboard['id']);
+
         try {
             $app = new AtkWpApp($this);
             $app->initWpLayout($this->wpComponent, $this->defaultLayout, $this->pluginName, ['configureMode' => $configureMode]);

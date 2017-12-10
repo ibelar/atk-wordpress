@@ -15,7 +15,6 @@ class DashboardService
 
     public $dashboards = [];
 
-
     public function __construct(ComponentCtrlInterface $ctrl, array $dashboards, $callable)
     {
         $this->ctrl = $ctrl;
