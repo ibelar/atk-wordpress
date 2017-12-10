@@ -86,7 +86,8 @@ class ComponentController implements ComponentCtrlInterface
         $this->components[$type] = $components;
     }
 
-    public function getComponentsByType($type) {
+    public function getComponentsByType($type)
+    {
         return $this->components[$type];
     }
 

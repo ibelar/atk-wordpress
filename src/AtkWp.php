@@ -167,11 +167,11 @@ class AtkWp
     }
 
     /**
-     * Dashboard output
+     * Dashboard output.
      *
-     * @param $key
-     * @param $dashboard
-     * @param bool $needForm
+     * @param string $key
+     * @param aray   $dashboard
+     * @param bool   $configureMode
      *
      * @throws Exception
      */

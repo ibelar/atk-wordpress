@@ -62,22 +62,22 @@ class DashboardService
     /**
      * The actual dashboard registration in Wp.
      *
-     * @param $key
-     * @param $dashboard
+     * @param string $key
+     * @param array  $dashboard
      */
     public function registerDashboard($key, $dashboard)
     {
         $configureCallback = null;
         //create metaBoxes using closure function.
-        add_action('wp_dashboard_setup', function() use ($key, $dashboard) {
+        add_action('wp_dashboard_setup', function () use ($key, $dashboard) {
 
             if ($dashboard['configureMode']) {
-                $configureCallback = function() use ($key, $dashboard) {
+                $configureCallback = function () use ($key, $dashboard) {
                     call_user_func_array($this->executable, [$key, $dashboard, true]);
                 };
             }
 
-            wp_add_dashboard_widget($key ,
+            wp_add_dashboard_widget($key,
                 $dashboard['title'],
                 $this->executable,
                 $configureCallback
