@@ -14,6 +14,7 @@ namespace atkwp\controllers;
 use atkwp\AtkWp;
 use atkwp\helpers\WpUtil;
 use atkwp\interfaces\ComponentCtrlInterface;
+use atkwp\services\DashboardService;
 use atkwp\services\EnqueueService;
 use atkwp\services\MetaBoxService;
 use atkwp\services\PanelService;
@@ -23,7 +24,7 @@ class ComponentController implements ComponentCtrlInterface
 {
     //Components use by the plugin
     public $components = [];
-    public $componentType = ['panel', 'metaBox', 'shortcode', 'widget'];
+    public $componentType = ['panel', 'metaBox', 'shortcode', 'widget', 'dashboard'];
     public $componentServices = [];
 
     public function __construct()
@@ -61,6 +62,12 @@ class ComponentController implements ComponentCtrlInterface
             [$plugin, 'wpMetaBoxExecute']
         );
 
+        $this->componentServices['dashboard'] = new DashboardService(
+            $this,
+            $plugin->config->getConfig('dashboard', []),
+            [$plugin, 'wpDashboardExecute']
+        );
+
         $this->componentServices['widget'] = new WidgetService(
             $this,
             $plugin->config->getConfig('widget', []),
@@ -79,6 +86,11 @@ class ComponentController implements ComponentCtrlInterface
         $this->components[$type] = $components;
     }
 
+    public function getComponentsByType($type)
+    {
+        return $this->components[$type];
+    }
+
     /**
      * Get a component using it's type and a key - value.
      *
@@ -88,7 +100,7 @@ class ComponentController implements ComponentCtrlInterface
      *
      * @return array|null
      */
-    public function getComponentByType($type, $search, $searchKey = 'id')
+    public function searchComponentByType($type, $search, $searchKey = 'id')
     {
         $comp = null;
         foreach ($this->components as $key => $component) {
@@ -105,14 +117,15 @@ class ComponentController implements ComponentCtrlInterface
     }
 
     /**
-     * Return a component from the components array.
+     * Return a component from the components array
+     * base on it's key value regardless of the component type.
      *
      * @param string $search
      * @param array  $components
      *
      * @return array|mixed
      */
-    public function getComponentByKey($search, $components = [])
+    public function searchComponentByKey($search, $components = [])
     {
         if (empty($components)) {
             $components = $this->components;
@@ -122,7 +135,7 @@ class ComponentController implements ComponentCtrlInterface
                 return $subComponents;
             }
             if (in_array($key, $this->componentType)) {
-                return $this->getComponentByKey($search, $subComponents);
+                return $this->searchComponentByKey($search, $subComponents);
             }
         }
     }

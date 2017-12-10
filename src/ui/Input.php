@@ -37,6 +37,11 @@ class Input extends Component
         return $this->app->getTag('input', $inputProperties);
     }
 
+    public function setValue($value)
+    {
+        $this->value = $value;
+    }
+
     public function renderView()
     {
         switch ($this->inputCssClass) {

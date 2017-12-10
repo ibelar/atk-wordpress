@@ -36,14 +36,14 @@ class AtkWpApp extends App
         }
     }
 
-    public function initWpLayout($component, $layout, $name)
+    public function initWpLayout($component, $layout, $name, $viewProperties = [])
     {
         $class = '\\'.$component['uses'];
         $this->wpHtml = new AtkWpView(['defaultTemplate' => $layout, 'name' => $name]);
         $this->wpHtml->app = $this;
         $this->wpHtml->init();
 
-        return $this->wpHtml->add(new $class());
+        return $this->wpHtml->add(new $class($viewProperties));
     }
 
     /**

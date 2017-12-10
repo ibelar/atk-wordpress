@@ -1,8 +1,7 @@
 <?php
 /**
- * Created by abelair.
- * Date: 2017-11-28
- * Time: 1:01 PM.
+ * Metabox field interface.
+ * Implement this interface if your MetaBoxComponent need input field.
  */
 
 namespace atkwp\interfaces;
@@ -29,7 +28,7 @@ interface MetaBoxFieldsInterface
     /**
      * Give a chance to update raw data prior to save it to database.
      * For example, you could escape $data from <script> character using strip_tags function.
-     * This method is called automatically for each fields in container and should return a string value.
+     * This method is called automatically for each fields in container and should return field value.
      *
      * public function onUpdateMetaFieldRawData($fieldName, $data)
      * {

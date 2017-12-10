@@ -132,7 +132,7 @@ class AtkWp
     public function wpAdminExecute()
     {
         global $hook_suffix;
-        $this->wpComponent = $this->componentCtrl->getComponentByType('panel', $hook_suffix, 'hook');
+        $this->wpComponent = $this->componentCtrl->searchComponentByType('panel', $hook_suffix, 'hook');
 
         try {
             $app = new AtkWpApp($this);
@@ -150,7 +150,7 @@ class AtkWp
     public function wpAjaxExecute()
     {
         $this->ajaxMode = true;
-        $this->wpComponent = $this->componentCtrl->getComponentByKey($_REQUEST['atkwp']);
+        $this->wpComponent = $this->componentCtrl->searchComponentByKey($_REQUEST['atkwp']);
         if (isset($_GET['atkshortcode'])) {
             //$this->stickyGet('atkshortcode');
         }
@@ -167,6 +167,28 @@ class AtkWp
     }
 
     /**
+     * Dashboard output.
+     *
+     * @param string $key
+     * @param aray   $dashboard
+     * @param bool   $configureMode
+     *
+     * @throws Exception
+     */
+    public function wpDashboardExecute($key, $dashboard, $configureMode = false)
+    {
+        $this->wpComponent = $this->componentCtrl->searchComponentByType('dashboard', $dashboard['id']);
+
+        try {
+            $app = new AtkWpApp($this);
+            $app->initWpLayout($this->wpComponent, $this->defaultLayout, $this->pluginName, ['configureMode' => $configureMode]);
+            $app->execute();
+        } catch (Exception $e) {
+            $this->caughtException($e);
+        }
+    }
+
+    /**
      * Output metabox view in Wp.
      *
      * @param \WP_Post $post  The wordpress post.
@@ -177,7 +199,7 @@ class AtkWp
     public function wpMetaBoxExecute(\WP_Post $post, array $param)
     {
         //set the view to output.
-        $this->wpComponent = $this->componentCtrl->getComponentByType('metaBox', $param['id']);
+        $this->wpComponent = $this->componentCtrl->searchComponentByType('metaBox', $param['id']);
 
         try {
             $app = new AtkWpApp($this);
@@ -191,7 +213,7 @@ class AtkWp
     }
 
     /**
-     * Create a new Atk View.
+     * Create a new AtkWp View.
      * This view is fully initialize with an atk application.
      * WidgetComponent use this to create a view for Widget.
      *  - You can echo this view using $view->app->execute().

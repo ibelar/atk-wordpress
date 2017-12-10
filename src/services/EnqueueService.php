@@ -20,6 +20,7 @@ class EnqueueService
     //Js files already register with WP
     protected $jsRegistered = [];
 
+    //The url to your plugin assets files.
     protected $assetsUrl;
 
     protected $atkJsFiles = [
@@ -65,10 +66,28 @@ class EnqueueService
      */
     public function enqueueAdminFiles($hook)
     {
-        //Check if this is an atk component.
-        //We need to load js and css for atk when using panel or metaBox
-        if ($component = $this->ctrl->getComponentByType('panel', $hook, 'hook')) {
-        } elseif ($component = $this->ctrl->getComponentByType('metaBox', $hook, 'hook')) {
+        // Check if this is an atk component.
+        // We need to load js and css for atk when using panel or metaBox
+        if ($component = $this->ctrl->searchComponentByType('panel', $hook, 'hook')) {
+        } elseif ($hook === 'post.php') {
+            // if we are here, mean that we are editing a post.
+            // check it's type and see if a metabox is using this type.
+            if ($postType = get_post_type($_GET['post'])) {
+                $component = $this->ctrl->searchComponentByType('metaBox', $postType, 'type');
+            }
+        } elseif ($hook === 'post-new.php') {
+            if ($postType = @$_GET['post_type']) {
+                // Check if we have a metabox that is using this post type.
+                $component = $this->ctrl->searchComponentByType('metaBox', $postType, 'type');
+            } else {
+                //if not post_type set, this mean that we have a regular post.
+                //Check if a metabox using post.
+                $component = $this->ctrl->searchComponentByType('metaBox', 'post', 'type');
+            }
+        } elseif ($hook === 'index.php') {
+            // if we are here mean that we are in dashboard page.
+            // for now, just load atk js file if we are using dashboard.
+            $component = $this->ctrl->getComponentsByType('dashboard');
         }
 
         if (isset($component)) {

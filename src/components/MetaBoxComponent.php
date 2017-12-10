@@ -1,12 +1,11 @@
 <?php
 /**
- * Created by abelair.
- * Date: 2017-11-20
- * Time: 10:21 AM.
+ * Creates Metaboxes in Wordpress post edit admin page.
  */
 
 namespace atkwp\components;
 
+use atk4\ui\Exception;
 use atkwp\controllers\MetaFieldController;
 use atkwp\interfaces\ComponentCtrlInterface;
 use atkwp\interfaces\MetaBoxArgumentsInterface;
@@ -26,6 +25,8 @@ class MetaBoxComponent extends Component
      * @param null                    $label
      * @param null                    $class
      * @param MetaFieldInterface|null $fieldCtrl
+     *
+     * @throws Exception
      */
     public function __construct($label = null, $class = null, MetaFieldInterface $fieldCtrl = null)
     {

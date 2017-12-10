@@ -1,8 +1,6 @@
 <?php
 /**
- * Created by abelair.
- * Date: 2017-06-08
- * Time: 2:50 PM.
+ * Create panel view component in WP admin.
  */
 
 namespace atkwp\components;
