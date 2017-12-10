@@ -28,7 +28,16 @@ interface ComponentCtrlInterface
     public function registerComponents($type, array $components);
 
     /**
-     * Get a component by type from the component container.
+     * Get components by it's type.
+     *
+     * @param $type
+     *
+     * @return mixed
+     */
+    public function getComponentsByType($type);
+
+    /**
+     * Search a component by type from the component container.
      *
      * @param string $type      The type of component to search.
      * @param string $search    The value to search for.
@@ -36,7 +45,7 @@ interface ComponentCtrlInterface
      *
      * @return array||null The component definition.
      */
-    public function getComponentByType($type, $search, $searchKey = 'id');
+    public function searchComponentByType($type, $search, $searchKey = 'id');
 
     /**
      * Search component by a key value in a components container.
@@ -46,7 +55,7 @@ interface ComponentCtrlInterface
      *
      * @return array||null The component definition.
      */
-    public function getComponentByKey($search, $components);
+    public function searchComponentByKey($search, $components);
 
     /**
      * Get meta data attach to a post.

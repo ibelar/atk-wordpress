@@ -1,6 +1,17 @@
 <?php
 /**
  * Wordpress Widget.
+ * This is not a typical atk view but rather a child of a \WP_Widget class.
+ *
+ * You can use this component as a regular Widget class in WP.
+ *
+ * Implementing the WidgetInterface will run three methods:
+ *      - onWidget(AtkWp $view, $instance);
+ *          Will pass an AtkWp view as param in order to allow for adding atk4\ui views element.
+ *      - onForm(AtkWp $view, $instance);
+ *          Will pas an AtkWp view as param in order to allow for adding atk4\ui input.
+ *      - onUpdate($newInstance, $oldInstance);
+ *          Will let you sanitaze user input value.
  */
 
 namespace atkwp\components;
