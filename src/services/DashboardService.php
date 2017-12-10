@@ -66,10 +66,9 @@ class DashboardService
      */
     public function registerDashboard($key, $dashboard)
     {
-        $configureCallback = null;
-        //create metaBoxes using closure function.
+        //create dashboard using closure function.
         add_action('wp_dashboard_setup', function () use ($key, $dashboard) {
-
+            $configureCallback = null;
             if ($dashboard['configureMode']) {
                 $configureCallback = function () use ($key, $dashboard) {
                     call_user_func_array($this->executable, [$key, $dashboard, true]);
