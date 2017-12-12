@@ -1,17 +1,29 @@
 <?php
+/* =====================================================================
+ * atk-wordpress => Wordpress interface for Agile Toolkit Framework.
+ *
+ * This interface enable the use of the Agile Toolkit framework within a WordPress site.
+ *
+ * Please note that when atk is mentioned it generally refer to Agile Toolkit.
+ * More information on Agile Toolkit: http://www.agiletoolkit.org
+ *
+ * Author: Alain Belair
+ * Licensed under MIT
+ * =====================================================================*/
 /**
  * Wordpress Widget.
  * This is not a typical atk view but rather a child of a \WP_Widget class.
  *
- * You can use this component as a regular Widget class in WP.
+ * This component can be use as a regular Widget class in WP.
  *
- * Implementing the WidgetInterface will run three methods:
+ * The WidgetInterface is needed to use this Widget class as an atk view.
+ * Implementing the interface will run three methods:
  *      - onWidget(AtkWp $view, $instance);
  *          Will pass an AtkWp view as param in order to allow for adding atk4\ui views element.
  *      - onForm(AtkWp $view, $instance);
  *          Will pas an AtkWp view as param in order to allow for adding atk4\ui input.
  *      - onUpdate($newInstance, $oldInstance);
- *          Will let you sanitaze user input value.
+ *          Will allow cleaning of user input value.
  */
 
 namespace atkwp\components;

@@ -1,6 +1,18 @@
 <?php
+/* =====================================================================
+ * atk-wordpress => Wordpress interface for Agile Toolkit Framework.
+ *
+ * This interface enable the use of the Agile Toolkit framework within a WordPress site.
+ *
+ * Please note that when atk is mentioned it generally refer to Agile Toolkit.
+ * More information on Agile Toolkit: http://www.agiletoolkit.org
+ *
+ * Author: Alain Belair
+ * Licensed under MIT
+ * =====================================================================*/
 /**
- * Load and register shortcode use by the plugin.
+ * Responsible for creating and registering all WP action
+ * needed for shortcode.
  */
 
 namespace atkwp\services;
@@ -9,10 +21,34 @@ use atkwp\interfaces\ComponentCtrlInterface;
 
 class ShortcodeService
 {
+    /**
+     * The component controller responsible of initiating this service.
+     *
+     * @var ComponentCtrlInterface
+     */
     private $ctrl;
-    public $shortcodes = [];
-    public $executable;
 
+    /**
+     * The executable need to output shortcode component within Wp.
+     *
+     * @var callable
+     */
+    protected $executable;
+
+    /**
+     * The shortcode registered within this services.
+     *
+     * @var array
+     */
+    public $shortcodes = [];
+
+    /**
+     * ShortcodeService constructor.
+     *
+     * @param ComponentCtrlInterface $ctrl
+     * @param array                  $shortcodes
+     * @param callable               $callable
+     */
     public function __construct(ComponentCtrlInterface $ctrl, array $shortcodes, $callable)
     {
         $this->ctrl = $ctrl;
@@ -26,11 +62,21 @@ class ShortcodeService
         });
     }
 
+    /**
+     * Return shortcode compoents.
+     *
+     * @return array
+     */
     public function getShortcodes()
     {
         return $this->shortcodes;
     }
 
+    /**
+     * Set shortcodes.
+     *
+     * @param $shortcodes
+     */
     public function setShortcodes($shortcodes)
     {
         foreach ($shortcodes as $key => $shortcode) {
@@ -40,6 +86,9 @@ class ShortcodeService
         $this->shortcodes = $shortcodes;
     }
 
+    /**
+     * Register each shortcode in Wp.
+     */
     public function registerShortcodes()
     {
         if (isset($this->shortcodes)) {
@@ -49,6 +98,12 @@ class ShortcodeService
         }
     }
 
+    /**
+     * The actual shortcode implementation in Wp.
+     *
+     * @param $key
+     * @param $shortcode
+     */
     public function registerShortcode($key, $shortcode)
     {
         add_shortcode($shortcode['name'], function ($args) use ($key, $shortcode) {

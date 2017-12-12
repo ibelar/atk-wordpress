@@ -1,4 +1,15 @@
 <?php
+/* =====================================================================
+ * atk-wordpress => Wordpress interface for Agile Toolkit Framework.
+ *
+ * This interface enable the use of the Agile Toolkit framework within a WordPress site.
+ *
+ * Please note that when atk is mentioned it generally refer to Agile Toolkit.
+ * More information on Agile Toolkit: http://www.agiletoolkit.org
+ *
+ * Author: Alain Belair
+ * Licensed under MIT
+ * =====================================================================*/
 /**
  * This service is responsible to load js and css file within WP.
  */
@@ -9,20 +20,46 @@ use atkwp\interfaces\ComponentCtrlInterface;
 
 class EnqueueService
 {
+    /**
+     * The component controller responsible of initiating this service.
+     *
+     * @var ComponentCtrlInterface
+     */
     private $ctrl;
 
-    //All jsFiles to load
+    /**
+     * The js files to load.
+     *
+     * @var array
+     */
     protected $jsFiles = [];
 
-    //All Css files to load
+    /**
+     * The css files to load.
+     *
+     * @var array
+     */
     protected $cssFiles = [];
 
-    //Js files already register with WP
+    /**
+     * The js files already registered within Wp.
+     *
+     * @var array
+     */
     protected $jsRegistered = [];
 
-    //The url to your plugin assets files.
+    /**
+     * The url to the assest directory.
+     *
+     * @var string
+     */
     protected $assetsUrl;
 
+    /**
+     * The necessary js files to run agile toolkit.
+     *
+     * @var array
+     */
     protected $atkJsFiles = [
         'https://cdnjs.cloudflare.com/ajax/libs/jquery-serialize-object/2.5.0/jquery.serialize-object.min.js',
         'https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.10/semantic.min.js',
@@ -30,13 +67,24 @@ class EnqueueService
         'https://cdn.rawgit.com/atk4/ui/1.3.0/public/atk4JS.min.js',
     ];
 
-    //the css file to load.
+    /**
+     * The necessary css files to run agile toolkit.
+     *
+     * @var array
+     */
     protected $atkCssFiles = [
         'https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.10/semantic.css',
         'https://cdn.rawgit.com/mdehoog/Semantic-UI-Calendar/0.0.8/dist/calendar.css',
     ];
 
-    public function __construct(ComponentCtrlInterface $ctrl, $enqueueFiles, $url)
+    /**
+     * EnqueueService constructor.
+     *
+     * @param ComponentCtrlInterface $ctrl
+     * @param array                  $enqueueFiles
+     * @param string                 $url
+     */
+    public function __construct(ComponentCtrlInterface $ctrl, array $enqueueFiles, $url)
     {
         $this->ctrl = $ctrl;
         $this->assetsUrl = $url;
@@ -133,6 +181,12 @@ class EnqueueService
         }
     }
 
+    /**
+     * Shortcode need to run in Wp front.
+     * This method is used to directly enqueue files when shortcode need them.
+     *
+     * @param $shortcode
+     */
     public function enqueueShortCodeFiles($shortcode)
     {
         $jsFiles = array_merge($this->jsFiles, $shortcode['js'], ($shortcode['atk']) ? $this->atkJsFiles : []);

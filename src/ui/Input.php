@@ -1,4 +1,15 @@
 <?php
+/* =====================================================================
+ * atk-wordpress => Wordpress interface for Agile Toolkit Framework.
+ *
+ * This interface enable the use of the Agile Toolkit framework within a WordPress site.
+ *
+ * Please note that when atk is mentioned it generally refer to Agile Toolkit.
+ * More information on Agile Toolkit: http://www.agiletoolkit.org
+ *
+ * Author: Alain Belair
+ * Licensed under MIT
+ * =====================================================================*/
 /**
  * Wordpress input field.
  */
@@ -11,12 +22,53 @@ use atkwp\components\Component;
 
 class Input extends Component
 {
+    /**
+     * The field id.
+     *
+     * @var string
+     */
     public $id = '';
+
+    /**
+     * The field value.
+     *
+     * @var mixed
+     */
     public $value;
+
+    /**
+     * The field input css class name.
+     *
+     * @var string
+     */
     public $inputCssClass = 'widefat';
+
+    /**
+     * The field default template file.
+     *
+     * @var string
+     */
     public $defaultTemplate = 'wp-input.html';
+
+    /**
+     * The field default input html type.
+     *
+     * @var string
+     */
     public $inputType = 'text';
+
+    /**
+     * The field input html placeholder attribute value.
+     *
+     * @var null||string
+     */
     public $placeholder = null;
+
+    /**
+     * The field name.
+     *
+     * @var string
+     */
     public $fieldName;
 
     public function getInput()
@@ -37,11 +89,21 @@ class Input extends Component
         return $this->app->getTag('input', $inputProperties);
     }
 
+    /**
+     * Set field value.
+     *
+     * @param mixed $value
+     */
     public function setValue($value)
     {
         $this->value = $value;
     }
 
+    /**
+     * Render field html.
+     *
+     * @throws \atk4\ui\Exception
+     */
     public function renderView()
     {
         switch ($this->inputCssClass) {

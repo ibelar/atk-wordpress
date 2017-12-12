@@ -1,8 +1,18 @@
 <?php
+/* =====================================================================
+ * atk-wordpress => Wordpress interface for Agile Toolkit Framework.
+ *
+ * This interface enable the use of the Agile Toolkit framework within a WordPress site.
+ *
+ * Please note that when atk is mentioned it generally refer to Agile Toolkit.
+ * More information on Agile Toolkit: http://www.agiletoolkit.org
+ *
+ * Author: Alain Belair
+ * Licensed under MIT
+ * =====================================================================*/
 /**
- * Created by abelair.
- * Date: 2017-11-28
- * Time: 1:07 PM.
+ * Collects atk\ui\Input field into a field container array.
+ * Fields can then be retrieve and add to a metabox component view.
  */
 
 namespace atkwp\controllers;
@@ -19,8 +29,17 @@ class MetaFieldController implements MetaFieldInterface
     {
     }
 
+    /**
+     * Add field object to a container.
+     *
+     * @param string       $name        The name of the field.
+     * @param Generic      $field       The field object to add to container.
+     * @param null||string $metaKeyName The meta key name to save in db.
+     */
     public function addField($name, Generic $field, $metaKeyName = null)
     {
+        // Add default name if not supplied.
+        // adding underscore prevent Wp to display in custom field setup.
         if (!$metaKeyName) {
             $metaKeyName = '_'.$name;
         }
@@ -29,11 +48,23 @@ class MetaFieldController implements MetaFieldInterface
         $this->fields[$name] = $field;
     }
 
+    /**
+     * Return a field object from the container base on it's name.
+     *
+     * @param $name
+     *
+     * @return Generic The field object.
+     */
     public function getField($name)
     {
         return $this->fields[$name];
     }
 
+    /**
+     * Return all fields object from the container.
+     *
+     * @return array
+     */
     public function getFields()
     {
         return $this->fields;

@@ -1,4 +1,15 @@
 <?php
+/* =====================================================================
+ * atk-wordpress => Wordpress interface for Agile Toolkit Framework.
+ *
+ * This interface enable the use of the Agile Toolkit framework within a WordPress site.
+ *
+ * Please note that when atk is mentioned it generally refer to Agile Toolkit.
+ * More information on Agile Toolkit: http://www.agiletoolkit.org
+ *
+ * Author: Alain Belair
+ * Licensed under MIT
+ * =====================================================================*/
 /**
  * Responsible for creating and registering all WP action
  * needed for metaboxes.
@@ -10,9 +21,25 @@ use atkwp\interfaces\ComponentCtrlInterface;
 
 class MetaBoxService
 {
+    /**
+     * The component controller responsible of initiating this service.
+     *
+     * @var ComponentCtrlInterface
+     */
     private $ctrl;
+
+    /**
+     * The executable need to output metabox component within Wp.
+     *
+     * @var callable
+     */
     protected $executable;
 
+    /**
+     * The metaboxes registered within this services.
+     *
+     * @var array
+     */
     public $metaBoxes = [];
 
     /**

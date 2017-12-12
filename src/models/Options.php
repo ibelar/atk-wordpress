@@ -1,8 +1,17 @@
 <?php
+/* =====================================================================
+ * atk-wordpress => Wordpress interface for Agile Toolkit Framework.
+ *
+ * This interface enable the use of the Agile Toolkit framework within a WordPress site.
+ *
+ * Please note that when atk is mentioned it generally refer to Agile Toolkit.
+ * More information on Agile Toolkit: http://www.agiletoolkit.org
+ *
+ * Author: Alain Belair
+ * Licensed under MIT
+ * =====================================================================*/
 /**
- * Created by abelair.
- * Date: 2017-11-15
- * Time: 1:32 PM.
+ * The Wp options model map to db table options.
  */
 
 namespace atkwp\models;
@@ -22,6 +31,16 @@ class Options extends \atk4\data\Model
         $this->addField('autoload');
     }
 
+    /**
+     * Get an option store in options table.
+     *
+     * @param string        $option  the option name to retrieve.
+     * @param null||string  $default the default value to use if option does not exist.
+     *
+     * @throws \Exception
+     *
+     * @return mixed|null
+     */
     public function getOptionValue($option, $default = null)
     {
         $value = $this->tryLoadBy('name', $option)->get('value');
@@ -34,6 +53,15 @@ class Options extends \atk4\data\Model
         return $value;
     }
 
+    /**
+     * Save an option name, value in options table.
+     *
+     * @param $option
+     * @param $value
+     *
+     * @throws \Exception
+     * @throws \atk4\data\Exception
+     */
     public function saveOptionValue($option, $value)
     {
         $this->tryLoadBy('name', $option);

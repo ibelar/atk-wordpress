@@ -1,18 +1,41 @@
 <?php
+/* =====================================================================
+ * atk-wordpress => Wordpress interface for Agile Toolkit Framework.
+ *
+ * This interface enable the use of the Agile Toolkit framework within a WordPress site.
+ *
+ * Please note that when atk is mentioned it generally refer to Agile Toolkit.
+ * More information on Agile Toolkit: http://www.agiletoolkit.org
+ *
+ * Author: Alain Belair
+ * Licensed under MIT
+ * =====================================================================*/
 /**
- * Created by abelair.
- * Date: 2017-11-24
- * Time: 10:48 AM.
+ * Simple configuration utilities.
  */
-
 namespace atkwp\helpers;
 
 class Config
 {
+    /**
+     * Contains all configuration options.
+     *
+     * @var array
+     */
     public $config;
+
+    /**
+     * Contains the path to the configuration files.
+     *
+     * @var string
+     */
     public $configPath;
 
-    //default config files to read
+    /**
+     * Default configuration files to read.
+     *
+     * @var array
+     */
     public $wpConfigFiles = [
         'config-default',
         'config-wp',
@@ -24,6 +47,11 @@ class Config
         'config-dashboard',
         ];
 
+    /**
+     * Config constructor.
+     *
+     * @param string $configPath The path to configuration files.
+     */
     public function __construct($configPath)
     {
         $this->configPath = $configPath;
@@ -35,6 +63,8 @@ class Config
      *
      * @param array $config
      * @param mixed $val
+     *
+     * @return mixed
      */
     public function setConfig($config = [], $val = UNDEFINED)
     {
@@ -82,6 +112,11 @@ class Config
         return $current_position;
     }
 
+    /**
+     * Load configuration files.
+     *
+     * @return array
+     */
     private function loadConfiguration()
     {
         $loadedConfig = [];

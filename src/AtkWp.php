@@ -26,36 +26,57 @@ use atkwp\interfaces\PathInterface;
 
 class AtkWp
 {
-    //The  name of the plugin
+    /**
+     * The plugin name.
+     *
+     * @var string
+     */
     public $pluginName;
 
-    //The plugin component controller
+    /**
+     * The plugin component ctrl.
+     *
+     * @var ComponentCtrlInterface
+     */
     public $componentCtrl;
-
-    protected $isExecuting;
-
-    //Whether initialized_layout is bypass or not.
-    public $isLayoutNeedInitialise = true;
 
     //wp default layout template.
     public $defaultLayout = 'layout.html';
 
-    //the current wp view to output. ( Ex: admin panel, shortcode or metabox)
+    /**
+     * The current component to output by this plugin.
+     *
+     * @var array
+     */
     public $wpComponent;
 
     /*
      * keep track of how many components are output.
      * Mainly use for shortcode component.
+     *
+     * @var int
      */
     public $componentCount = 0;
 
-    //the database connection for this plugin.
+    /**
+     * The db connection.
+     *
+     * @var Persistence_SQL
+     */
     public $dbConnection;
 
-    //plugin path locator for template file.
+    /**
+     * The pathfinder object.
+     *
+     * @var PathInterface
+     */
     public $pathFinder;
 
-    //plugin configuration
+    /**
+     * The configuration object.
+     *
+     * @var Config
+     */
     public $config;
 
     /**
@@ -74,42 +95,86 @@ class AtkWp
         $this->init();
     }
 
+    /**
+     * Return this plugin name.
+     *
+     * @return string
+     */
     public function getPluginName()
     {
         return $this->pluginName;
     }
 
+    /**
+     * Return a configuration value.
+     *
+     * @param atring      $name
+     * @param null||mixed $default
+     *
+     * @return string
+     */
     public function getConfig($name, $default = null)
     {
         return $this->config->getConfig($name, $default);
     }
 
-    public function setConfig($config = [], $defautl = UNDEFINED)
+    /**
+     * Set a configuration value.
+     *
+     * @param array $config
+     * @param mixed $default
+     */
+    public function setConfig($config = [], $default = UNDEFINED)
     {
-        $this->config->setConfig($config, $defautl);
+        $this->config->setConfig($config, $default);
     }
 
+    /**
+     * Return a path to a template location.
+     *
+     * @param string $fileName
+     *
+     * @return mixed
+     */
     public function getTemplateLocation($fileName)
     {
         return $this->pathFinder->getTemplateLocation($fileName);
     }
 
+    /**
+     * Return the db connection.
+     *
+     * @return mixed
+     */
     public function getDbConnection()
     {
         return $this->dbConnection;
     }
 
+    /**
+     * Set the db connection object.
+     */
     public function setDbConnection()
     {
         $dsn = 'mysql:host='.DB_HOST.';dbname='.DB_NAME;
         $this->dbConnection = new Persistence_SQL($dsn, DB_USER, DB_PASSWORD);
     }
 
+    /**
+     * Get the id of the current component being output.
+     *
+     * @return mixed
+     */
     public function getWpComponentId()
     {
         return $this->wpComponent['id'];
     }
 
+    /**
+     * Get the number of time a component has been output.
+     *
+     * @return int
+     */
     public function getComponentCount()
     {
         return $this->componentCount;
@@ -248,7 +313,7 @@ class AtkWp
      * Dashboard output.
      *
      * @param string $key
-     * @param aray   $dashboard
+     * @param array  $dashboard
      * @param bool   $configureMode
      *
      * @throws Exception

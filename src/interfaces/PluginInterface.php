@@ -1,17 +1,18 @@
 <?php
 /* =====================================================================
- * Atk4-wp => An Agile Toolkit PHP framework interface for WordPress.
+ * atk-wordpress => Wordpress interface for Agile Toolkit Framework.
  *
  * This interface enable the use of the Agile Toolkit framework within a WordPress site.
  *
- * Please note that atk or atk4 mentioned in comments refer to Agile Toolkit or Agile Toolkit version 4.
+ * Please note that when atk is mentioned it generally refer to Agile Toolkit.
  * More information on Agile Toolkit: http://www.agiletoolkit.org
  *
  * Author: Alain Belair
  * Licensed under MIT
  * =====================================================================*/
 /**
- * Interface for creating Plugin using atk.
+ * Plugin Interface.
+ * An AtkWp Plugin must implement this interface to work under Wp.
  */
 
 namespace atkwp\interfaces;
