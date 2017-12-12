@@ -310,6 +310,7 @@ class AtkWp
             $view = new $this->wpComponent['uses'](['args' => $args]);
             $app = new AtkWpApp($this);
             $app->initWpLayout($view, $this->defaultLayout, $this->pluginName.'-'.$this->componentCount);
+
             return $app->render(false);
         } catch (Exception $e) {
             $this->caughtException($e);
