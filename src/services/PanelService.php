@@ -1,23 +1,21 @@
 <?php
-/**
- * Created by abelair.
- * Date: 2017-06-08
- * Time: 2:58 PM.
- */
-
-namespace atkwp\services;
-
 /* =====================================================================
- * Atk4-wp => An Agile Toolkit PHP framework interface for WordPress.
+ * atk-wordpress => Wordpress interface for Agile Toolkit Framework.
  *
  * This interface enable the use of the Agile Toolkit framework within a WordPress site.
  *
- * Please note that atk or atk4 mentioned in comments refer to Agile Toolkit or Agile Toolkit version 4.
+ * Please note that when atk is mentioned it generally refer to Agile Toolkit.
  * More information on Agile Toolkit: http://www.agiletoolkit.org
  *
  * Author: Alain Belair
  * Licensed under MIT
  * =====================================================================*/
+/**
+ * Responsible for creating and registering all WP action
+ * needed for panel.
+ */
+
+namespace atkwp\services;
 
 use atkwp\interfaces\ComponentCtrlInterface;
 
@@ -33,19 +31,43 @@ use atkwp\interfaces\ComponentCtrlInterface;
  */
 class PanelService
 {
-    //Component controller for this plugin.
+    /**
+     * The component controller responsible of initiating this service.
+     *
+     * @var ComponentCtrlInterface
+     */
     private $ctrl;
 
-    //Panels
-    protected $panels = [];
-
-    //callback function for panels output.
+    /**
+     * The executable need to output panel component within Wp.
+     *
+     * @var callable
+     */
     protected $executable;
 
-    //icon base url
+    /**
+     * The panels registered within this services.
+     *
+     * @var array
+     */
+    protected $panels = [];
+
+    /**
+     * The url to assets directory where we can find panel icon.
+     *
+     * @var string
+     */
     protected $iconUrl;
 
-    public function __construct(ComponentCtrlInterface $ctrl, $panels, $callable, $url)
+    /**
+     * PanelService constructor.
+     *
+     * @param ComponentCtrlInterface $ctrl
+     * @param array                  $panels
+     * @param callable               $callable
+     * @param string                 $url
+     */
+    public function __construct(ComponentCtrlInterface $ctrl, array $panels, $callable, $url)
     {
         $this->ctrl = $ctrl;
         $this->executable = $callable;

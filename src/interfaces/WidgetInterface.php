@@ -1,10 +1,19 @@
 <?php
+/* =====================================================================
+ * atk-wordpress => Wordpress interface for Agile Toolkit Framework.
+ *
+ * This interface enable the use of the Agile Toolkit framework within a WordPress site.
+ *
+ * Please note that when atk is mentioned it generally refer to Agile Toolkit.
+ * More information on Agile Toolkit: http://www.agiletoolkit.org
+ *
+ * Author: Alain Belair
+ * Licensed under MIT
+ * =====================================================================*/
 /**
  * Widget component interfaces.
- * You may still extends WidgetComponent without using this interface, however
- * doing so will result in using the \Wp_Widget class as usual, i.e. you
- * will have to overide the appropriate \Wp_Widget class method as in a normal
- * plugin development.
+ * WidgetComponent must implement this interface in order to use atk view inside it.
+ * WidgetComponent can be use without implementing this interface, if so, they are simply regular Wp_Widget class.
  */
 
 namespace atkwp\interfaces;

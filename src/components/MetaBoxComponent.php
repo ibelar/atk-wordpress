@@ -1,6 +1,17 @@
 <?php
+/* =====================================================================
+ * atk-wordpress => Wordpress interface for Agile Toolkit Framework.
+ *
+ * This interface enable the use of the Agile Toolkit framework within a WordPress site.
+ *
+ * Please note that when atk is mentioned it generally refer to Agile Toolkit.
+ * More information on Agile Toolkit: http://www.agiletoolkit.org
+ *
+ * Author: Alain Belair
+ * Licensed under MIT
+ * =====================================================================*/
 /**
- * Creates Metaboxes in Wordpress post edit admin page.
+ * Creates Metaboxes in Wordpress post admin page.
  */
 
 namespace atkwp\components;
@@ -13,7 +24,18 @@ use atkwp\interfaces\MetaFieldInterface;
 
 class MetaBoxComponent extends Component
 {
+    /**
+     * The controller need to add input field in metabox.
+     *
+     * @var MetaFieldInterface
+     */
     public $fieldCtrl;
+
+    /**
+     * The arguments set in config-metabox file.
+     *
+     * @var null
+     */
     public $args = null;
 
     /**
