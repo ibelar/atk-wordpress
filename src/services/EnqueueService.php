@@ -133,6 +133,19 @@ class EnqueueService
         }
     }
 
+    public function enqueueShortCodeFiles($shortcode)
+    {
+        $jsFiles = array_merge($this->jsFiles, $shortcode['js'], ($shortcode['atk']) ? $this->atkJsFiles : []);
+        $cssFiles = array_merge($this->cssFiles, $shortcode['css'], ($shortcode['atk']) ? $this->atkCssFiles : []);
+
+        if (!empty($jsFiles)) {
+            $this->enqueueFiles($jsFiles, 'js');
+        }
+        if (!empty($cssFiles)) {
+            $this->enqueueFiles($cssFiles, 'css');
+        }
+    }
+
     /**
      * The actual file inclusion in WP.
      *

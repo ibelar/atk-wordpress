@@ -8,13 +8,13 @@ namespace atkwp\components;
 use atk4\ui\Exception;
 use atkwp\controllers\MetaFieldController;
 use atkwp\interfaces\ComponentCtrlInterface;
-use atkwp\interfaces\MetaBoxArgumentsInterface;
 use atkwp\interfaces\MetaBoxFieldsInterface;
 use atkwp\interfaces\MetaFieldInterface;
 
 class MetaBoxComponent extends Component
 {
     public $fieldCtrl;
+    public $args = null;
 
     /**
      * MetaBoxComponent constructor.
@@ -38,13 +38,6 @@ class MetaBoxComponent extends Component
                 $this->fieldCtrl = new MetaFieldController();
             }
             $this->onInitMetaBoxFields($this->fieldCtrl);
-        }
-    }
-
-    public function addMetaArguments($args)
-    {
-        if ($this instanceof MetaBoxArgumentsInterface) {
-            $this->onMetaBoxArguments($args);
         }
     }
 

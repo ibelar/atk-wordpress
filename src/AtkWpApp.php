@@ -8,8 +8,10 @@
 namespace atkwp;
 
 use atk4\ui\App;
+use atk4\ui\Exception;
 use atk4\ui\Persistence\UI;
 use atk4\ui\Template;
+use atkwp\helpers\WpUtil;
 
 class AtkWpApp extends App
 {
@@ -20,6 +22,8 @@ class AtkWpApp extends App
 
     //The html produce by this app
     public $wpHtml;
+
+    public $max_name_length = 20;
 
     public $skin = 'semantic-ui';
 
@@ -36,34 +40,54 @@ class AtkWpApp extends App
         }
     }
 
-    public function initWpLayout($component, $layout, $name, $viewProperties = [])
+    public function initWpLayout($view, $layout, $name)
     {
-        $class = '\\'.$component['uses'];
+        //$class = '\\'.$component['uses'];
         $this->wpHtml = new AtkWpView(['defaultTemplate' => $layout, 'name' => $name]);
         $this->wpHtml->app = $this;
         $this->wpHtml->init();
 
-        return $this->wpHtml->add(new $class($viewProperties));
+        return $this->wpHtml->add($view);
     }
 
     /**
      * Runs app and echo rendered template.
+     *
+     * @param bool $isAjax
+     *
+     * @throws \atk4\core\Exception
      */
     public function execute($isAjax = false)
     {
-        //$this->run_called = true;
-        $this->hook('beforeRender');
-        $this->is_rendering = true;
-        //$this->html->template->set('title', $this->title);
-        $this->wpHtml->renderAll();
-        $this->wpHtml->template->appendHTML('HEAD', $this->getJsReady($this->wpHtml));
-        //$this->wpHtml->getJS(/*$isAjax*/);
-        //$this->wpHtml->template->appendHTML('HEAD', $this->wpHtml->getJS());
-        $this->is_rendering = false;
-        $this->hook('beforeOutput');
-        echo $this->wpHtml->template->render();
+        echo $this->render($isAjax);
     }
 
+    /**
+     * Take care of rendering views.
+     *
+     * @param $isAjax
+     *
+     * @throws \atk4\core\Exception
+     *
+     * @return mixed
+     */
+    public function render($isAjax)
+    {
+        $this->hook('beforeRender');
+        $this->is_rendering = true;
+        $this->wpHtml->renderAll();
+        $this->wpHtml->template->appendHTML('HEAD', $this->getJsReady($this->wpHtml));
+        $this->is_rendering = false;
+        $this->hook('beforeOutput');
+
+        return $this->wpHtml->template->render();
+    }
+
+    /**
+     * Return the db connection run by this plugin.
+     *
+     * @return mixed
+     */
     public function getDbConnection()
     {
         return $this->plugin->getDbConnection();
@@ -85,18 +109,22 @@ class AtkWpApp extends App
 
     public function url($page = [], $hasRequestUri = false)
     {
-        // $url = admin_url('admin-ajax.php');
-        $sticky = $this->sticky_get_arguments;
         $result = [];
 
-        if ($this->page === null) {
-            //$this->page = basename($this->getRequestURI(), '.php');
-            $this->page = 'admin-ajax';
+        $this->page = 'admin-ajax';
+        if (!WpUtil::isAdmin()) {
+            $this->page = WpUtil::getBaseAdminUrl().'admin-ajax';
+        }
+        $sticky = $this->sticky_get_arguments;
+        $sticky['action'] = $this->plugin->getPluginName();
+        $sticky['atkwp'] = $this->plugin->getWpComponentId();
+
+        if ($this->plugin->getComponentCount() > 0) {
+            $sticky['atkwp-count'] = $this->plugin->getComponentCount();
         }
 
-        if ($this->page === 'admin-ajax') {
-            $sticky['action'] = $this->plugin->getPluginName();
-            $sticky['atkwp'] = $this->plugin->getWpComponentId();
+        if ($this->plugin->config->getConfig('plugin/use_nounce')) {
+            $sticky['_ajax_nonce'] = helpers\WpUtil::createWpNounce($this->plugin->getPluginName());
         }
 
         if (is_string($page)) {
@@ -168,9 +196,11 @@ class AtkWpApp extends App
     }
 
     /**
-     * Load template.
+     * Load template file.
      *
      * @param string $name
+     *
+     * @throws Exception
      *
      * @return Template
      */
