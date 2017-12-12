@@ -1,13 +1,10 @@
 <?php
 /**
- * Created by abelair.
- * Date: 2017-12-11
- * Time: 9:01 AM
+ * Load and register shortcode use by the plugin.
  */
 
 namespace atkwp\services;
 
-use atkwp\components\ShortcodeComponent;
 use atkwp\interfaces\ComponentCtrlInterface;
 
 class ShortcodeService
@@ -59,6 +56,7 @@ class ShortcodeService
                 $this->ctrl->enqueueShortcodeFiles($shortcode);
                 $this->shortcode[$shortcode['id']]['enqueued'] = true;
             }
+
             return call_user_func_array($this->executable, [$shortcode, $args]);
         });
         $this->shortcodes[$key] = $shortcode;

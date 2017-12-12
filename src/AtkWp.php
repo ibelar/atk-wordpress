@@ -294,8 +294,8 @@ class AtkWp
     /**
      * Output shortcode view in Wordpress.
      *
-     * @param array  $shortcode
-     * @param array  $args
+     * @param array $shortcode
+     * @param array $args
      *
      * @throws Exception
      *
@@ -309,7 +309,7 @@ class AtkWp
         try {
             $view = new $this->wpComponent['uses'](['args' => $args]);
             $app = new AtkWpApp($this);
-            $app->initWpLayout($view, $this->defaultLayout,$this->pluginName.'-'.$this->componentCount);
+            $app->initWpLayout($view, $this->defaultLayout, $this->pluginName.'-'.$this->componentCount);
             return $app->render(false);
         } catch (Exception $e) {
             $this->caughtException($e);

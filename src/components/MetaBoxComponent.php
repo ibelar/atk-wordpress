@@ -8,7 +8,6 @@ namespace atkwp\components;
 use atk4\ui\Exception;
 use atkwp\controllers\MetaFieldController;
 use atkwp\interfaces\ComponentCtrlInterface;
-use atkwp\interfaces\MetaBoxArgumentsInterface;
 use atkwp\interfaces\MetaBoxFieldsInterface;
 use atkwp\interfaces\MetaFieldInterface;
 

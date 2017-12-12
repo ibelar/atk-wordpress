@@ -52,27 +52,42 @@ class AtkWpApp extends App
 
     /**
      * Runs app and echo rendered template.
+     *
+     * @param bool $isAjax
+     *
+     * @throws \atk4\core\Exception
      */
     public function execute($isAjax = false)
     {
         echo $this->render($isAjax);
     }
 
+    /**
+     * Take care of rendering views.
+     *
+     * @param $isAjax
+     *
+     * @throws \atk4\core\Exception
+     *
+     * @return mixed
+     */
     public function render($isAjax)
     {
-        //$this->run_called = true;
         $this->hook('beforeRender');
         $this->is_rendering = true;
-        //$this->html->template->set('title', $this->title);
         $this->wpHtml->renderAll();
         $this->wpHtml->template->appendHTML('HEAD', $this->getJsReady($this->wpHtml));
-        //$this->wpHtml->getJS(/*$isAjax*/);
-        //$this->wpHtml->template->appendHTML('HEAD', $this->wpHtml->getJS());
         $this->is_rendering = false;
         $this->hook('beforeOutput');
+
         return $this->wpHtml->template->render();
     }
 
+    /**
+     * Return the db connection run by this plugin.
+     *
+     * @return mixed
+     */
     public function getDbConnection()
     {
         return $this->plugin->getDbConnection();
