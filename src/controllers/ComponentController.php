@@ -18,6 +18,7 @@ use atkwp\services\DashboardService;
 use atkwp\services\EnqueueService;
 use atkwp\services\MetaBoxService;
 use atkwp\services\PanelService;
+use atkwp\services\ShortcodeService;
 use atkwp\services\WidgetService;
 
 class ComponentController implements ComponentCtrlInterface
@@ -72,6 +73,12 @@ class ComponentController implements ComponentCtrlInterface
             $this,
             $plugin->config->getConfig('widget', []),
             $plugin
+        );
+
+        $this->componentServices['shortcode'] = new ShortcodeService(
+            $this,
+            $plugin->config->getConfig('shortcode', []),
+            [$plugin, 'wpShortcodeExecute']
         );
     }
 
@@ -135,9 +142,23 @@ class ComponentController implements ComponentCtrlInterface
                 return $subComponents;
             }
             if (in_array($key, $this->componentType)) {
-                return $this->searchComponentByKey($search, $subComponents);
+                if ($component = $this->searchComponentByKey($search, $subComponents)) {
+                    return $component;
+                }
             }
         }
+    }
+
+    /**
+     * Enqueue shortcode js and css files for a particular shortcode.
+     *
+     * @param array $shortcode
+     *
+     * @return mixed|void
+     */
+    public function enqueueShortcodeFiles(array $shortcode)
+    {
+        $this->componentServices['enqueue']->enqueueShortCodeFiles($shortcode);
     }
 
     /**

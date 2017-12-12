@@ -58,6 +58,15 @@ interface ComponentCtrlInterface
     public function searchComponentByKey($search, $components);
 
     /**
+     * Enqueue js and css files to use with a Wp shortcode.
+     *
+     * @param array $shortcode The shortcode configuration as set in shortcode-config.php.
+     *
+     * @return mixed
+     */
+    public function enqueueShortcodeFiles(array $shortcode);
+
+    /**
      * Get meta data attach to a post.
      *
      * @param int    $postId The post id.

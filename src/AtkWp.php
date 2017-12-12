@@ -1,4 +1,15 @@
 <?php
+/* =====================================================================
+ * atk-wordpress => Wordpress interface for Agile Toolkit Framework.
+ *
+ * This interface enable the use of the Agile Toolkit framework within a WordPress site.
+ *
+ * Please note that when atk is mentioned it generally refer to Agile Toolkit.
+ * More information on Agile Toolkit: http://www.agiletoolkit.org
+ *
+ * Author: Alain Belair
+ * Licensed under MIT
+ * =====================================================================*/
 /**
  * The actual plugin class implementation for WP.
  */
@@ -31,6 +42,12 @@ class AtkWp
 
     //the current wp view to output. ( Ex: admin panel, shortcode or metabox)
     public $wpComponent;
+
+    /*
+     * keep track of how many components are output.
+     * Mainly use for shortcode component.
+     */
+    public $componentCount = 0;
 
     //the database connection for this plugin.
     public $dbConnection;
@@ -93,16 +110,17 @@ class AtkWp
         return $this->wpComponent['id'];
     }
 
+    public function getComponentCount()
+    {
+        return $this->componentCount;
+    }
+
     /**
      * Plugin Entry point
-     * Wordpress plugin file call this function in order to have
-     * atk work under Wordpress.
+     * Wordpress plugin file call this function in order to initialise
+     * atk to work under Wordpress.
      *
-     * Will load panel, metab box, widget and shortcode configuration file;
-     * Setup proper Wp action for each of them;
-     * Setup WP Ajax.
-     *
-     * @param string $filePath the path to wp plugin file.
+     * @param string $filePath the path to this WP plugin file.
      */
     public function boot($filePath)
     {
@@ -115,6 +133,11 @@ class AtkWp
 
         //register ajax action for this plugin
         add_action("wp_ajax_{$this->getPluginName()}", [$this, 'wpAjaxExecute']);
+        if ($this->config->getConfig('plugin/use_ajax_front')) {
+            //$this->sticky_get_arguments['_ajax_nonce'] = wp_create_nonce($this->pluginName);
+            //enable Wp ajax front end action.
+            add_action("wp_ajax_nopriv_{$this->getPluginName()}", [$this, 'wpAjaxExecute']);
+        }
     }
 
     /**
@@ -124,99 +147,11 @@ class AtkWp
     {
     }
 
-    /*--------------------- OUTPUT -------------------------------*/
-
     /**
-     * Output Panel view in Wp.
-     */
-    public function wpAdminExecute()
-    {
-        global $hook_suffix;
-        $this->wpComponent = $this->componentCtrl->searchComponentByType('panel', $hook_suffix, 'hook');
-
-        try {
-            $app = new AtkWpApp($this);
-            $app->initWpLayout($this->wpComponent, $this->defaultLayout, $this->pluginName);
-            $app->execute();
-        } catch (Exception $e) {
-            $this->caughtException($e);
-        }
-    }
-
-    /**
-     * Output ajax call in Wp.
-     * This is an overall catch ajax request for Wordpress admin and front.
-     */
-    public function wpAjaxExecute()
-    {
-        $this->ajaxMode = true;
-        $this->wpComponent = $this->componentCtrl->searchComponentByKey($_REQUEST['atkwp']);
-        if (isset($_GET['atkshortcode'])) {
-            //$this->stickyGet('atkshortcode');
-        }
-
-        try {
-            //check_ajax_referer($this->pluginName);
-            $app = new AtkWpApp($this);
-            $app->page = 'admin-ajax';
-            $app->initWpLayout($this->wpComponent, $this->defaultLayout, $this->pluginName);
-            $app->execute($this->ajaxMode);
-        } catch (Exception $e) {
-            $this->caughtException($e);
-        }
-    }
-
-    /**
-     * Dashboard output.
-     *
-     * @param string $key
-     * @param aray   $dashboard
-     * @param bool   $configureMode
-     *
-     * @throws Exception
-     */
-    public function wpDashboardExecute($key, $dashboard, $configureMode = false)
-    {
-        $this->wpComponent = $this->componentCtrl->searchComponentByType('dashboard', $dashboard['id']);
-
-        try {
-            $app = new AtkWpApp($this);
-            $app->initWpLayout($this->wpComponent, $this->defaultLayout, $this->pluginName, ['configureMode' => $configureMode]);
-            $app->execute();
-        } catch (Exception $e) {
-            $this->caughtException($e);
-        }
-    }
-
-    /**
-     * Output metabox view in Wp.
-     *
-     * @param \WP_Post $post  The wordpress post.
-     * @param array    $param The param set in metabox configuration.
-     *
-     * @throws Exception
-     */
-    public function wpMetaBoxExecute(\WP_Post $post, array $param)
-    {
-        //set the view to output.
-        $this->wpComponent = $this->componentCtrl->searchComponentByType('metaBox', $param['id']);
-
-        try {
-            $app = new AtkWpApp($this);
-            $metaBox = $app->initWpLayout($this->wpComponent, $this->defaultLayout, $this->pluginName);
-            $metaBox->addMetaArguments($param['args']);
-            $metaBox->setFieldInput($post->ID, $this->componentCtrl);
-            $app->execute();
-        } catch (Exception $e) {
-            $this->caughtException($e);
-        }
-    }
-
-    /**
-     * Create a new AtkWp View.
+     * Create a new AtkWpApp View.
      * This view is fully initialize with an atk application.
      * WidgetComponent use this to create a view for Widget.
-     *  - You can echo this view using $view->app->execute().
+     *  - You can output (echo) this view using $view->app->execute().
      *
      * @param string $template the template to use with this view.
      * @param string $name     the name of the application.
@@ -225,10 +160,9 @@ class AtkWp
      */
     public function newAtkAppView($template, $name)
     {
-        $this->wpComponent['uses'] = 'atk4\ui\View';
         $app = new AtkWpApp($this);
 
-        return $app->initWpLayout($this->wpComponent, $template, $name);
+        return $app->initWpLayout(new View(), $template, $name);
     }
 
     /**
@@ -256,5 +190,129 @@ class AtkWp
         }
         $view->template->tryDel('Header');
         $view->app->execute();
+    }
+
+    /*--------------------- PLUGIN OUTPUTS -------------------------------*/
+
+    /**
+     * Output Panel view in Wp.
+     */
+    public function wpAdminExecute()
+    {
+        global $hook_suffix;
+        $this->wpComponent = $this->componentCtrl->searchComponentByType('panel', $hook_suffix, 'hook');
+
+        try {
+            $view = new $this->wpComponent['uses']();
+            $app = new AtkWpApp($this);
+            $app->initWpLayout($view, $this->defaultLayout, $this->pluginName);
+            $app->execute();
+        } catch (Exception $e) {
+            $this->caughtException($e);
+        }
+    }
+
+    /**
+     * Output ajax call in Wp.
+     * This is an overall catch ajax request for Wordpress admin and front.
+     */
+    public function wpAjaxExecute()
+    {
+        if ($this->config->getConfig('plugin/use_nounce', false)) {
+            check_ajax_referer($this->pluginName);
+        }
+
+        $this->ajaxMode = true;
+        $this->wpComponent = $this->componentCtrl->searchComponentByKey($_REQUEST['atkwp']);
+
+        $name = $this->pluginName;
+
+        // check if this component has been output more than once
+        // and adjust name accordingly.
+        if ($count = @$_REQUEST['atkwp-count']) {
+            $name = $this->pluginName.'-'.$count;
+        }
+
+        try {
+            $view = new $this->wpComponent['uses']();
+            $app = new AtkWpApp($this);
+            $app->initWpLayout($view, $this->defaultLayout, $name);
+            $app->execute($this->ajaxMode);
+        } catch (Exception $e) {
+            $this->caughtException($e);
+        }
+        die();
+    }
+
+    /**
+     * Dashboard output.
+     *
+     * @param string $key
+     * @param aray   $dashboard
+     * @param bool   $configureMode
+     *
+     * @throws Exception
+     */
+    public function wpDashboardExecute($key, $dashboard, $configureMode = false)
+    {
+        $this->wpComponent = $this->componentCtrl->searchComponentByType('dashboard', $dashboard['id']);
+
+        try {
+            $view = new $this->wpComponent['uses'](['configureMode' => $configureMode]);
+            $app = new AtkWpApp($this);
+            $app->initWpLayout($view, $this->defaultLayout, $this->pluginName);
+            $app->execute();
+        } catch (Exception $e) {
+            $this->caughtException($e);
+        }
+    }
+
+    /**
+     * Output metabox view in Wp.
+     *
+     * @param \WP_Post $post  The wordpress post.
+     * @param array    $param The param set in metabox configuration.
+     *
+     * @throws Exception
+     */
+    public function wpMetaBoxExecute(\WP_Post $post, array $param)
+    {
+        //set the view to output.
+        $this->wpComponent = $this->componentCtrl->searchComponentByType('metaBox', $param['id']);
+
+        try {
+            $view = new $this->wpComponent['uses'](['args' => $param['args']]);
+            $app = new AtkWpApp($this);
+            $metaBox = $app->initWpLayout($view, $this->defaultLayout, $this->pluginName);
+            $metaBox->setFieldInput($post->ID, $this->componentCtrl);
+            $app->execute();
+        } catch (Exception $e) {
+            $this->caughtException($e);
+        }
+    }
+
+    /**
+     * Output shortcode view in Wordpress.
+     *
+     * @param array  $shortcode
+     * @param array  $args
+     *
+     * @throws Exception
+     *
+     * @return string
+     */
+    public function wpShortcodeExecute($shortcode, $args)
+    {
+        $this->wpComponent = $shortcode;
+        $this->componentCount++;
+
+        try {
+            $view = new $this->wpComponent['uses'](['args' => $args]);
+            $app = new AtkWpApp($this);
+            $app->initWpLayout($view, $this->defaultLayout,$this->pluginName.'-'.$this->componentCount);
+            return $app->render(false);
+        } catch (Exception $e) {
+            $this->caughtException($e);
+        }
     }
 }

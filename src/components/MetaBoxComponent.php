@@ -15,6 +15,7 @@ use atkwp\interfaces\MetaFieldInterface;
 class MetaBoxComponent extends Component
 {
     public $fieldCtrl;
+    public $args = null;
 
     /**
      * MetaBoxComponent constructor.
@@ -38,13 +39,6 @@ class MetaBoxComponent extends Component
                 $this->fieldCtrl = new MetaFieldController();
             }
             $this->onInitMetaBoxFields($this->fieldCtrl);
-        }
-    }
-
-    public function addMetaArguments($args)
-    {
-        if ($this instanceof MetaBoxArgumentsInterface) {
-            $this->onMetaBoxArguments($args);
         }
     }
 
