@@ -26,21 +26,47 @@ class AtkWpApp extends App
 {
     use \atk4\core\SessionTrait;
 
-    //The pluggin running this app
+    /**
+     * The plugin running this app.
+     *
+     * @var AtkWp
+     */
     public $plugin;
 
-    //The html produce by this app
+    /**
+     * The html produce by this app.
+     *
+     * @var string
+     */
     public $wpHtml;
 
+    /**
+     * The maximum number of letter of atk element name.
+     *
+     * @var int
+     */
     public $max_name_length = 20;
 
+    /**
+     * The default directory name of atk template.
+     *
+     * @var string
+     */
     public $skin = 'semantic-ui';
 
+    /**
+     * atk view initialisation.
+     */
     public function init()
     {
         parent::init();
     }
 
+    /**
+     * AtkWpApp constructor.
+     *
+     * @param AtkWp|null $plugin
+     */
     public function __construct(AtkWp $plugin = null)
     {
         $this->plugin = $plugin;
@@ -49,9 +75,19 @@ class AtkWpApp extends App
         }
     }
 
+    /**
+     * The layout initialisation for each Wp component.
+     *
+     * @param $view
+     * @param $layout
+     * @param $name
+     *
+     * @throws Exception
+     *
+     * @return \atk4\ui\View The Wp component being output.
+     */
     public function initWpLayout($view, $layout, $name)
     {
-        //$class = '\\'.$component['uses'];
         $this->wpHtml = new AtkWpView(['defaultTemplate' => $layout, 'name' => $name]);
         $this->wpHtml->app = $this;
         $this->wpHtml->init();
@@ -116,6 +152,14 @@ class AtkWpApp extends App
         exit;
     }
 
+    /**
+     * Return url.
+     *
+     * @param array $page
+     * @param bool $hasRequestUri
+     *
+     * @return array|null|string
+     */
     public function url($page = [], $hasRequestUri = false)
     {
         $result = [];
@@ -184,6 +228,14 @@ class AtkWpApp extends App
         return $url;
     }
 
+    /**
+     * Return javascript action.
+     *
+     * @param $app_view
+     *
+     * @throws Exception
+     * @return string
+     */
     public function getJsReady($app_view)
     {
         $actions = [];
