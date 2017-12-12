@@ -27,7 +27,7 @@ class Component extends AtkWpView
     /**
      * The default template file name for this component.
      *
-     * @var string 
+     * @var string
      */
     public $defaultTemplate = 'component.html';
 }
