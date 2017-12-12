@@ -234,6 +234,7 @@ class AtkWpApp extends App
      * @param $app_view
      *
      * @throws Exception
+     *
      * @return string
      */
     public function getJsReady($app_view)
