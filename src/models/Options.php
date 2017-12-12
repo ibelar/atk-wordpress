@@ -34,8 +34,8 @@ class Options extends \atk4\data\Model
     /**
      * Get an option store in options table.
      *
-     * @param string        $option  the option name to retrieve.
-     * @param null||string  $default the default value to use if option does not exist.
+     * @param string       $option  the option name to retrieve.
+     * @param null||string $default the default value to use if option does not exist.
      *
      * @throws \Exception
      *
