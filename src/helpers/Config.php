@@ -13,6 +13,7 @@
 /**
  * Simple configuration utilities.
  */
+
 namespace atkwp\helpers;
 
 class Config

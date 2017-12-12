@@ -13,6 +13,7 @@
 /**
  * Base model.
  */
+
 namespace atkwp\models;
 
 class Model extends \atk4\data\Model

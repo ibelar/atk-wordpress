@@ -156,7 +156,7 @@ class AtkWpApp extends App
      * Return url.
      *
      * @param array $page
-     * @param bool $hasRequestUri
+     * @param bool  $hasRequestUri
      *
      * @return array|null|string
      */
