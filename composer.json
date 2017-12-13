@@ -1,13 +1,15 @@
 {
-  "name": "atk-wordpress",
+  "name": "ibelar/atk-wordpress",
   "type": "package",
-  "description": "Enable use of agile toolkit library in wordpress",
+  "description": "Enable use of agile toolkit framework in wordpress",
+  "homepage": "https://github.com/ibelar/atk-wordpress",
   "license": "MIT",
-  "keywords": ["atk", "wordpress", "atk4/ui"],
+  "keywords": ["agile toolkit", "wordpress", "atk4/ui"],
   "authors": [
     {
       "name": "Alain Belair",
-      "email": "belair.alain@gmail.com"
+      "email": "belair.alain@gmail.com",
+      "homepage": "https://github.com/ibelar"
     }
   ],
   "require": {
