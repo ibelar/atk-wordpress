@@ -4,7 +4,7 @@
   "description": "Enable use of agile toolkit framework in wordpress",
   "homepage": "https://github.com/ibelar/atk-wordpress",
   "license": "MIT",
-  "keywords": ["agile toolkit", "wordpress", "atk4/ui"],
+  "keywords": ["WordPress","WordPress Plugin", "Agile Toolkit", "Atk4", "Atk4ui"],
   "authors": [
     {
       "name": "Alain Belair",
