@@ -1,0 +1,13 @@
+.ui.container {
+    margin-top: 1em;
+}
+
+.ui.button {
+    margin: 2em 0.25em 0em 0em;
+    padding: 0.785em 1.5em 1.785em;
+}
+
+.ui.compact.icon.button {
+    margin-top: 0em;
+    margin-bottom: 0em;
+}

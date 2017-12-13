@@ -54,6 +54,16 @@ class Pathfinder implements PathInterface
     }
 
     /**
+     * Return the current plugin path.
+     *
+     * @return string
+     */
+    public function getPluginPath()
+    {
+        return $this->path;
+    }
+
+    /**
      * Return the path where configuration directory is located.
      *
      * @return mixed|string

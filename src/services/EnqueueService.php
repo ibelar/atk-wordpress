@@ -17,6 +17,7 @@
 
 namespace atkwp\services;
 
+use atkwp\helpers\WpUtil;
 use atkwp\interfaces\ComponentCtrlInterface;
 
 class EnqueueService
@@ -48,6 +49,13 @@ class EnqueueService
      * @var array
      */
     protected $jsRegistered = [];
+
+    /**
+     * The url to the vendor directory.
+     *
+     * @var string
+     */
+    protected $vendorUrl;
 
     /**
      * The url to the assest directory.
@@ -83,12 +91,14 @@ class EnqueueService
      *
      * @param ComponentCtrlInterface $ctrl
      * @param array                  $enqueueFiles
-     * @param string                 $url
+     * @param string                 $assetUrl
+     * @param string                 $vendorUrl
      */
-    public function __construct(ComponentCtrlInterface $ctrl, array $enqueueFiles, $url)
+    public function __construct(ComponentCtrlInterface $ctrl, array $enqueueFiles, $assetUrl, $vendorUrl)
     {
         $this->ctrl = $ctrl;
-        $this->assetsUrl = $url;
+        $this->assetsUrl = $assetUrl;
+        $this->vendorUrl = $vendorUrl;
         if (is_admin()) {
             if (isset($enqueueFiles['admin']['js']) && is_array($enqueueFiles['admin']['js'])) {
                 $this->jsFiles = array_merge($this->jsFiles, $enqueueFiles['admin']['js']);
@@ -141,7 +151,7 @@ class EnqueueService
 
         if (isset($component)) {
             $this->jsFiles = array_merge($this->jsFiles, $this->atkJsFiles);
-            $this->cssFiles = array_merge($this->cssFiles, $this->atkCssFiles);
+            $this->cssFiles = array_merge($this->cssFiles, $this->atkCssFiles, [$this->vendorUrl.'/atk-wordpress/assets/css/atk-wordpress.css']);
 
             //check if component require specific js or css file.
             if (isset($component['js']) && !empty($component['js'])) {

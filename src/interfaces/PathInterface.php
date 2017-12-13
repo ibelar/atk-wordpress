@@ -21,6 +21,13 @@ namespace atkwp\interfaces;
 interface PathInterface
 {
     /**
+     * Return the current plugin path.
+     *
+     * @return string
+     */
+    public function getPluginPath();
+
+    /**
      * @param $templateFileName The template file to lookup.
      *
      * @return mixed string containing the full path to the template file.

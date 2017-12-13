@@ -80,7 +80,8 @@ class ComponentController implements ComponentCtrlInterface
         $this->componentServices['enqueue'] = new EnqueueService(
             $this,
             $plugin->config->getConfig('enqueue', []),
-            $assetUrl
+            $assetUrl,
+            WpUtil::getPluginUrl('vendor', $plugin->pathFinder->getPluginPath().'vendor')
         );
 
         $this->componentServices['panel'] = new PanelService(
