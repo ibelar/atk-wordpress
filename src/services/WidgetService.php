@@ -8,6 +8,7 @@
  * More information on Agile Toolkit: http://www.agiletoolkit.org
  *
  * Author: Alain Belair
+ * https://github.com/ibelar
  * Licensed under MIT
  * =====================================================================*/
 /**

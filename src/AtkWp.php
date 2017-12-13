@@ -8,6 +8,7 @@
  * More information on Agile Toolkit: http://www.agiletoolkit.org
  *
  * Author: Alain Belair
+ * https://github.com/ibelar
  * Licensed under MIT
  * =====================================================================*/
 /**
@@ -199,7 +200,6 @@ class AtkWp
         //register ajax action for this plugin
         add_action("wp_ajax_{$this->getPluginName()}", [$this, 'wpAjaxExecute']);
         if ($this->config->getConfig('plugin/use_ajax_front')) {
-            //$this->sticky_get_arguments['_ajax_nonce'] = wp_create_nonce($this->pluginName);
             //enable Wp ajax front end action.
             add_action("wp_ajax_nopriv_{$this->getPluginName()}", [$this, 'wpAjaxExecute']);
         }
@@ -220,6 +220,8 @@ class AtkWp
      *
      * @param string $template the template to use with this view.
      * @param string $name     the name of the application.
+     *
+     * @throws Exception
      *
      * @return \atk4\ui\View
      */
