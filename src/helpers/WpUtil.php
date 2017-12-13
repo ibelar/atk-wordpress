@@ -7,7 +7,7 @@
  * Please note that when atk is mentioned it generally refer to Agile Toolkit.
  * More information on Agile Toolkit: http://www.agiletoolkit.org
  *
- * Author: Alain Belair 
+ * Author: Alain Belair
  * https://github.com/ibelar
  * Licensed under MIT
  * =====================================================================*/
