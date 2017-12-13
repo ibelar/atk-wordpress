@@ -111,6 +111,7 @@ class Pathfinder implements PathInterface
     {
         $this->filesLocation['template']['plugin'] = $path.'templates/';
         $this->filesLocation['template']['atkwp'] = $path.'vendor/atk-wordpress/templates/';
+        $this->filesLocation['template']['atkwp'] = $path.'vendor/ibelar/atk-wordpress/templates/';
         $this->filesLocation['template']['atkui'] = $path.'vendor/atk4/ui/template/'.$skin.'/';
     }
 
