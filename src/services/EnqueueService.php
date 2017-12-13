@@ -17,7 +17,6 @@
 
 namespace atkwp\services;
 
-use atkwp\helpers\WpUtil;
 use atkwp\interfaces\ComponentCtrlInterface;
 
 class EnqueueService
