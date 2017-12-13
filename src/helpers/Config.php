@@ -19,6 +19,8 @@ namespace atkwp\helpers;
 
 class Config
 {
+    const UNDEFINED = '_atk4_undefined_value';
+
     /**
      * Contains all configuration options.
      *
@@ -68,9 +70,9 @@ class Config
      *
      * @return mixed
      */
-    public function setConfig($config = [], $val = UNDEFINED)
+    public function setConfig($config = [], $val = self::UNDEFINED)
     {
-        if ($val !== UNDEFINED) {
+        if ($val !== self::UNDEFINED) {
             return $this->setConfig([$config => $val]);
         }
         $this->config = array_merge($this->config ?: [], $config ?: []);
@@ -84,7 +86,7 @@ class Config
      *
      * @return string
      */
-    public function getConfig($path, $default_value = UNDEFINED)
+    public function getConfig($path, $default_value = self::UNDEFINED)
     {
         /*
          * For given path such as 'dsn' or 'logger/log_dir' returns
@@ -99,7 +101,7 @@ class Config
         $current_position = $this->config;
         foreach ($parts as $part) {
             if (!array_key_exists($part, $current_position)) {
-                if ($default_value !== UNDEFINED) {
+                if ($default_value !== self::UNDEFINED) {
                     return $default_value;
                 }
 
