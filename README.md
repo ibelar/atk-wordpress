@@ -182,7 +182,7 @@ The assest's a plugin need. It usually contains:
 
 Beside the [plugin starter project](http://github.com/ibelar/atk-wordress-starter), there is a more complete plugin sample ([atk-wordpress-sample](http://github.com/ibelar/atk-wordress-sample)) available that use most of Wordpress components.
 
-#License
+# License
 
 Copyright (c) 2017 Alain Belair. MIT Licensed,
 
