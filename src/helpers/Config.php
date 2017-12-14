@@ -97,7 +97,8 @@ class Config
                 if ($default_value !== self::UNDEFINED) {
                     return $default_value;
                 }
-                return null;
+
+                return;
             } else {
                 $current_position = $current_position[$part];
             }
