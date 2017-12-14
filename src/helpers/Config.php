@@ -79,24 +79,17 @@ class Config
     }
 
     /**
-     * Load config if necessary and look up corresponding setting.
+     * Return a configuration value,
+     * or a default value if no configuration is found and a default value is supply,
+     * or null if no configuration is found and no default value is supply.
      *
      * @param string $path
      * @param mixed  $default_value
      *
-     * @return string
+     * @return mixed||null
      */
     public function getConfig($path, $default_value = self::UNDEFINED)
     {
-        /*
-         * For given path such as 'dsn' or 'logger/log_dir' returns
-         * corresponding config value. Throws ExceptionNotConfigured if not set.
-         *
-         * To find out if config is set, do this:
-         *
-         * $var_is_set = true;
-         * try { $app->getConfig($path); } catch ExceptionNotConfigured($e) { $var_is_set=false; }
-         */
         $parts = explode('/', $path);
         $current_position = $this->config;
         foreach ($parts as $part) {
@@ -104,10 +97,7 @@ class Config
                 if ($default_value !== self::UNDEFINED) {
                     return $default_value;
                 }
-
-                throw $this->exception('Configuration parameter is missing in config.php', 'NotConfigured')
-                           ->addMoreInfo('config_files_loaded', $this->config_files_loaded)
-                           ->addMoreInfo('missign_line', " \$config['".implode("']['", explode('/', $path))."']");
+                return null;
             } else {
                 $current_position = $current_position[$part];
             }

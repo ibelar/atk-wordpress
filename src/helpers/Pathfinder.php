@@ -110,8 +110,8 @@ class Pathfinder implements PathInterface
     private function setFilesLocation($path, $skin)
     {
         $this->filesLocation['template']['plugin'] = $path.'templates/';
-        $this->filesLocation['template']['atkwp'] = $path.'vendor/atk-wordpress/templates/';
         $this->filesLocation['template']['atkwp'] = $path.'vendor/ibelar/atk-wordpress/templates/';
+        $this->filesLocation['template']['atkwp_debug'] = $path.'vendor/atk-wordpress/templates/';
         $this->filesLocation['template']['atkui'] = $path.'vendor/atk4/ui/template/'.$skin.'/';
     }
 
@@ -135,8 +135,7 @@ class Pathfinder implements PathInterface
         }
 
         throw new \atk4\ui\Exception([
-            'Unable to get path location for file',
-            'file'=> $fileName,
+            'Unable to get path location for file: '.$fileName,
         ]);
     }
 }

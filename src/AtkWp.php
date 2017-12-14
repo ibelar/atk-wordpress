@@ -199,7 +199,8 @@ class AtkWp
 
         //register ajax action for this plugin
         add_action("wp_ajax_{$this->getPluginName()}", [$this, 'wpAjaxExecute']);
-        if ($this->config->getConfig('plugin/use_ajax_front')) {
+
+        if ($this->config->getConfig('plugin/use_ajax_front', false)) {
             //enable Wp ajax front end action.
             add_action("wp_ajax_nopriv_{$this->getPluginName()}", [$this, 'wpAjaxExecute']);
         }

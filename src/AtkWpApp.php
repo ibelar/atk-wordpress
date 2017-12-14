@@ -177,7 +177,7 @@ class AtkWpApp extends App
             $sticky['atkwp-count'] = $this->plugin->getComponentCount();
         }
 
-        if ($this->plugin->config->getConfig('plugin/use_nounce')) {
+        if ($this->plugin->config->getConfig('plugin/use_nounce', false)) {
             $sticky['_ajax_nonce'] = helpers\WpUtil::createWpNounce($this->plugin->getPluginName());
         }
 
