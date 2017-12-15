@@ -83,7 +83,6 @@ class WpInput extends Generic
      */
     public $placeholder = null;
 
-
     public function init()
     {
         parent::init();
