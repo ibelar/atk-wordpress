@@ -18,7 +18,7 @@
 
 namespace atkwp\controllers;
 
-use atk4\ui\FormField\Generic;
+use atk4\ui\View;
 use atkwp\interfaces\MetaFieldInterface;
 
 class MetaFieldController implements MetaFieldInterface
@@ -34,10 +34,10 @@ class MetaFieldController implements MetaFieldInterface
      * Add field object to a container.
      *
      * @param string       $name        The name of the field.
-     * @param Generic      $field       The field object to add to container.
+     * @param View         $field       The field object to add to container.
      * @param null||string $metaKeyName The meta key name to save in db.
      */
-    public function addField($name, Generic $field, $metaKeyName = null)
+    public function addField($name, View $field, $metaKeyName = null)
     {
         // Add default name if not supplied.
         // adding underscore prevent Wp to display in custom field setup.
@@ -54,7 +54,7 @@ class MetaFieldController implements MetaFieldInterface
      *
      * @param $name
      *
-     * @return Generic The field object.
+     * @return View The field object.
      */
     public function getField($name)
     {
