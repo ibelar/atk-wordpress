@@ -137,11 +137,6 @@ Minimally, it should look like this:
         {
             // TODO: Implement deactivatePlugin() method.
         }
-    
-        public function uninstallPlugin()
-        {
-            // TODO: Implement uninstallPlugin() method.
-        }
     }
     
 ### configuratons folder
