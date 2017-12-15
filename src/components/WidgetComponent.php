@@ -57,7 +57,7 @@ class WidgetComponent extends \WP_Widget
         $this->plugin = $plugin;
         $this->name = $config['title'];
         //make sure our id_base is unique
-        $this->id_base = $plugin->name.$id;
+        $this->id_base = $plugin->pluginName.'-'.$id;
         //Widget option_name in Option table that will hold the widget instance field value.
         $this->option_name = 'widget_'.$this->id_base;
         $this->widget_options = wp_parse_args($config['widget_ops'], ['classname' => $this->option_name]);
