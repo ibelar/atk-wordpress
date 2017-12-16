@@ -82,6 +82,7 @@ class ShortcodeService
     {
         foreach ($shortcodes as $key => $shortcode) {
             $shortcodes[$key]['id'] = $key;
+            //set a not enqueue yet. Enqueue is done when shortocode is building.
             $shortcodes[$key]['enqueued'] = false;
         }
         $this->shortcodes = $shortcodes;
@@ -108,9 +109,9 @@ class ShortcodeService
     public function registerShortcode($key, $shortcode)
     {
         add_shortcode($shortcode['name'], function ($args) use ($key, $shortcode) {
-            if (!$this->shortcode[$shortcode['id']]['enqueued']) {
+            if (!$this->shortcodes[$key]['enqueued']) {
                 $this->ctrl->enqueueShortcodeFiles($shortcode);
-                $this->shortcode[$shortcode['id']]['enqueued'] = true;
+                $this->shortcodes[$key]['enqueued'] = true;
             }
 
             return call_user_func_array($this->executable, [$shortcode, $args]);

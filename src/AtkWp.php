@@ -230,7 +230,7 @@ class AtkWp
     {
         $app = new AtkWpApp($this);
 
-        return $app->initWpLayout(new View(), $template, $name);
+        return $app->initWpLayout(new AtkWpView(), $template, $name);
     }
 
     /**

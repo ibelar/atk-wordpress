@@ -13,11 +13,30 @@
  * =====================================================================*/
 /**
  * The atk basic view for all Wp components.
- * All Wp component views are children of this class.
+ * All Wp component views derive from this class.
  */
 
 namespace atkwp;
 
 class AtkWpView extends \atk4\ui\View
 {
+    /**
+     * Return the plugin running this view.
+     *
+     * @return AtkWp
+     */
+    public function getPluginInstance()
+    {
+        return $this->app->plugin;
+    }
+
+    /**
+     * Return the db connection set for this plugin.
+     *
+     * @return mixed
+     */
+    public function getDbConnection()
+    {
+        return $this->app->plugin->getDbConnection();
+    }
 }

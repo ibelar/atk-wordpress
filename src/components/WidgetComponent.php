@@ -34,8 +34,18 @@ use atkwp\AtkWp;
 
 class WidgetComponent extends \WP_Widget
 {
-    public $id;
+    /**
+     * The plugin running this widget.
+     *
+     * @var AtkWp
+     */
     public $plugin;
+
+    /**
+     * The current widget configuration.
+     *
+     * @var array
+     */
     public $widgetConfig;
 
     public function __construct($idBase = null, $name = 'atkDefaultName', $widgetOtions = [], $controlOptions = [])
@@ -56,14 +66,20 @@ class WidgetComponent extends \WP_Widget
     {
         $this->plugin = $plugin;
         $this->name = $config['title'];
+
         //make sure our id_base is unique
-        $this->id_base = $plugin->pluginName.'-'.$id;
+        $this->id_base = $plugin->pluginName.'_'.$id;
+
         //Widget option_name in Option table that will hold the widget instance field value.
-        $this->option_name = 'widget_'.$this->id_base;
-        $this->widget_options = wp_parse_args($config['widget_ops'], ['classname' => $this->option_name]);
-        $this->control_options = wp_parse_args($config['widget_control_ops'], ['id_base' => $this->id_base]);
+        $this->option_name = 'widget-'.$this->id_base;
+        $this->widget_options = wp_parse_args($this->widget_options, $config['widget_ops']);
+
+        $control = (isset($config['widget_control_ops'])) ? $config['widget_control_ops'] : [];
+        $this->control_options = wp_parse_args($control, ['id_base' => $this->id_base]);
+
         // Our widget definition
         $this->widgetConfig = $config;
+
         //Add the id value to our widget definition.
         $this->widgetConfig['id'] = $id;
     }
@@ -75,6 +91,8 @@ class WidgetComponent extends \WP_Widget
      *
      * @param array $args
      * @param array $instance
+     *
+     * @throws Exception
      */
     public function widget($args, $instance)
     {
@@ -105,6 +123,8 @@ class WidgetComponent extends \WP_Widget
      * Use the $view pass to onForm for adding your input field.
      *
      * @param array $instance
+     *
+     * @throws Exception
      *
      * @return string|void
      */
