@@ -150,7 +150,7 @@ class EnqueueService
 
         if (isset($component)) {
             $this->jsFiles = array_merge($this->jsFiles, $this->atkJsFiles);
-            $this->cssFiles = array_merge($this->cssFiles, $this->atkCssFiles, [$this->vendorUrl.'/atk-wordpress/assets/css/atk-wordpress.css']);
+            $this->cssFiles = array_merge($this->cssFiles, $this->atkCssFiles, [$this->vendorUrl.'/ibelar/atk-wordpress/assets/css/atk-wordpress.css']);
 
             //check if component require specific js or css file.
             if (isset($component['js']) && !empty($component['js'])) {
