@@ -84,10 +84,10 @@ class EnqueueService
      */
     public function __construct(ComponentCtrlInterface $ctrl, array $enqueueFiles, $assetUrl, $vendorUrl)
     {
-        $this->ctrl           = $ctrl;
-        $this->assetsUrl      = $assetUrl;
-        $this->vendorUrl      = $vendorUrl;
-        $this->atkWpAssetsUrl = $vendorUrl . '/ibelar/atk-wordpress/assets';
+        $this->ctrl = $ctrl;
+        $this->assetsUrl = $assetUrl;
+        $this->vendorUrl = $vendorUrl;
+        $this->atkWpAssetsUrl = $vendorUrl.'/ibelar/atk-wordpress/assets';
 
         if (is_admin()) {
             if (isset($enqueueFiles['admin']['js']) && is_array($enqueueFiles['admin']['js'])) {
@@ -130,7 +130,7 @@ class EnqueueService
             true
         );
 
-        /**
+        /*
          * Register our js files.
          * Because we declare dependencies for atk4JS, then calling wp_enqueue_script('atk4JS') will also load
          * these dependencies.
