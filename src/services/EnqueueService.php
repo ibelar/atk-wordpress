@@ -108,7 +108,6 @@ class EnqueueService
         }
     }
 
-
     /**
      * Register js and css files necessary for our components.
      */
