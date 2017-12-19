@@ -75,7 +75,7 @@ class ComponentController implements ComponentCtrlInterface
     public function initializeComponents(AtkWp $plugin)
     {
         $assetUrl = WpUtil::getPluginUrl('assets', $plugin->pathFinder->getAssetsPath());
-        $this->plugin = $plugin;
+        //$this->plugin = $plugin;
 
         $this->componentServices['enqueue'] = new EnqueueService(
             $this,

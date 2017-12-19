@@ -28,6 +28,10 @@ class EnqueueService
      */
     private $ctrl;
 
+    protected $semanticUiVersion = '2.2.12';
+    protected $semanticCalanderVersion = '0.0.8';
+    protected $atk4JsVersion = '1.3.0';
+
     /**
      * The js files to load.
      *
@@ -57,33 +61,18 @@ class EnqueueService
     protected $vendorUrl;
 
     /**
-     * The url to the assest directory.
+     * The url to this assets directory.
+     *
+     * @var string
+     */
+    protected $atkWpAssetsUrl;
+
+    /**
+     * The url to the plugin assest directory.
      *
      * @var string
      */
     protected $assetsUrl;
-
-    /**
-     * The necessary js files to run agile toolkit.
-     *
-     * @var array
-     */
-    protected $atkJsFiles = [
-        'https://cdnjs.cloudflare.com/ajax/libs/jquery-serialize-object/2.5.0/jquery.serialize-object.min.js',
-        'https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.10/semantic.min.js',
-        'https://cdn.rawgit.com/mdehoog/Semantic-UI-Calendar/0.0.8/dist/calendar.min.js',
-        'https://cdn.rawgit.com/atk4/ui/1.3.0/public/atk4JS.min.js',
-    ];
-
-    /**
-     * The necessary css files to run agile toolkit.
-     *
-     * @var array
-     */
-    protected $atkCssFiles = [
-        'https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.10/semantic.css',
-        'https://cdn.rawgit.com/mdehoog/Semantic-UI-Calendar/0.0.8/dist/calendar.css',
-    ];
 
     /**
      * EnqueueService constructor.
@@ -95,15 +84,17 @@ class EnqueueService
      */
     public function __construct(ComponentCtrlInterface $ctrl, array $enqueueFiles, $assetUrl, $vendorUrl)
     {
-        $this->ctrl = $ctrl;
-        $this->assetsUrl = $assetUrl;
-        $this->vendorUrl = $vendorUrl;
+        $this->ctrl           = $ctrl;
+        $this->assetsUrl      = $assetUrl;
+        $this->vendorUrl      = $vendorUrl;
+        $this->atkWpAssetsUrl = $vendorUrl . '/ibelar/atk-wordpress/assets';
+
         if (is_admin()) {
             if (isset($enqueueFiles['admin']['js']) && is_array($enqueueFiles['admin']['js'])) {
                 $this->jsFiles = array_merge($this->jsFiles, $enqueueFiles['admin']['js']);
             }
             if (isset($enqueueFiles['admin']['css']) && is_array($enqueueFiles['admin']['css'])) {
-                $this->jsFiles = array_merge($this->jsFiles, $enqueueFiles['admin']['css']);
+                $this->cssFiles = array_merge($this->cssFiles, $enqueueFiles['admin']['css']);
             }
             add_action('admin_enqueue_scripts', [$this, 'enqueueAdminFiles']);
         } else {
@@ -111,10 +102,68 @@ class EnqueueService
                 $this->jsFiles = array_merge($this->jsFiles, $enqueueFiles['front']['js']);
             }
             if (isset($enqueueFiles['front']['css']) && is_array($enqueueFiles['front']['css'])) {
-                $this->jsFiles = array_merge($this->jsFiles, $enqueueFiles['front']['css']);
+                $this->cssFiles = array_merge($this->cssFiles, $enqueueFiles['front']['css']);
             }
             add_action('wp_enqueue_scripts', [$this, 'enqueueFrontFiles']);
         }
+    }
+
+
+    /**
+     * Register js and css files necessary for our components.
+     */
+    protected function registerAtkWpFiles()
+    {
+        wp_register_script(
+            'semantic',
+            "{$this->atkWpAssetsUrl}/external/semantic-ui-{$this->semanticUiVersion}/semantic.min.js",
+            [],
+            $this->semanticUiVersion,
+            true
+        );
+
+        wp_register_script(
+            'semantic-calendar',
+            "{$this->atkWpAssetsUrl}/external/mdehoog/Semantic-UI-Calendar/{$this->semanticCalanderVersion}/calendar.min.js",
+            [],
+            $this->semanticCalanderVersion,
+            true
+        );
+
+        /**
+         * Register our js files.
+         * Because we declare dependencies for atk4JS, then calling wp_enqueue_script('atk4JS') will also load
+         * these dependencies.
+         */
+        wp_register_script(
+            'atk4JS',
+            "{$this->atkWpAssetsUrl}/external/atk4/ui/{$this->atk4JsVersion}/atk4JS.min.js",
+            ['jquery-serialize-object', 'semantic', 'semantic-calendar'],
+            $this->atk4JsVersion,
+            true
+        );
+
+        wp_register_style(
+            'semantic',
+            "{$this->atkWpAssetsUrl}/external/semantic-ui-{$this->semanticUiVersion}/semantic.min.css",
+            [],
+            $this->semanticUiVersion
+        );
+
+        wp_register_style(
+            'semantic-calendar',
+            "{$this->atkWpAssetsUrl}/external/mdehoog/Semantic-UI-Calendar/{$this->semanticCalanderVersion}/calendar.min.css",
+            [],
+            $this->semanticCalanderVersion
+        );
+
+        // Admin section css fix for certain semantic ui element.
+        wp_register_style(
+            'atk-wp',
+            "{$this->atkWpAssetsUrl}/css/atk-wordpress.css",
+            ['semantic', 'semantic-calendar'],
+            null
+        );
     }
 
     /**
@@ -124,6 +173,7 @@ class EnqueueService
      */
     public function enqueueAdminFiles($hook)
     {
+        $this->registerAtkWpFiles();
         // Check if this is an atk component.
         // We need to load js and css for atk when using panel or metaBox
         if ($component = $this->ctrl->searchComponentByType('panel', $hook, 'hook')) {
@@ -149,9 +199,6 @@ class EnqueueService
         }
 
         if (isset($component)) {
-            $this->jsFiles = array_merge($this->jsFiles, $this->atkJsFiles);
-            $this->cssFiles = array_merge($this->cssFiles, $this->atkCssFiles, [$this->vendorUrl.'/ibelar/atk-wordpress/assets/css/atk-wordpress.css']);
-
             //check if component require specific js or css file.
             if (isset($component['js']) && !empty($component['js'])) {
                 $this->jsFiles = array_merge($this->jsFiles, $component['js']);
@@ -162,6 +209,10 @@ class EnqueueService
             if (isset($component['js-inc']) && !empty($component['js-inc'])) {
                 $this->jsRegistered = array_merge($this->jsRegistered, $component['js-inc']);
             }
+
+            //Load our register atk js and css.
+            wp_enqueue_script('atk4JS');
+            wp_enqueue_style('atk-wp');
         }
 
         if (!empty($this->jsFiles)) {
@@ -180,6 +231,8 @@ class EnqueueService
      */
     public function enqueueFrontFiles()
     {
+        $this->registerAtkWpFiles();
+
         if (!empty($this->jsFiles)) {
             $this->enqueueFiles($this->jsFiles, 'js');
         }
@@ -199,8 +252,10 @@ class EnqueueService
      */
     public function enqueueShortCodeFiles($shortcode)
     {
-        $jsFiles = array_merge($this->jsFiles, $shortcode['js'], ($shortcode['atk']) ? $this->atkJsFiles : []);
-        $cssFiles = array_merge($this->cssFiles, $shortcode['css'], ($shortcode['atk']) ? $this->atkCssFiles : []);
+        if ($shortcode['atk']) {
+            $this->enqueueJsInclude(['atk4JS']);
+            $this->enqueueCssInclude(['semantic', 'semantic-calendar']);
+        }
 
         if (!empty($jsFiles)) {
             $this->enqueueFiles($jsFiles, 'js');
