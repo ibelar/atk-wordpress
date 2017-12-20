@@ -29,7 +29,7 @@ class EnqueueService
     private $ctrl;
 
     protected $semanticUiVersion = '2.2.12';
-    protected $semanticCalanderVersion = '0.0.8';
+    protected $semanticCalendarVersion = '0.0.8';
     protected $atk4JsVersion = '1.3.0';
 
     /**
@@ -248,7 +248,7 @@ class EnqueueService
     {
         wp_register_script(
             'semantic',
-            "{$this->atkWpAssetsUrl}/external/semantic-ui-{$this->semanticUiVersion}/semantic.min.js",
+            "{$this->atkWpAssetsUrl}/vendor/semantic-ui/{$this->semanticUiVersion}/semantic.min.js",
             [],
             $this->semanticUiVersion,
             true
@@ -256,9 +256,9 @@ class EnqueueService
 
         wp_register_script(
             'semantic-calendar',
-            "{$this->atkWpAssetsUrl}/external/mdehoog/Semantic-UI-Calendar/{$this->semanticCalanderVersion}/calendar.min.js",
+            "{$this->atkWpAssetsUrl}/vendor/mdehoog/Semantic-UI-Calendar/{$this->semanticCalendarVersion}/calendar.min.js",
             [],
-            $this->semanticCalanderVersion,
+            $this->semanticCalendarVersion,
             true
         );
 
@@ -269,7 +269,7 @@ class EnqueueService
          */
         wp_register_script(
             'atk4JS',
-            "{$this->atkWpAssetsUrl}/external/atk4/ui/{$this->atk4JsVersion}/atk4JS.min.js",
+            "{$this->atkWpAssetsUrl}/vendor/atk4/ui/{$this->atk4JsVersion}/atk4JS.min.js",
             ['jquery-serialize-object', 'semantic', 'semantic-calendar'],
             $this->atk4JsVersion,
             true
@@ -277,16 +277,16 @@ class EnqueueService
 
         wp_register_style(
             'semantic',
-            "{$this->atkWpAssetsUrl}/external/semantic-ui-{$this->semanticUiVersion}/semantic.min.css",
+            "{$this->atkWpAssetsUrl}/vendor/semantic-ui/{$this->semanticUiVersion}/semantic.min.css",
             [],
             $this->semanticUiVersion
         );
 
         wp_register_style(
             'semantic-calendar',
-            "{$this->atkWpAssetsUrl}/external/mdehoog/Semantic-UI-Calendar/{$this->semanticCalanderVersion}/calendar.min.css",
+            "{$this->atkWpAssetsUrl}/vendor/mdehoog/Semantic-UI-Calendar/{$this->semanticCalendarVersion}/calendar.min.css",
             [],
-            $this->semanticCalanderVersion
+            $this->semanticCalendarVersion
         );
 
         // Admin section css fix for certain semantic ui element.
