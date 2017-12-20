@@ -27,9 +27,9 @@ class Options extends \atk4\data\Model
         $this->id_field = 'option_id';
         parent::init();
 
-        $this->addField('name', ['actual'=>'option_name']);
-        $this->addField('value', ['actual'=>'option_value']);
-        $this->addField('autoload');
+        $this->addField('name', ['actual' => 'option_name']);
+        $this->addField('value', ['actual' => 'option_value']);
+        $this->addField('autoload', ['default' => true]);
     }
 
     /**
