@@ -55,20 +55,23 @@ class EnqueueService
 
     /**
      * The url to the vendor directory.
+     * ./pluginName/vendor
      *
      * @var string
      */
     protected $vendorUrl;
 
     /**
-     * The url to this assets directory.
+     * The url to this package assets directory.
+     * ./pluginName/vendor/ibelar/atk-wordpress/assets.
      *
      * @var string
      */
     protected $atkWpAssetsUrl;
 
     /**
-     * The url to the plugin assest directory.
+     * The url to the plugin assets directory.
+     * ./pluginName/assest.
      *
      * @var string
      */
@@ -106,63 +109,6 @@ class EnqueueService
             }
             add_action('wp_enqueue_scripts', [$this, 'enqueueFrontFiles']);
         }
-    }
-
-    /**
-     * Register js and css files necessary for our components.
-     */
-    protected function registerAtkWpFiles()
-    {
-        wp_register_script(
-            'semantic',
-            "{$this->atkWpAssetsUrl}/external/semantic-ui-{$this->semanticUiVersion}/semantic.min.js",
-            [],
-            $this->semanticUiVersion,
-            true
-        );
-
-        wp_register_script(
-            'semantic-calendar',
-            "{$this->atkWpAssetsUrl}/external/mdehoog/Semantic-UI-Calendar/{$this->semanticCalanderVersion}/calendar.min.js",
-            [],
-            $this->semanticCalanderVersion,
-            true
-        );
-
-        /*
-         * Register our js files.
-         * Because we declare dependencies for atk4JS, then calling wp_enqueue_script('atk4JS') will also load
-         * these dependencies.
-         */
-        wp_register_script(
-            'atk4JS',
-            "{$this->atkWpAssetsUrl}/external/atk4/ui/{$this->atk4JsVersion}/atk4JS.min.js",
-            ['jquery-serialize-object', 'semantic', 'semantic-calendar'],
-            $this->atk4JsVersion,
-            true
-        );
-
-        wp_register_style(
-            'semantic',
-            "{$this->atkWpAssetsUrl}/external/semantic-ui-{$this->semanticUiVersion}/semantic.min.css",
-            [],
-            $this->semanticUiVersion
-        );
-
-        wp_register_style(
-            'semantic-calendar',
-            "{$this->atkWpAssetsUrl}/external/mdehoog/Semantic-UI-Calendar/{$this->semanticCalanderVersion}/calendar.min.css",
-            [],
-            $this->semanticCalanderVersion
-        );
-
-        // Admin section css fix for certain semantic ui element.
-        wp_register_style(
-            'atk-wp',
-            "{$this->atkWpAssetsUrl}/css/atk-wordpress.css",
-            ['semantic', 'semantic-calendar'],
-            null
-        );
     }
 
     /**
@@ -296,11 +242,68 @@ class EnqueueService
     }
 
     /**
+     * Register js and css files necessary for our components.
+     */
+    protected function registerAtkWpFiles()
+    {
+        wp_register_script(
+            'semantic',
+            "{$this->atkWpAssetsUrl}/external/semantic-ui-{$this->semanticUiVersion}/semantic.min.js",
+            [],
+            $this->semanticUiVersion,
+            true
+        );
+
+        wp_register_script(
+            'semantic-calendar',
+            "{$this->atkWpAssetsUrl}/external/mdehoog/Semantic-UI-Calendar/{$this->semanticCalanderVersion}/calendar.min.js",
+            [],
+            $this->semanticCalanderVersion,
+            true
+        );
+
+        /*
+         * Register our js files.
+         * Because we declare dependencies for atk4JS, then calling wp_enqueue_script('atk4JS') will also load
+         * these dependencies.
+         */
+        wp_register_script(
+            'atk4JS',
+            "{$this->atkWpAssetsUrl}/external/atk4/ui/{$this->atk4JsVersion}/atk4JS.min.js",
+            ['jquery-serialize-object', 'semantic', 'semantic-calendar'],
+            $this->atk4JsVersion,
+            true
+        );
+
+        wp_register_style(
+            'semantic',
+            "{$this->atkWpAssetsUrl}/external/semantic-ui-{$this->semanticUiVersion}/semantic.min.css",
+            [],
+            $this->semanticUiVersion
+        );
+
+        wp_register_style(
+            'semantic-calendar',
+            "{$this->atkWpAssetsUrl}/external/mdehoog/Semantic-UI-Calendar/{$this->semanticCalanderVersion}/calendar.min.css",
+            [],
+            $this->semanticCalanderVersion
+        );
+
+        // Admin section css fix for certain semantic ui element.
+        wp_register_style(
+            'atk-wp',
+            "{$this->atkWpAssetsUrl}/css/atk-wordpress.css",
+            ['semantic', 'semantic-calendar'],
+            null
+        );
+    }
+
+    /**
      * The js files to includes that are already registered within WP.
      *
      * @param array $files
      */
-    public function enqueueJsInclude(array $files)
+    protected function enqueueJsInclude(array $files)
     {
         foreach ($files as $file) {
             wp_enqueue_script($file);
@@ -312,7 +315,7 @@ class EnqueueService
      *
      * @param array $files
      */
-    public function enqueueCssInclude(array $files)
+    protected function enqueueCssInclude(array $files)
     {
         foreach ($files as $file) {
             wp_enqueue_style($file);
