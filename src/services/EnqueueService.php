@@ -55,7 +55,7 @@ class EnqueueService
 
     /**
      * The url to the vendor directory.
-     * ./pluginName/vendor
+     * ./pluginName/vendor.
      *
      * @var string
      */
