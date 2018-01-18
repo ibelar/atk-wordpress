@@ -30,7 +30,7 @@ class EnqueueService
 
     protected $semanticUiVersion = '2.2.12';
     protected $semanticCalendarVersion = '0.0.8';
-    protected $atk4JsVersion = '1.3.0';
+    protected $atkUiVersion = '1.3.0';
 
     /**
      * The js files to load.
@@ -156,7 +156,7 @@ class EnqueueService
             }
 
             //Load our register atk js and css.
-            wp_enqueue_script('atk4JS');
+            wp_enqueue_script('atkjs-ui');
             wp_enqueue_style('atk-wp');
         }
 
@@ -198,7 +198,7 @@ class EnqueueService
     public function enqueueShortCodeFiles($shortcode)
     {
         if ($shortcode['atk']) {
-            $this->enqueueJsInclude(['atk4JS']);
+            $this->enqueueJsInclude(['atkjs-ui']);
             $this->enqueueCssInclude(['semantic', 'semantic-calendar']);
         }
 
@@ -268,10 +268,10 @@ class EnqueueService
          * these dependencies.
          */
         wp_register_script(
-            'atk4JS',
-            "{$this->atkWpAssetsUrl}/vendor/atk4/ui/{$this->atk4JsVersion}/atk4JS.min.js",
+            'atkjs-ui',
+            "{$this->atkWpAssetsUrl}/vendor/atk4/ui/{$this->atkUiVersion}/atkjs-ui.min.js",
             ['jquery-serialize-object', 'semantic', 'semantic-calendar'],
-            $this->atk4JsVersion,
+            $this->atkUiVersion,
             true
         );
 

@@ -2,12 +2,34 @@
     margin-top: 1em;
 }
 
-.ui.button {
-    margin: 2em 0.25em 0em 0em;
+/** Fix button in general **/
+.ui.button, .ui.icon.button {
+    /*margin: 2em 0.25em 0em 0em;*/
     padding: 0.785em 1.5em 1.785em;
 }
 
 .ui.compact.icon.button {
     margin-top: 0em;
     margin-bottom: 0em;
+}
+
+/** Fix button using right class **/
+.ui.button {
+    float: none;
+}
+
+/** Fix button using an arrow icon **/
+.ui > .arrow:after {
+    background: none;
+}
+
+/** Fix button disabled state **/
+.ui.disabled.button {
+    background-color: lightgrey !important;
+    color: rgba(0,0,0,.6) !important;
+}
+
+/** Fix Label **/
+.ui.label {
+    padding: 1.2em .833em;
 }
