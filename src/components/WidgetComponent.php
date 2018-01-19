@@ -96,6 +96,7 @@ class WidgetComponent extends \WP_Widget
      */
     public function widget($args, $instance)
     {
+        $this->plugin->getPluginLoader()->enableLoader();
         echo $args['before_widget'];
 
         $title = apply_filters('widget_title', $instance['title']);
@@ -114,6 +115,7 @@ class WidgetComponent extends \WP_Widget
         }
 
         echo $args['after_widget'];
+        $this->plugin->getPluginLoader()->disableLoader();
     }
 
     /**
@@ -130,6 +132,7 @@ class WidgetComponent extends \WP_Widget
      */
     public function form($instance)
     {
+        $this->plugin->getPluginLoader()->enableLoader();
         try {
             $view = $this->onForm($this->plugin->newAtkAppView('widget.html', $this->widgetConfig['id']), $instance);
             if (!$view) {
@@ -139,6 +142,7 @@ class WidgetComponent extends \WP_Widget
         } catch (Exception $e) {
             $this->plugin->caughtException($e);
         }
+        $this->plugin->getPluginLoader()->disableLoader();
     }
 
     /**

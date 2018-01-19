@@ -34,6 +34,8 @@ class AtkWp
      */
     public $pluginName;
 
+    public $pluginLoader = null;
+
     /**
      * The plugin component ctrl.
      *
@@ -87,12 +89,13 @@ class AtkWp
      * @param PathInterface          $pathFinder The pathFinder object for retrieving atk template file under WP.
      * @param ComponentCtrlInterface $ctrl       The ctrl object responsible to initialize all WP components.
      */
-    public function __construct($pluginName, PathInterface $pathFinder, ComponentCtrlInterface $ctrl)
+    public function __construct($pluginName, PathInterface $pathFinder, ComponentCtrlInterface $ctrl, $loader)
     {
         $this->pluginName = $pluginName;
         $this->pathFinder = $pathFinder;
         $this->componentCtrl = $ctrl;
         $this->config = new Config($this->pathFinder->getConfigurationPath());
+        $this->pluginLoader = $loader;
         $this->init();
     }
 
@@ -104,6 +107,11 @@ class AtkWp
     public function getPluginName()
     {
         return $this->pluginName;
+    }
+
+    public function getPluginLoader()
+    {
+        return $this->pluginLoader;
     }
 
     /**
@@ -267,6 +275,7 @@ class AtkWp
      */
     public function wpAdminExecute()
     {
+        $this->pluginLoader->enableLoader();
         global $hook_suffix;
         $this->wpComponent = $this->componentCtrl->searchComponentByType('panel', $hook_suffix, 'hook');
 
@@ -278,6 +287,7 @@ class AtkWp
         } catch (Exception $e) {
             $this->caughtException($e);
         }
+        $this->pluginLoader->disableLoader();
     }
 
     /**
@@ -286,6 +296,7 @@ class AtkWp
      */
     public function wpAjaxExecute()
     {
+        $this->pluginLoader->enableLoader();
         if ($this->config->getConfig('plugin/use_nounce', false)) {
             check_ajax_referer($this->pluginName);
         }
@@ -309,6 +320,7 @@ class AtkWp
         } catch (Exception $e) {
             $this->caughtException($e);
         }
+        $this->pluginLoader->disableLoader();
         die();
     }
 
@@ -323,6 +335,7 @@ class AtkWp
      */
     public function wpDashboardExecute($key, $dashboard, $configureMode = false)
     {
+        $this->pluginLoader->enableLoader();
         $this->wpComponent = $this->componentCtrl->searchComponentByType('dashboard', $dashboard['id']);
 
         try {
@@ -333,6 +346,7 @@ class AtkWp
         } catch (Exception $e) {
             $this->caughtException($e);
         }
+        $this->pluginLoader->disableLoader();
     }
 
     /**
@@ -345,6 +359,7 @@ class AtkWp
      */
     public function wpMetaBoxExecute(\WP_Post $post, array $param)
     {
+        $this->pluginLoader->enableLoader();
         //set the view to output.
         $this->wpComponent = $this->componentCtrl->searchComponentByType('metaBox', $param['id']);
 
@@ -357,6 +372,7 @@ class AtkWp
         } catch (Exception $e) {
             $this->caughtException($e);
         }
+        $this->pluginLoader->disableLoader();
     }
 
     /**
@@ -371,6 +387,7 @@ class AtkWp
      */
     public function wpShortcodeExecute($shortcode, $args)
     {
+        $this->pluginLoader->enableLoader();
         $this->wpComponent = $shortcode;
         $this->componentCount++;
 
@@ -383,5 +400,6 @@ class AtkWp
         } catch (Exception $e) {
             $this->caughtException($e);
         }
+        $this->pluginLoader->disableLoader();
     }
 }

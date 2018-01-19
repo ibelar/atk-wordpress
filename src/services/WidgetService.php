@@ -77,12 +77,14 @@ class WidgetService
     public function registerWidget($id, $widget)
     {
         add_action('widgets_init', function () use ($id, $widget) {
+            $this->plugin->getPluginLoader()->enableLoader();
             global $wp_widget_factory;
             register_widget($widget['uses']);
             //get latest create widget in widget factory
             $wdg = end($wp_widget_factory->widgets);
             // pre init latest widget.
             $wdg->initializeWidget($id, $widget, $this->plugin);
+            $this->plugin->getPluginLoader()->disableLoader();
         });
     }
 }
