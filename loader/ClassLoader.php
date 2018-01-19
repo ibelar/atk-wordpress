@@ -348,7 +348,7 @@ class ClassLoader
             }
         }
 
-        $file = $this->findFileWithExtension($class,'.php');
+        $file = $this->findFileWithExtension($class, '.php');
 
         // Search for Hack files if we are running on HHVM
         if (false === $file && defined('HHVM_VERSION')) {
@@ -400,7 +400,7 @@ class ClassLoader
         if (false !== $pos = strrpos($class, '\\')) {
             // namespaced class name
             $logicalPathPsr0 = substr($logicalPathPsr4, 0, $pos + 1)
-                               . strtr(substr($logicalPathPsr4, $pos + 1), '_', DIRECTORY_SEPARATOR);
+                               .strtr(substr($logicalPathPsr4, $pos + 1), '_', DIRECTORY_SEPARATOR);
         } else {
             // PEAR-like class name
             $logicalPathPsr0 = strtr($class, '_', DIRECTORY_SEPARATOR).$ext;

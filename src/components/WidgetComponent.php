@@ -133,7 +133,7 @@ class WidgetComponent extends \WP_Widget
     public function form($instance)
     {
         $this->plugin->getPluginLoader()->enableLoader();
-        
+
         try {
             $view = $this->onForm($this->plugin->newAtkAppView('widget.html', $this->widgetConfig['id']), $instance);
             if (!$view) {
