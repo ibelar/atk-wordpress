@@ -291,7 +291,7 @@ class AtkWp
         }
 
         $this->ajaxMode = true;
-        if ($request = @$_REQUEST['atkwp']){
+        if ($request = @$_REQUEST['atkwp']) {
             $this->wpComponent = $this->componentCtrl->searchComponentByKey($request);
         }
 
