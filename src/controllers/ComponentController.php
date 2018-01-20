@@ -182,7 +182,7 @@ class ComponentController implements ComponentCtrlInterface
             if ($key === $search) {
                 return $subComponents;
             }
-            if (in_array($key, $this->componentType)) {
+            if (in_array($key, $this->componentType) && !empty($subComponents)) {
                 if ($component = $this->searchComponentByKey($search, $subComponents)) {
                     return $component;
                 }
