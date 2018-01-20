@@ -295,7 +295,6 @@ class AtkWp
             $this->wpComponent = $this->componentCtrl->searchComponentByKey($request);
         }
 
-
         $name = $this->pluginName;
 
         // check if this component has been output more than once
