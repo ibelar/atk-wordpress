@@ -46,7 +46,7 @@ class AtkWpApp extends App
      *
      * @var int
      */
-    public $max_name_length = 20;
+    public $max_name_length = 60;
 
     /**
      * The default directory name of atk template.
@@ -67,12 +67,15 @@ class AtkWpApp extends App
      * AtkWpApp constructor.
      *
      * @param AtkWp|null $plugin
+     * @param UI|null    $uiPersistance
      */
-    public function __construct(AtkWp $plugin = null)
+    public function __construct(AtkWp $plugin = null, UI $uiPersistance = null)
     {
         $this->plugin = $plugin;
-        if (!isset($this->ui_persistence)) {
+        if (!isset($uiPersistance)) {
             $this->ui_persistence = new UI();
+        } else {
+            $this->ui_persistence = $uiPersistance;
         }
     }
 
@@ -158,12 +161,18 @@ class AtkWpApp extends App
      *
      * @param array $page
      * @param bool  $hasRequestUri
+     * @param array $extraArgs
      *
      * @return array|null|string
+     * TODO fix url for jsREdirect and other action like menu.
      */
-    public function url($page = [], $hasRequestUri = false)
+    public function url($page = [], $hasRequestUri = false, $extraArgs = [])
     {
         $result = [];
+
+        if (is_string($page)) {
+            return $page;
+        }
 
         $this->page = 'admin-ajax';
         if (!WpUtil::isAdmin()) {
@@ -181,9 +190,7 @@ class AtkWpApp extends App
             $sticky['_ajax_nonce'] = helpers\WpUtil::createWpNounce($this->plugin->getPluginName());
         }
 
-        if (is_string($page)) {
-            return $page;
-        }
+
 
         if (!isset($page[0])) {
             $page[0] = $this->page;

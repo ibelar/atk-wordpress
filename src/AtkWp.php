@@ -19,6 +19,7 @@ namespace atkwp;
 
 use atk4\data\Persistence_SQL;
 use atk4\ui\Exception;
+use atk4\ui\Persistence\UI;
 use atk4\ui\Text;
 use atk4\ui\View;
 use atkwp\helpers\Config;
@@ -80,6 +81,8 @@ class AtkWp
      */
     public $config;
 
+    public $appUiPersistence = null;
+
     /**
      * AtkWp constructor.
      *
@@ -128,6 +131,16 @@ class AtkWp
     public function setConfig($config = [], $default = UNDEFINED)
     {
         $this->config->setConfig($config, $default);
+    }
+
+    /**
+     * Set UI persistence for atk4\App.
+     *
+     * @param UI $persistence
+     */
+    public function setAppUiPersistence(UI $persistence)
+    {
+        $this->appUiPersistence = $persistence;
     }
 
     /**
@@ -228,7 +241,7 @@ class AtkWp
      */
     public function newAtkAppView($template, $name)
     {
-        $app = new AtkWpApp($this);
+        $app = new AtkWpApp($this, $this->appUiPersistence);
 
         return $app->initWpLayout(new AtkWpView(), $template, $name);
     }
@@ -272,7 +285,7 @@ class AtkWp
 
         try {
             $view = new $this->wpComponent['uses']();
-            $app = new AtkWpApp($this);
+            $app = new AtkWpApp($this, $this->appUiPersistence);
             $app->initWpLayout($view, $this->defaultLayout, $this->pluginName);
             $app->execute();
         } catch (Exception $e) {
@@ -305,7 +318,7 @@ class AtkWp
 
         try {
             $view = new $this->wpComponent['uses']();
-            $app = new AtkWpApp($this);
+            $app = new AtkWpApp($this, $this->appUiPersistence);
             $app->initWpLayout($view, $this->defaultLayout, $name);
             $app->execute($this->ajaxMode);
         } catch (Exception $e) {
@@ -329,7 +342,7 @@ class AtkWp
 
         try {
             $view = new $this->wpComponent['uses'](['configureMode' => $configureMode]);
-            $app = new AtkWpApp($this);
+            $app = new AtkWpApp($this, $this->appUiPersistence);
             $app->initWpLayout($view, $this->defaultLayout, $this->pluginName);
             $app->execute();
         } catch (Exception $e) {
@@ -352,7 +365,7 @@ class AtkWp
 
         try {
             $view = new $this->wpComponent['uses'](['args' => $param['args']]);
-            $app = new AtkWpApp($this);
+            $app = new AtkWpApp($this, $this->appUiPersistence);
             $metaBox = $app->initWpLayout($view, $this->defaultLayout, $this->pluginName);
             $metaBox->setFieldInput($post->ID, $this->componentCtrl);
             $app->execute();
@@ -378,7 +391,7 @@ class AtkWp
 
         try {
             $view = new $this->wpComponent['uses'](['args' => $args]);
-            $app = new AtkWpApp($this);
+            $app = new AtkWpApp($this, $this->appUiPersistence);
             $app->initWpLayout($view, $this->defaultLayout, $this->pluginName.'-'.$this->componentCount);
 
             return $app->render(false);
