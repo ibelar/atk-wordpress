@@ -30,7 +30,7 @@ class EnqueueService
 
     protected $semanticUiVersion = '2.2.12';
     protected $semanticCalendarVersion = '0.0.8';
-    protected $atkUiVersion = '1.3.0';
+    protected $atkUiVersion = '1.4';
 
     /**
      * The js files to load.

@@ -69,7 +69,7 @@ class AtkWpApp extends App
      * @param AtkWp|null $plugin
      * @param UI|null    $uiPersistance
      */
-    public function __construct(AtkWp $plugin = null, UI $uiPersistance = null)
+    public function __construct(AtkWp $plugin = null)
     {
         $this->plugin = $plugin;
         if (!isset($uiPersistance)) {
@@ -168,13 +168,15 @@ class AtkWpApp extends App
      */
     public function url($page = [], $hasRequestUri = false, $extraArgs = [])
     {
-        $result = [];
+        $result = $extraArgs;
 
         if (is_string($page)) {
             return $page;
         }
 
         $this->page = 'admin-ajax';
+
+        //if running front end set url for ajax.
         if (!WpUtil::isAdmin()) {
             $this->page = WpUtil::getBaseAdminUrl().'admin-ajax';
         }
@@ -189,8 +191,6 @@ class AtkWpApp extends App
         if ($this->plugin->config->getConfig('plugin/use_nounce', false)) {
             $sticky['_ajax_nonce'] = helpers\WpUtil::createWpNounce($this->plugin->getPluginName());
         }
-
-
 
         if (!isset($page[0])) {
             $page[0] = $this->page;
