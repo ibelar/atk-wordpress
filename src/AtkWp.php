@@ -88,7 +88,6 @@ class AtkWp
      * @var AtkWpApp
      */
     public $app = null;
-    //public $appUiPersistence = null;
 
     /**
      * AtkWp constructor.
