@@ -164,7 +164,6 @@ class AtkWpApp extends App
      * @param array $extraArgs
      *
      * @return array|null|string
-     * TODO fix url for jsREdirect and other action like menu.
      */
     public function url($page = [], $hasRequestUri = false, $extraArgs = [])
     {

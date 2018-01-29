@@ -1,14 +1,10 @@
 <?php
 /**
- * Created by abelair.
- * Date: 2018-01-24
- * Time: 1:57 PM
+ * Wizard implementation.
  */
 
 namespace atkwp\ui;
 
-
-use atk4\ui\View;
 use atk4\ui\Wizard;
 use atkwp\helpers\WpUtil;
 
