@@ -43,3 +43,9 @@
 .ui.input > .ui.button {
     height: auto;
 }
+
+/** fix submit button spacing in modal form **/
+.ui.clearing.hidden.divider {
+    display: block;
+    margin-bottom: 4px;
+}
