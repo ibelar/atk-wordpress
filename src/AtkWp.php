@@ -335,7 +335,6 @@ class AtkWp
 
         try {
             $view = new $this->wpComponent['uses']();
-            //$app = new AtkWpApp($this, $this->appUiPersistence);
             $this->app->initWpLayout($view, $this->defaultLayout, $name);
             $this->app->execute($this->ajaxMode);
         } catch (Exception $e) {
@@ -359,7 +358,6 @@ class AtkWp
 
         try {
             $view = new $this->wpComponent['uses'](['configureMode' => $configureMode]);
-            //$app = new AtkWpApp($this, $this->appUiPersistence);
             $this->app->initWpLayout($view, $this->defaultLayout, $this->pluginName);
             $this->app->execute();
         } catch (Exception $e) {
@@ -382,7 +380,6 @@ class AtkWp
 
         try {
             $view = new $this->wpComponent['uses'](['args' => $param['args']]);
-            //$app = new AtkWpApp($this, $this->appUiPersistence);
             $metaBox = $this->app->initWpLayout($view, $this->defaultLayout, $this->pluginName);
             $metaBox->setFieldInput($post->ID, $this->componentCtrl);
             $this->app->execute();
@@ -408,7 +405,6 @@ class AtkWp
 
         try {
             $view = new $this->wpComponent['uses'](['args' => $args]);
-            //$app = new AtkWpApp($this, $this->appUiPersistence);
             $this->app->initWpLayout($view, $this->defaultLayout, $this->pluginName.'-'.$this->componentCount);
 
             return $this->app->render(false);
