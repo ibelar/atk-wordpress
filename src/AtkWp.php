@@ -302,7 +302,6 @@ class AtkWp
 
         try {
             $view = new $this->wpComponent['uses']();
-            //$app = new AtkWpApp($this, $this->appUiPersistence);
             $this->app->initWpLayout($view, $this->defaultLayout, $this->pluginName);
             $this->app->execute();
         } catch (Exception $e) {
