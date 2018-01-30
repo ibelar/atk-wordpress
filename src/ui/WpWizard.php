@@ -10,6 +10,28 @@ use atkwp\helpers\WpUtil;
 
 class WpWizard extends Wizard
 {
+
+//    public function init()
+//    {
+//        parent::init();
+//        $this->stepCallback = $this->add(['Callback', 'urlTrigger'=>$this->name]);
+//
+//        $this->currentStep = $this->stepCallback->triggered() ?: 0;
+//
+//        $this->stepTemplate = $this->template->cloneRegion('Step');
+//        $this->template->del('Step');
+//
+//        // add buttons
+//        if ($this->currentStep) {
+//            $this->buttonPrev = $this->add(['Button', 'Back', 'basic'], 'Left');
+//            $this->buttonPrev->link($this->stepCallback->getURL($this->currentStep - 1));
+//        }
+//
+//        $this->buttonNext = $this->add(['Button', 'Next', 'primary'], 'Right');
+//        $this->buttonFinish = $this->add(['Button', 'Finish', 'primary'], 'Right');
+//
+//        $this->buttonNext->link($this->stepCallback->getURL($this->currentStep + 1));
+//    }
     public function url($page = [])
     {
         $args = [];
