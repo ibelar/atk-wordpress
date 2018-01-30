@@ -19,6 +19,7 @@ namespace atkwp;
 
 use atk4\data\Persistence_SQL;
 use atk4\ui\Exception;
+use atk4\ui\Persistence\UI;
 use atk4\ui\Text;
 use atk4\ui\View;
 use atkwp\helpers\Config;
@@ -81,6 +82,14 @@ class AtkWp
     public $config;
 
     /**
+     * The atk4\ui\App that will generate html output
+     * for this plugin.
+     *
+     * @var AtkWpApp
+     */
+    public $app = null;
+
+    /**
      * AtkWp constructor.
      *
      * @param string                 $pluginName The name of this plugin.
@@ -93,6 +102,7 @@ class AtkWp
         $this->pathFinder = $pathFinder;
         $this->componentCtrl = $ctrl;
         $this->config = new Config($this->pathFinder->getConfigurationPath());
+        $this->initApp();
         $this->init();
     }
 
@@ -128,6 +138,16 @@ class AtkWp
     public function setConfig($config = [], $default = UNDEFINED)
     {
         $this->config->setConfig($config, $default);
+    }
+
+    /**
+     * Set UI persistence for atk4\App.
+     *
+     * @param UI $persistence
+     */
+    public function setAppUiPersistence(UI $persistence)
+    {
+        $this->app->ui_persistence = $persistence;
     }
 
     /**
@@ -206,6 +226,11 @@ class AtkWp
         }
     }
 
+    public function initApp()
+    {
+        $this->app = new AtkWpApp($this);
+    }
+
     /**
      * Plugin Initialize function.
      */
@@ -231,6 +256,11 @@ class AtkWp
         $app = new AtkWpApp($this);
 
         return $app->initWpLayout(new AtkWpView(), $template, $name);
+    }
+
+    public function getAtkAppView($template, $name)
+    {
+        return $this->app->initWpLayout(new AtkWpView(), $template, $name);
     }
 
     /**
@@ -272,9 +302,8 @@ class AtkWp
 
         try {
             $view = new $this->wpComponent['uses']();
-            $app = new AtkWpApp($this);
-            $app->initWpLayout($view, $this->defaultLayout, $this->pluginName);
-            $app->execute();
+            $this->app->initWpLayout($view, $this->defaultLayout, $this->pluginName);
+            $this->app->execute();
         } catch (Exception $e) {
             $this->caughtException($e);
         }
@@ -305,9 +334,8 @@ class AtkWp
 
         try {
             $view = new $this->wpComponent['uses']();
-            $app = new AtkWpApp($this);
-            $app->initWpLayout($view, $this->defaultLayout, $name);
-            $app->execute($this->ajaxMode);
+            $this->app->initWpLayout($view, $this->defaultLayout, $name);
+            $this->app->execute($this->ajaxMode);
         } catch (Exception $e) {
             $this->caughtException($e);
         }
@@ -329,9 +357,8 @@ class AtkWp
 
         try {
             $view = new $this->wpComponent['uses'](['configureMode' => $configureMode]);
-            $app = new AtkWpApp($this);
-            $app->initWpLayout($view, $this->defaultLayout, $this->pluginName);
-            $app->execute();
+            $this->app->initWpLayout($view, $this->defaultLayout, $this->pluginName);
+            $this->app->execute();
         } catch (Exception $e) {
             $this->caughtException($e);
         }
@@ -352,10 +379,9 @@ class AtkWp
 
         try {
             $view = new $this->wpComponent['uses'](['args' => $param['args']]);
-            $app = new AtkWpApp($this);
-            $metaBox = $app->initWpLayout($view, $this->defaultLayout, $this->pluginName);
+            $metaBox = $this->app->initWpLayout($view, $this->defaultLayout, $this->pluginName);
             $metaBox->setFieldInput($post->ID, $this->componentCtrl);
-            $app->execute();
+            $this->app->execute();
         } catch (Exception $e) {
             $this->caughtException($e);
         }
@@ -378,10 +404,9 @@ class AtkWp
 
         try {
             $view = new $this->wpComponent['uses'](['args' => $args]);
-            $app = new AtkWpApp($this);
-            $app->initWpLayout($view, $this->defaultLayout, $this->pluginName.'-'.$this->componentCount);
+            $this->app->initWpLayout($view, $this->defaultLayout, $this->pluginName.'-'.$this->componentCount);
 
-            return $app->render(false);
+            return $this->app->render(false);
         } catch (Exception $e) {
             $this->caughtException($e);
         }

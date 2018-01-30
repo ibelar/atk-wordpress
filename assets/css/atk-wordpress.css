@@ -2,6 +2,11 @@
     margin-top: 1em;
 }
 
+/**fix modal display **/
+.ui.dimmer {
+    z-index: 10000 !important;
+}
+
 /** Fix button in general **/
 .ui.button, .ui.icon.button {
     /*margin: 2em 0.25em 0em 0em;*/
@@ -30,6 +35,11 @@
 }
 
 /** Fix Label **/
-.ui.label {
+.ui.labeled.button > .ui.label {
     padding: 1.2em .833em;
+}
+
+/** fix button after input **/
+.ui.input > .ui.button {
+    height: auto;
 }
