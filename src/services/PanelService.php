@@ -148,7 +148,7 @@ class PanelService
     {
         $iconUrl = null;
         if (isset($panel['icon']) && !empty($panel['icon'])) {
-            if (strpos($panel['icon'],'dashicons') === false) {
+            if (strpos($panel['icon'], 'dashicons') === false) {
                 $iconUrl = "{$this->iconUrl}/{$panel['icon']}";
             } else {
                 $iconUrl = $panel['icon'];
