@@ -148,7 +148,11 @@ class PanelService
     {
         $iconUrl = null;
         if (isset($panel['icon']) && !empty($panel['icon'])) {
-            $iconUrl = "{$this->iconUrl}/{$panel['icon']}";
+            if (strpos($panel['icon'],'dashicons') === false) {
+                $iconUrl = "{$this->iconUrl}/{$panel['icon']}";
+            } else {
+                $iconUrl = $panel['icon'];
+            }
         }
         $hook = add_menu_page(
             $panel['page'],
