@@ -162,34 +162,70 @@ class AtkWpApp extends App
      * @param array $page
      * @param bool  $hasRequestUri
      * @param array $extraArgs
+     * @param bool  $needAjax
      *
      * @return array|null|string
      */
-    public function url($page = [], $hasRequestUri = false, $extraArgs = [])
+    public function url($page = [], $needRequestUri = false, $extraArgs = [], $needAjax = false)
     {
-        $result = $extraArgs;
-
         if (is_string($page)) {
             return $page;
         }
 
-        $this->page = 'admin-ajax';
+        if ($needAjax) {
+            return $this->jsUrl($page, $needRequestUri, $extraArgs);
+        }
+
+        $wpPage = 'admin';
+
+        if ($wpPageRequest = @$_REQUEST['page']) {
+            $extraArgs['page'] = $wpPageRequest;
+        }
+
+        return $this->buildUrl($wpPage, $page, $extraArgs);
+    }
+
+    /**
+     * Return url.
+     *
+     * @param array $page
+     * @param bool  $hasRequestUri
+     * @param array $extraArgs
+     *
+     * @return array|null|string
+     */
+    public function jsUrl($page = [], $hasRequestUri = false, $extraArgs = [])
+    {
+        if (is_string($page)) {
+            return $page;
+        }
+
+        $wpPage = 'admin-ajax';
 
         //if running front end set url for ajax.
         if (!WpUtil::isAdmin()) {
             $this->page = WpUtil::getBaseAdminUrl().'admin-ajax';
         }
-        $sticky = $this->sticky_get_arguments;
-        $sticky['action'] = $this->plugin->getPluginName();
-        $sticky['atkwp'] = $this->plugin->getWpComponentId();
+
+        $extraArgs['action'] = $this->plugin->getPluginName();
+        $extraArgs['atkwp'] = $this->plugin->getWpComponentId();
 
         if ($this->plugin->getComponentCount() > 0) {
-            $sticky['atkwp-count'] = $this->plugin->getComponentCount();
+            $extraArgs['atkwp-count'] = $this->plugin->getComponentCount();
         }
 
         if ($this->plugin->config->getConfig('plugin/use_nounce', false)) {
-            $sticky['_ajax_nonce'] = helpers\WpUtil::createWpNounce($this->plugin->getPluginName());
+            $extraArgs['_ajax_nonce'] = helpers\WpUtil::createWpNounce($this->plugin->getPluginName());
         }
+
+        return $this->buildUrl($wpPage, $page, $extraArgs);
+    }
+
+    private function buildUrl($wpPage, $page, $extras)
+    {
+        $result = $extras;
+        $sticky = $this->sticky_get_arguments;
+        $this->page = $wpPage;
 
         if (!isset($page[0])) {
             $page[0] = $this->page;
