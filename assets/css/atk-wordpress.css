@@ -7,6 +7,11 @@
     z-index: 10000 !important;
 }
 
+/** fix ui menu **/
+.ui.menu, .ui.menu .menu {
+    padding-top: 0px;
+}
+
 /** Fix button in general **/
 .ui.button, .ui.icon.button {
     /*margin: 2em 0.25em 0em 0em;*/
@@ -48,4 +53,9 @@
 .ui.clearing.hidden.divider {
     display: block;
     margin-bottom: 4px;
+}
+
+/** Fix jsQuickSerch **/
+i.search {
+    background-color: transparent;
 }
