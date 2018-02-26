@@ -90,6 +90,18 @@ class AtkWp
     public $app = null;
 
     /**
+     * The AtkWpLoader that manage composer
+     * Autoloader for this plugin.
+     *
+     * AtkWpLoader is available as a seperate mu-plugins.
+     * It collects different composer loader and associate
+     * proper loader to use with a plugin.
+     *
+     * @var null|\AtkWpLoader
+     */
+    private $atkWploader = null;
+
+    /**
      * AtkWp constructor.
      *
      * @param string                 $pluginName The name of this plugin.
@@ -104,6 +116,36 @@ class AtkWp
         $this->config = new Config($this->pathFinder->getConfigurationPath());
         $this->initApp();
         $this->init();
+    }
+
+    /**
+     * Set the class autoloader for this plugin.
+     *
+     * @param $loader \AtkWpLoader
+     */
+    public function setClassLoader ($loader)
+    {
+        $this->atkWploader = $loader;
+    }
+
+    /**
+     * Make sure the atkWpLoader is set for this plugin.
+     *
+     * This function should be call when running an action or filter
+     * in WP prior to load classes manage by composer. This make sure that
+     * the right composer vendor directory is used to load classes needed
+     * for this plugin and allow for multiple plugins to use their own composer vendor dir.
+     *
+     * add_action('admin_init', function () use ($plugin) {
+     *  $plugin->activateLoader();
+     *  $View = new \atk4\ui\View();
+     * });
+     */
+    public function activateLoader()
+    {
+        if ($this->atkWploader) {
+            $this->atkWploader->setCurrentPlugin($this->pluginName);
+        }
     }
 
     /**
@@ -300,6 +342,7 @@ class AtkWp
         global $hook_suffix;
         $this->wpComponent = $this->componentCtrl->searchComponentByType('panel', $hook_suffix, 'hook');
 
+        $this->activateLoader();
         try {
             $view = new $this->wpComponent['uses']();
             $this->app->initWpLayout($view, $this->defaultLayout, $this->pluginName);
@@ -318,6 +361,8 @@ class AtkWp
         if ($this->config->getConfig('plugin/use_nounce', false)) {
             check_ajax_referer($this->pluginName);
         }
+
+        $this->activateLoader();
 
         $this->ajaxMode = true;
         if ($request = @$_REQUEST['atkwp']) {
@@ -353,6 +398,8 @@ class AtkWp
      */
     public function wpDashboardExecute($key, $dashboard, $configureMode = false)
     {
+        $this->activateLoader();
+
         $this->wpComponent = $this->componentCtrl->searchComponentByType('dashboard', $dashboard['id']);
 
         try {
@@ -374,6 +421,8 @@ class AtkWp
      */
     public function wpMetaBoxExecute(\WP_Post $post, array $param)
     {
+        $this->activateLoader();
+
         //set the view to output.
         $this->wpComponent = $this->componentCtrl->searchComponentByType('metaBox', $param['id']);
 
@@ -399,6 +448,8 @@ class AtkWp
      */
     public function wpShortcodeExecute($shortcode, $args)
     {
+        $this->activateLoader();
+
         $this->wpComponent = $shortcode;
         $this->componentCount++;
 
