@@ -78,6 +78,7 @@ class WidgetService
     {
         add_action('widgets_init', function () use ($id, $widget) {
             global $wp_widget_factory;
+            $this->plugin->activateLoader();
             register_widget($widget['uses']);
             //get latest create widget in widget factory
             $wdg = end($wp_widget_factory->widgets);
