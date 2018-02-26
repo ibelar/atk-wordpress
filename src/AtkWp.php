@@ -123,7 +123,7 @@ class AtkWp
      *
      * @param $loader \AtkWpLoader
      */
-    public function setClassLoader ($loader)
+    public function setClassLoader($loader)
     {
         $this->atkWploader = $loader;
     }
