@@ -343,6 +343,7 @@ class AtkWp
         $this->wpComponent = $this->componentCtrl->searchComponentByType('panel', $hook_suffix, 'hook');
 
         $this->activateLoader();
+        
         try {
             $view = new $this->wpComponent['uses']();
             $this->app->initWpLayout($view, $this->defaultLayout, $this->pluginName);
