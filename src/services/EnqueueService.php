@@ -28,7 +28,7 @@ class EnqueueService
      */
     private $ctrl;
 
-    protected $semanticUiVersion = '2.2.12';
+    protected $semanticUiVersion = '2.3';
     protected $semanticCalendarVersion = '0.0.8';
     protected $atkUiVersion = '1.4';
 

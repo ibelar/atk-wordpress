@@ -166,14 +166,10 @@ class AtkWpApp extends App
      *
      * @return array|null|string
      */
-    public function url($page = [], $needRequestUri = false, $extraArgs = [], $needAjax = false)
+    public function url($page = [], $needRequestUri = false, $extraArgs = [])
     {
         if (is_string($page)) {
             return $page;
-        }
-
-        if ($needAjax) {
-            return $this->jsUrl($page, $needRequestUri, $extraArgs);
         }
 
         $wpPage = 'admin';
