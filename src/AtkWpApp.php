@@ -213,7 +213,7 @@ class AtkWpApp extends App
         if ($this->plugin->config->getConfig('plugin/use_nounce', false)) {
             $extraArgs['_ajax_nonce'] = helpers\WpUtil::createWpNounce($this->plugin->getPluginName());
         }
-                
+
         if (isset($extraArgs['path'])) {
             $extraArgs['page'] = $this->plugin->wpComponent['slug'];
         }
