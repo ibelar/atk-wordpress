@@ -82,7 +82,9 @@ class MetaBoxComponent extends Component
     {
         if ($this->fieldCtrl) {
             foreach ($this->fieldCtrl->getFields() as $key => $field) {
-                $compCtrl->savePostMetaData($postId, $field->short_name, $this->onUpdateMetaFieldRawData($key, $_POST[$field->short_name]));
+                if (isset($_POST) && array_key_exists($field->short_name, $_POST)) {
+                    $compCtrl->savePostMetaData($postId, $field->short_name, $this->onUpdateMetaFieldRawData($key, $_POST[$field->short_name]));
+                }
             }
         }
     }
