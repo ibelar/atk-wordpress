@@ -215,7 +215,7 @@ class AtkWpApp extends App
         }
 
         /* Page argument may be forced by using $config['plugin']['use_page_argument'] = true in config-default.php. */
-        if ( isset($extraArgs['path']) || $this->plugin->config->getConfig('plugin/use_page_argument', false)) {
+        if (isset($extraArgs['path']) || $this->plugin->config->getConfig('plugin/use_page_argument', false)) {
             $extraArgs['page'] = $this->plugin->wpComponent['slug'];
         }
 
