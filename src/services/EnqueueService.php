@@ -28,9 +28,8 @@ class EnqueueService
      */
     private $ctrl;
 
-    protected $semanticUiVersion = '2.3';
-    protected $semanticCalendarVersion = '0.0.8';
-    protected $atkUiVersion = '1.5';
+    protected $atkUiVersion = '1.6';
+    protected $fomanticUiVersion = '2.6.4';
 
     /**
      * The js files to load.
@@ -247,18 +246,10 @@ class EnqueueService
     protected function registerAtkWpFiles()
     {
         wp_register_script(
-            'semantic',
-            "{$this->atkWpAssetsUrl}/vendor/semantic-ui/{$this->semanticUiVersion}/semantic.min.js",
+            'fomantic',
+            "{$this->atkWpAssetsUrl}/vendor/fomantic/{$this->fomanticUiVersion}/semantic.min.js",
             [],
-            $this->semanticUiVersion,
-            true
-        );
-
-        wp_register_script(
-            'semantic-calendar',
-            "{$this->atkWpAssetsUrl}/vendor/mdehoog/Semantic-UI-Calendar/{$this->semanticCalendarVersion}/calendar.min.js",
-            [],
-            $this->semanticCalendarVersion,
+            $this->fomanticUiVersion,
             true
         );
 
@@ -270,30 +261,23 @@ class EnqueueService
         wp_register_script(
             'atkjs-ui',
             "{$this->atkWpAssetsUrl}/vendor/atk4/ui/{$this->atkUiVersion}/atkjs-ui.min.js",
-            ['jquery-serialize-object', 'semantic', 'semantic-calendar'],
+            ['jquery-serialize-object', 'fomantic'],
             $this->atkUiVersion,
             true
         );
 
         wp_register_style(
-            'semantic',
-            "{$this->atkWpAssetsUrl}/vendor/semantic-ui/{$this->semanticUiVersion}/semantic.min.css",
+            'fomantic',
+            "{$this->atkWpAssetsUrl}/vendor/fomantic/{$this->fomanticUiVersion}/semantic.min.css",
             [],
-            $this->semanticUiVersion
-        );
-
-        wp_register_style(
-            'semantic-calendar',
-            "{$this->atkWpAssetsUrl}/vendor/mdehoog/Semantic-UI-Calendar/{$this->semanticCalendarVersion}/calendar.min.css",
-            [],
-            $this->semanticCalendarVersion
+            $this->fomanticUiVersion
         );
 
         // Admin section css fix for certain semantic ui element.
         wp_register_style(
             'atk-wp',
             "{$this->atkWpAssetsUrl}/css/atk-wordpress.css",
-            ['semantic', 'semantic-calendar'],
+            ['fomantic'],
             null
         );
     }
