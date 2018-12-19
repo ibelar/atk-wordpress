@@ -13,7 +13,7 @@
     }
   ],
   "require": {
-    "atk4/ui": "^1.5"
+    "atk4/ui": "^1.6"
   },
   "require-dev": {
     "phpunit/phpunit": "4.0.*"
