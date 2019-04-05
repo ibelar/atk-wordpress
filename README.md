@@ -32,7 +32,7 @@ This package require [composer](https://getcomposer.org/) in order to install al
 
 ### Using the starter project
 
-Although you can start from scratch, the easiest way would be to start using the [atk-wordpress-starter](http://github.com/ibelar/atk-wordress-starter).
+Although you can start from scratch, the easiest way would be to start using the [atk-wordpress-starter](http://github.com/ibelar/atk-wordpress-starter).
  
  - download or clone the starter project inside you Wordpress installation plugins folder, 
  - rename it to match your plugin name and namespace by replacing text mark as TODO,
