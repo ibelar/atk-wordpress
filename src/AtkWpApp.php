@@ -37,7 +37,7 @@ class AtkWpApp extends App
     /**
      * The html produce by this app.
      *
-     * @var string
+     * @var AtkWpView
      */
     public $wpHtml;
 
@@ -67,36 +67,39 @@ class AtkWpApp extends App
      * AtkWpApp constructor.
      *
      * @param AtkWp|null $plugin
-     * @param UI|null    $uiPersistance
+     * @param UI|null $ui_persistence
      */
-    public function __construct(AtkWp $plugin = null)
+    public function __construct(AtkWp $plugin = null, ?UI $ui_persistence = null)
     {
         $this->plugin = $plugin;
-        if (!isset($uiPersistance)) {
+        if (!isset($ui_persistence)) {
             $this->ui_persistence = new UI();
         } else {
-            $this->ui_persistence = $uiPersistance;
+            $this->ui_persistence = $ui_persistence;
         }
     }
 
     /**
      * The layout initialisation for each Wp component.
      *
-     * @param $view
+     * @param AtkWpView $view
      * @param $layout
      * @param $name
      *
-     * @throws Exception
+     * @throws \atk4\core\Exception
      *
-     * @return \atk4\ui\View The Wp component being output.
+     * @return AtkWpView The Wp component being output.
+     *
      */
-    public function initWpLayout($view, $layout, $name)
+    public function initWpLayout(AtkWpView $view, $layout, $name)
     {
         $this->wpHtml = new AtkWpView(['defaultTemplate' => $layout, 'name' => $name]);
         $this->wpHtml->app = $this;
         $this->wpHtml->init();
 
-        return $this->wpHtml->add($view);
+        $this->wpHtml->add($view);
+
+        return $view;
     }
 
     /**
@@ -143,26 +146,11 @@ class AtkWpApp extends App
     }
 
     /**
-     * Will perform a preemptive output and terminate. Do not use this
-     * directly, instead call it form Callback, jsCallback or similar
-     * other classes.
-     *
-     * @param string $output
-     */
-    public function terminate($output = null)
-    {
-        echo $output;
-        $this->run_called = true; // prevent shutdown function from triggering.
-        exit;
-    }
-
-    /**
      * Return url.
      *
      * @param array $page
-     * @param bool  $hasRequestUri
+     * @param bool  $needRequestUri
      * @param array $extraArgs
-     * @param bool  $needAjax
      *
      * @return array|null|string
      */

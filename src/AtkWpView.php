@@ -20,6 +20,8 @@ namespace atkwp;
 
 class AtkWpView extends \atk4\ui\View
 {
+    /** @var AtkWpApp */
+    public $app;
     /**
      * Return the plugin running this view.
      *
