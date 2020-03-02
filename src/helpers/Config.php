@@ -11,22 +11,21 @@
  * https://github.com/ibelar
  * Licensed under MIT
  * =====================================================================*/
+
 /**
  * Simple configuration utilities.
  */
 
 namespace atkwp\helpers;
 
+use atk4\core\ConfigTrait;
+use atk4\core\Exception;
+
 class Config
 {
-    const UNDEFINED = '_atk4_undefined_value';
-
-    /**
-     * Contains all configuration options.
-     *
-     * @var array
-     */
-    public $config;
+    use ConfigTrait {
+        readConfig as private;
+    }
 
     /**
      * Contains the path to the configuration files.
@@ -49,7 +48,7 @@ class Config
         'config-widget',
         'config-metabox',
         'config-dashboard',
-        ];
+    ];
 
     /**
      * Config constructor.
@@ -59,75 +58,27 @@ class Config
     public function __construct($configPath)
     {
         $this->configPath = $configPath;
-        $this->config = $this->loadConfiguration();
-    }
-
-    /**
-     * Manually set configuration option.
-     *
-     * @param array $config
-     * @param mixed $val
-     *
-     * @return mixed
-     */
-    public function setConfig($config = [], $val = self::UNDEFINED)
-    {
-        if ($val !== self::UNDEFINED) {
-            return $this->setConfig([$config => $val]);
-        }
-        $this->config = array_merge($this->config ?: [], $config ?: []);
-    }
-
-    /**
-     * Return a configuration value,
-     * or a default value if no configuration is found and a default value is supply,
-     * or null if no configuration is found and no default value is supply.
-     *
-     * @param string $path
-     * @param mixed  $default_value
-     *
-     * @return mixed||null
-     */
-    public function getConfig($path, $default_value = self::UNDEFINED)
-    {
-        $parts = explode('/', $path);
-        $current_position = $this->config;
-        foreach ($parts as $part) {
-            if (!array_key_exists($part, $current_position)) {
-                if ($default_value !== self::UNDEFINED) {
-                    return $default_value;
-                }
-
-                return;
-            } else {
-                $current_position = $current_position[$part];
-            }
-        }
-
-        return $current_position;
+        $this->loadConfiguration();
     }
 
     /**
      * Load configuration files.
-     *
-     * @return array
+     * @throws Exception
      */
     private function loadConfiguration()
     {
-        $loadedConfig = [];
         foreach ($this->wpConfigFiles as $fileName) {
-            $config = [];
+
             if (strpos($fileName, '.php') != strlen($fileName) - 4) {
                 $fileName .= '.php';
             }
-            $filePath = $this->configPath.'/'.$fileName;
 
+            $filePath = $this->configPath . '/' . $fileName;
             if (file_exists($filePath)) {
+                $config = [];
                 include $filePath;
+                $this->setConfig($config);
             }
-            $loadedConfig = array_merge($loadedConfig, $config);
         }
-
-        return $loadedConfig;
     }
 }
