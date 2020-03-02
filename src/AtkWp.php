@@ -20,11 +20,10 @@ namespace atkwp;
 use atk4\data\Persistence\SQL;
 use atk4\ui\Exception;
 use atk4\ui\Persistence\UI;
-use atk4\ui\Text;
-use atk4\ui\View;
 use atkwp\helpers\Config;
 use atkwp\interfaces\ComponentCtrlInterface;
 use atkwp\interfaces\PathInterface;
+use Throwable;
 
 class AtkWp
 {
@@ -326,28 +325,37 @@ class AtkWp
     /**
      * Catch exception.
      *
-     * @param $exception
+     * @param Throwable $exception
      *
      * @throws Exception
+     * @throws \atk4\core\Exception
      */
-    public function caughtException($exception)
+    public function caughtException(Throwable $exception)
     {
         $view = $this->newAtkAppView('layout.html', $this->pluginName);
-        if ($exception instanceof \atk4\core\Exception) {
-            $view->template->setHTML('Content', $exception->getHTML());
-        } elseif ($exception instanceof \Error) {
-            $view->add(new View([
-                'ui'=> 'message',
-                get_class($exception).': '.$exception->getMessage().' (in '.$exception->getFile().':'.$exception->getLine().')',
-                'error',
-                ])
-            );
-            $view->add(new Text())->set(nl2br($exception->getTraceAsString()));
-        } else {
-            $view->add(new View(['ui'=>'message', get_class($exception).': '.$exception->getMessage(), 'error']));
+
+        switch (true) {
+
+            case $exception instanceof \atk4\core\Exception:
+                $view->template->setHTML('Content', $exception->getHTML());
+                break;
+
+            default:
+                $view->add(['Message', get_class($exception).': '.$exception->getMessage().' (in '.$exception->getFile().':'.$exception->getLine().')', 'error']);
+                $view->add(['Text', nl2br($exception->getTraceAsString())]);
+                break;
         }
+
         $view->template->tryDel('Header');
-        $view->app->execute();
+
+        if ($this->ajaxMode) {
+            $view->app->outputResponseJSON([
+                'success'   => false,
+                'message'   => $view->app->wpHtml->getHTML(),
+            ]);
+        } else {
+            $view->app->execute(false);
+        }
     }
 
     /*--------------------- PLUGIN OUTPUTS -------------------------------*/
@@ -366,7 +374,7 @@ class AtkWp
             $view = new $this->wpComponent['uses']();
             $this->app->initWpLayout($view, $this->defaultLayout, $this->pluginName);
             $this->app->execute();
-        } catch (Exception $e) {
+        } catch (Throwable $e) {
             $this->caughtException($e);
         }
     }
@@ -392,7 +400,7 @@ class AtkWp
 
         // check if this component has been output more than once
         // and adjust name accordingly.
-        if ($count = @$_REQUEST['atkwp-count']) {
+        if ($count = $_REQUEST['atkwp-count'] ?? null) {
             $name = $this->pluginName.'-'.$count;
         }
 
@@ -400,10 +408,10 @@ class AtkWp
             $view = new $this->wpComponent['uses']();
             $this->app->initWpLayout($view, $this->defaultLayout, $name);
             $this->app->execute($this->ajaxMode);
-        } catch (Exception $e) {
+        } catch (Throwable $e) {
             $this->caughtException($e);
         }
-        die();
+        $this->app->callExit();
     }
 
     /**
@@ -425,7 +433,7 @@ class AtkWp
             $view = new $this->wpComponent['uses'](['configureMode' => $configureMode]);
             $this->app->initWpLayout($view, $this->defaultLayout, $this->pluginName);
             $this->app->execute();
-        } catch (Exception $e) {
+        } catch (Throwable $e) {
             $this->caughtException($e);
         }
     }
@@ -450,7 +458,7 @@ class AtkWp
             $metaBox = $this->app->initWpLayout($view, $this->defaultLayout, $this->pluginName);
             $metaBox->setFieldInput($post->ID, $this->componentCtrl);
             $this->app->execute();
-        } catch (Exception $e) {
+        } catch (Throwable $e) {
             $this->caughtException($e);
         }
     }
@@ -477,7 +485,7 @@ class AtkWp
             $this->app->initWpLayout($view, $this->defaultLayout, $this->pluginName.'-'.$this->componentCount);
 
             return $this->app->render(false);
-        } catch (Exception $e) {
+        } catch (Throwable $e) {
             $this->caughtException($e);
         }
     }
