@@ -67,7 +67,7 @@ class AtkWpApp extends App
      * AtkWpApp constructor.
      *
      * @param AtkWp|null $plugin
-     * @param UI|null $ui_persistence
+     * @param UI|null    $ui_persistence
      */
     public function __construct(AtkWp $plugin = null, ?UI $ui_persistence = null)
     {
@@ -89,7 +89,6 @@ class AtkWpApp extends App
      * @throws \atk4\core\Exception
      *
      * @return AtkWpView The Wp component being output.
-     *
      */
     public function initWpLayout(AtkWpView $view, $layout, $name)
     {

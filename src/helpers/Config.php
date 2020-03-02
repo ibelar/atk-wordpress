@@ -63,7 +63,6 @@ class Config
 
     /**
      * Load configuration files.
-     * @throws Exception
      */
     private function loadConfiguration()
     {
@@ -73,7 +72,7 @@ class Config
                 $fileName .= '.php';
             }
 
-            $filePath = $this->configPath . '/' . $fileName;
+            $filePath = $this->configPath.'/'.$fileName;
             if (file_exists($filePath)) {
                 $config = [];
                 include $filePath;

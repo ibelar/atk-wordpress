@@ -26,7 +26,7 @@ class Model extends \atk4\data\Model
     public function init()
     {
         if (!empty($this->wp_table)) {
-            $this->table = WpUtil::getDbPrefix() . $this->wp_table;
+            $this->table = WpUtil::getDbPrefix().$this->wp_table;
         }
 
         return parent::init();

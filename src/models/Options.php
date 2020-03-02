@@ -17,8 +17,6 @@
 
 namespace atkwp\models;
 
-use atkwp\helpers\WpUtil;
-
 class Options extends Model
 {
     public $wp_table = 'options';

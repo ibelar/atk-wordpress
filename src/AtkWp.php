@@ -101,7 +101,7 @@ class AtkWp
     private $atkWploader = null;
 
     /**
-     * store if the request mode is ajax, used for exceptions
+     * store if the request mode is ajax, used for exceptions.
      *
      * @var bool
      */
@@ -127,7 +127,7 @@ class AtkWp
     /**
      * Set the class autoloader for this plugin.
      *
-     * @param $loader \AtkWpLoader
+     * @param AtkWpLoader $loader
      */
     public function setClassLoader($loader)
     {
@@ -308,7 +308,7 @@ class AtkWp
     }
 
     /**
-     * Get Actual AtkWpApp View
+     * Get Actual AtkWpApp View.
      *
      * @param $template
      * @param $name
