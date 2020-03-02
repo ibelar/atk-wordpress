@@ -66,7 +66,6 @@ class Config
     private function loadConfiguration()
     {
         foreach ($this->wpConfigFiles as $fileName) {
-
             if (strpos($fileName, '.php') != strlen($fileName) - 4) {
                 $fileName .= '.php';
             }
