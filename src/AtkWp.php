@@ -102,6 +102,13 @@ class AtkWp
     private $atkWploader = null;
 
     /**
+     * store if the request mode is ajax, used for exceptions
+     *
+     * @var bool
+     */
+    private $ajaxMode = false;
+
+    /**
      * AtkWp constructor.
      *
      * @param string                 $pluginName The name of this plugin.
