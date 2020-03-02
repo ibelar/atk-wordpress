@@ -222,6 +222,7 @@ class AtkWp
 
     /**
      * Set the db connection object.
+     *
      * @throws \atk4\data\Exception
      */
     public function setDbConnection()

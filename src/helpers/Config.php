@@ -19,7 +19,6 @@
 namespace atkwp\helpers;
 
 use atk4\core\ConfigTrait;
-use atk4\core\Exception;
 
 class Config
 {
