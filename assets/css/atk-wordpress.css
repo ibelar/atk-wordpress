@@ -15,7 +15,7 @@
 /** Fix button in general **/
 .ui.button, .ui.icon.button {
     /*margin: 2em 0.25em 0em 0em;*/
-    padding: 0.785em 1.5em 1.785em;
+    /*padding: 0.785em 1.5em 1.785em;*/
 }
 
 .ui.compact.icon.button {
