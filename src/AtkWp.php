@@ -17,7 +17,7 @@
 
 namespace atkwp;
 
-use atk4\data\Persistence_SQL;
+use atk4\data\Persistence\SQL;
 use atk4\ui\Exception;
 use atk4\ui\Persistence\UI;
 use atk4\ui\Text;
@@ -63,7 +63,7 @@ class AtkWp
     /**
      * The db connection.
      *
-     * @var Persistence_SQL
+     * @var SQL
      */
     public $dbConnection;
 
@@ -220,7 +220,7 @@ class AtkWp
     public function setDbConnection()
     {
         $dsn = 'mysql:host='.DB_HOST.';dbname='.DB_NAME;
-        $this->dbConnection = new Persistence_SQL($dsn, DB_USER, DB_PASSWORD);
+        $this->dbConnection = new SQL($dsn, DB_USER, DB_PASSWORD);
     }
 
     /**
