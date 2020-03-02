@@ -223,6 +223,7 @@ class AtkWp
 
     /**
      * Set the db connection object.
+     * @throws \atk4\data\Exception
      */
     public function setDbConnection()
     {
@@ -298,7 +299,7 @@ class AtkWp
      *
      * @throws Exception
      *
-     * @return \atk4\ui\View
+     * @return AtkWpView
      */
     public function newAtkAppView($template, $name)
     {
@@ -307,6 +308,16 @@ class AtkWp
         return $app->initWpLayout(new AtkWpView(), $template, $name);
     }
 
+    /**
+     * Get Actual AtkWpApp View
+     *
+     * @param $template
+     * @param $name
+     *
+     * @throws \atk4\core\Exception
+     *
+     * @return AtkWpView
+     */
     public function getAtkAppView($template, $name)
     {
         return $this->app->initWpLayout(new AtkWpView(), $template, $name);
