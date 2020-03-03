@@ -17,14 +17,13 @@
 
 namespace atkwp\models;
 
-use atkwp\helpers\WpUtil;
-
-class Options extends \atk4\data\Model
+class Options extends Model
 {
+    public $wp_table = 'options';
+    public $id_field = 'option_id';
+
     public function init()
     {
-        $this->table = WpUtil::getDbPrefix().'options';
-        $this->id_field = 'option_id';
         parent::init();
 
         $this->addField('name', ['actual' => 'option_name']);

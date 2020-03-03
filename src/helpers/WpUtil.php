@@ -40,6 +40,18 @@ class WpUtil
     }
 
     /**
+     * Return the Wp database charset collate.
+     *
+     * @return mixed
+     */
+    public static function getDbCharsetCollate()
+    {
+        global $wpdb;
+
+        return $wpdb->get_charset_collate();
+    }
+
+    /**
      * Return Wp page id.
      *
      * @return int|string
