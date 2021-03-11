@@ -33,7 +33,8 @@ class AtkWpModelManager
     private function getTableName(string $name)
     {
         return strtolower(
-            sprintf("%s_%s_%s",
+            sprintf(
+                '%s_%s_%s',
                 WpUtil::getDbPrefix(),
                 $this->atkwp->getPluginName(),
                 $name,
@@ -49,9 +50,12 @@ class AtkWpModelManager
             if ($model->isEnabledDbDelta()) {
 
                 $stmt = $statement = sprintf(
-                    "CREATE TABLE `%s` (" . PHP_EOL . "%s" . PHP_EOL . ")" . PHP_EOL . "COLLATE {%s}",
+                    'CREATE TABLE `%s` (%s%s%s)%sCOLLATE {%s}',
                     $model->table,
+                    PHP_EOL,
                     $model->getSQLSchema(),
+                    PHP_EOL,
+                    PHP_EOL,
                     WpUtil::getDbCharsetCollate()
                 );
 

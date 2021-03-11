@@ -108,7 +108,7 @@ class AtkWp
     private $ajaxMode = false;
 
     /**
-     * Manage the models involved in the plugin
+     * Manage the models involved in the plugin.
      *
      * @var AtkWpModelManager
      */
@@ -499,7 +499,8 @@ class AtkWp
         }
     }
 
-    public function getModelManager() : AtkWpModelManager {
+    public function getModelManager(): AtkWpModelManager
+    {
         return $this->atkWpModelManager;
     }
 }
