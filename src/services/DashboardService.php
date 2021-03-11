@@ -115,7 +115,8 @@ class DashboardService
                 };
             }
 
-            wp_add_dashboard_widget($key,
+            wp_add_dashboard_widget(
+                $key,
                 $dashboard['title'],
                 $this->executable,
                 $configureCallback

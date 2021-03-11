@@ -25,7 +25,7 @@ abstract class Model extends \atk4\data\Model
 
     protected $dbdelta_enabled = true;
 
-    public function init() : void
+    public function init(): void
     {
         if (!empty($this->wp_table)) {
             $this->table = WpUtil::getDbPrefix().$this->wp_table;
@@ -34,9 +34,28 @@ abstract class Model extends \atk4\data\Model
         parent::init();
     }
 
-    public function isEnabledDbDelta() : bool {
+    /**
+     * Used during installation of plugin, if Model schema need to be processed via dbDelta.
+     *
+     * @return bool
+     */
+    public function isEnabledDbDelta(): bool
+    {
         return $this->dbdelta_enabled;
     }
 
-    abstract public function getSQLSchema() : string;
+    /**
+     * Return internal declaration of SQL Schema.
+     *
+     * Ex : return "
+     * `id` BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+     * `type` VARCHAR(255) NOT NULL DEFAULT '',
+     * `imported` int(11) NOT NULL DEFAULT 0,
+     * `date` DATE NOT NULL,
+     * PRIMARY KEY  (`id`)
+     * "
+     *
+     * @return string
+     */
+    abstract public function getSQLSchema(): string;
 }
