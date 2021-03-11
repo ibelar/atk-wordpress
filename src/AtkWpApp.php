@@ -304,4 +304,45 @@ class AtkWpApp extends App
 
         return $template->load($this->plugin->getTemplateLocation($name));
     }
+
+    public function terminate($output = null)
+    {
+        if ($output !== null) {
+            if ($this->isJsonRequest()) {
+                if (is_string($output)) {
+                    $decode = json_decode($output, true);
+                    if (json_last_error() === JSON_ERROR_NONE) {
+                        $decode['modals'] = $this->getRenderedModals();
+                        $output = $decode;
+                    }
+                } elseif (is_array($output)) {
+                    $output['modals'] = $this->getRenderedModals();
+                }
+                $this->outputResponseJSON($output);
+            } elseif (isset($_GET['__atk_tab'])) {
+                // ugly hack for TABS
+                // because fomantic ui tab only deal with html and not JSON
+                // we need to hack output to include app modal.
+                $keys = null;
+                $remove_function = '';
+                foreach ($this->getRenderedModals() as $key => $modal) {
+                    // add modal rendering to output
+                    $keys[] = '#'.$key;
+                    $output['atkjs'] = $output['atkjs'].';'.$modal['js'];
+                    $output['html'] = $output['html'].$modal['html'];
+                }
+                if ($keys) {
+                    $ids = implode(',', $keys);
+                    $remove_function = "$('.ui.dimmer.modals.page').find('${ids}').remove();";
+                }
+                $output = '<script>var $=jQuery.noConflict();(function() {'.$remove_function.$output['atkjs'].'})($);</script>'.$output['html'];
+                $this->outputResponseHtml($output);
+            } else {
+                $this->outputResponseHTML($output);
+            }
+        }
+
+        $this->run_called = true; // prevent shutdown function from triggering.
+        $this->callExit();
+    }
 }
