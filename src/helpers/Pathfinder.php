@@ -17,6 +17,7 @@
 
 namespace atkwp\helpers;
 
+use atk4\ui\Exception;
 use atkwp\interfaces\PathInterface;
 
 class Pathfinder implements PathInterface
@@ -88,7 +89,7 @@ class Pathfinder implements PathInterface
      *
      * @param string $fileName The name of the template file.
      *
-     * @throws \atk4\ui\Exception
+     * @throws Exception
      *
      * @return mixed|string
      */
@@ -121,7 +122,7 @@ class Pathfinder implements PathInterface
      * @param string $type
      * @param string $fileName
      *
-     * @throws \atk4\ui\Exception
+     * @throws Exception
      *
      * @return string
      */
@@ -134,7 +135,7 @@ class Pathfinder implements PathInterface
             }
         }
 
-        throw new \atk4\ui\Exception([
+        throw new Exception([
             'Unable to get path location for file: '.$fileName,
         ]);
     }
