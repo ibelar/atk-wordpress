@@ -19,16 +19,24 @@ namespace atkwp\models;
 
 use atkwp\helpers\WpUtil;
 
-class Model extends \atk4\data\Model
+abstract class Model extends \atk4\data\Model
 {
     public $wp_table;
 
-    public function init()
+    protected $dbdelta_enabled = true;
+
+    public function init() : void
     {
         if (!empty($this->wp_table)) {
             $this->table = WpUtil::getDbPrefix().$this->wp_table;
         }
 
-        return parent::init();
+        parent::init();
     }
+
+    public function isEnabledDbDelta() : bool {
+        return $this->dbdelta_enabled;
+    }
+
+    abstract public function getSQLSchema() : string;
 }

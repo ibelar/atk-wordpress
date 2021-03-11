@@ -108,6 +108,13 @@ class AtkWp
     private $ajaxMode = false;
 
     /**
+     * Manage the models involved in the plugin
+     *
+     * @var AtkWpModelManager
+     */
+    private $atkWpModelManager;
+
+    /**
      * AtkWp constructor.
      *
      * @param string                 $pluginName The name of this plugin.
@@ -116,6 +123,7 @@ class AtkWp
      */
     public function __construct($pluginName, PathInterface $pathFinder, ComponentCtrlInterface $ctrl)
     {
+        $this->atkWpModelManager = new AtkWpModelManager($this);
         $this->pluginName = $pluginName;
         $this->pathFinder = $pathFinder;
         $this->componentCtrl = $ctrl;
@@ -489,5 +497,9 @@ class AtkWp
         } catch (Throwable $e) {
             $this->caughtException($e);
         }
+    }
+
+    public function getModelManager() : AtkWpModelManager {
+        return $this->atkWpModelManager;
     }
 }
