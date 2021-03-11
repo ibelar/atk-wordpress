@@ -39,7 +39,8 @@ abstract class Model extends \atk4\data\Model
      *
      * @return bool
      */
-    public function isEnabledDbDelta(): bool {
+    public function isEnabledDbDelta(): bool
+    {
         return $this->dbdelta_enabled;
     }
 

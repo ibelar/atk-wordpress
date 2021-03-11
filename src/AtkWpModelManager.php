@@ -48,7 +48,6 @@ class AtkWpModelManager
         foreach ($this->models as $model) {
             // check if the model allow upgrade
             if ($model->isEnabledDbDelta()) {
-
                 $stmt = $statement = sprintf(
                     'CREATE TABLE `%s` (%s%s%s)%sCOLLATE {%s}',
                     $model->table,
@@ -64,8 +63,13 @@ class AtkWpModelManager
         }
     }
 
-    public function getModel(string $model_fqcn)
+    /**
+     * @param string $fqcn Model FQCN
+     *
+     * @return Model|null
+     */
+    public function getModel(string $fqcn):? Model
     {
-        return clone $this->models[$model_fqcn];
+        return clone $this->models[$fqcn] ?? null;
     }
 }
