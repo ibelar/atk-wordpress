@@ -28,7 +28,7 @@ class EnqueueService
      */
     private $ctrl;
 
-    protected $atkUiVersion = '1.6';
+    protected $atkUiVersion = '2.0.4';
     protected $fomanticUiVersion = '2.6.4';
 
     /**
