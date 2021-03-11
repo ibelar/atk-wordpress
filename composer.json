@@ -13,7 +13,10 @@
     }
   ],
   "require": {
-    "atk4/ui": "2.0.4"
+    "atk4/ui": "2.0.4",
+    "atk4/data": "2.0.4",
+    "atk4/core": "2.0.2",
+    "atk4/dsql": "2.0.2"
   },
   "require-dev": {
     "phpunit/phpunit": "4.0.*"
